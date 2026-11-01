@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What KNOBE claims, and what it does not</title>
+<meta name="description" content="Claims, non-claims, and an obligation map from Italy&#x27;s Decree 179/2026, the EU AI Act and publisher disclosure rules onto KNOBE fields.">
+<link rel="canonical" href="https://knobe.org/policy">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="KNOBE Protocol">
+<meta property="og:title" content="What KNOBE claims, and what it does not">
+<meta property="og:description" content="Claims, non-claims, and an obligation map from Italy&#x27;s Decree 179/2026, the EU AI Act and publisher disclosure rules onto KNOBE fields.">
+<meta property="og:url" content="https://knobe.org/policy">
+<meta property="og:image" content="https://knobe.org/assets/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What KNOBE claims, and what it does not">
+<meta name="twitter:description" content="Claims, non-claims, and an obligation map from Italy&#x27;s Decree 179/2026, the EU AI Act and publisher disclosure rules onto KNOBE fields.">
+<meta name="twitter:image" content="https://knobe.org/assets/share-card.png">
+<link rel="stylesheet" href="/front.css">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#1d4733">
+<style>@media print{nav.fd,footer,.skip{display:none}section{padding:24px 0;border:0}body{font-size:12pt}}</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+<nav class="fd" aria-label="Main navigation">
+  <div class="wrap wide">
+    <a href="/" class="brand">KNOBE</a>
+    <div class="links">
+      <a href="/make">Make</a>
+      <a href="/build">Build</a>
+      <a href="/decide" class="here" aria-current="page">Decide</a>
+      <a href="/docs/">Docs</a>
+    </div>
+    <details>
+      <summary aria-label="Menu">Menu</summary>
+      <div class="menu"><a href="/make">Make</a><a href="/build">Build</a><a href="/decide">Decide</a><a href="/docs/">Docs</a></div>
+    </details>
+  </div>
+</nav>
+<main id="main">
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">For policy readers · printable</div>
+    <h1>What KNOBE claims, and what it does not.</h1>
+    <p class="lede">A policy reader does not want the spec. They want to know what the thing claims, what it refuses to claim, and which obligations it bears on. This page is those three things.</p>
+  </div>
+</header>
+<section>
+  <div class="wrap">
+    <h2>Claims</h2>
+    <ul class="claims">
+      <li>A knowledge file can carry its own declared origin, history, limits and terms of use in plain text, with no platform required.</li>
+      <li>A verifier, running locally, can show whether that declared record has changed since it was sealed.</li>
+      <li>The same file stays readable in any editor or screen reader whether or not it is ever verified.</li>
+    </ul>
+    <h2>Does not claim</h2>
+    <ul class="claims">
+      <li><strong>That the content is true.</strong> A seal proves the record is intact, not accurate.</li>
+      <li><strong>That declarations are honest.</strong> Attribution is a good-faith declaration, and the seal cannot detect a lie told at sealing time.</li>
+      <li><strong>That it identifies AI-generated text nobody declared.</strong> KNOBE is a declaration format, not a detector. It is complementary to watermarking, not a substitute for it.</li>
+      <li><strong>That the readable body is always sealed.</strong> The body's integrity is checked only when the optional body hash is present. A copied excerpt does not inherit the original's seal, and a file whose payload has been stripped does not announce the fact to a recipient who never saw the original.</li>
+      <li><strong>That verification is enforcement.</strong> A failed check is a reason to inspect, not a barrier to reading.</li>
+      <li><strong>That it carries any institutional endorsement.</strong> It is an independent open protocol, not a UC Davis standard or product.</li>
+    </ul>
+  </div>
+</section>
+<section class="warm">
+  <div class="wrap">
+    <h2>Obligation map</h2>
+    <div class="note">Under review. The rows on Italy's Decree 179/2026 rest on English-language secondary reporting of the decree. They will be confirmed against the decree text before this note is removed.</div>
+    <p>Each row names an obligation now in force or in policy, and says precisely what a KNOBE record supplies toward it. The honest verb is <em>supplies</em>, not <em>satisfies</em>: the obligations bind people and organizations, and KNOBE records artifacts. A compliant explanation draws on the record; the record does not make the explanation.</p>
+  </div>
+  <div class="wrap wide">
+    <table>
+      <thead><tr><th>Obligation</th><th>Where it comes from</th><th>KNOBE fields</th><th>What the record supplies, and what it does not</th></tr></thead>
+      <tbody>
+        <tr><td>Whether, and to what extent, AI influenced a decision affecting a worker</td><td><a href="https://blog.pwc.it/en/ai-what-changes-from-23-october/">Italy, Legislative Decree 179/2026</a>, in force 23 October 2026; explanation available on request</td><td><code>attribution</code> roles, including <code>ai_assistant</code> marked non-rights-bearing; <code>transformation_history</code></td><td>Supplies the artifact-level record of AI involvement in any document the decision used. Does not record the decision itself.</td></tr>
+        <tr><td>The main factors and parameters considered</td><td>Same decree</td><td><code>fidelity_limits</code>, <code>use_conditions</code>, <code>parents</code></td><td>Supplies the artifact's declared limits and lineage. Does not record a decision-maker's reasoning.</td></tr>
+        <tr><td>The contribution of human intervention</td><td>Same decree</td><td><code>attribution</code>, with a role and a contribution line per source</td><td>Supplies who did what to the artifact, as declared.</td></tr>
+        <tr><td>Decisions on hiring, management and dismissal may not rest solely on automated processes; a natural person must independently assess the output</td><td><a href="https://en.ilsole24ore.com/art/training-sanctions-and-the-regulatory-sandbox-the-latest-legislative-decree-on-ai-has-come-into-force-AJIlIFoB">Same decree</a></td><td>none directly</td><td>KNOBE does not bear on this. Listed so the reader sees the boundary.</td></tr>
+        <tr><td>AI-generated text must be identifiable in a machine-readable way</td><td>EU AI Act transparency obligations; the requirement <a href="https://openai.com/index/eu-text-provenance/">OpenAI's October 2026 watermarking</a> responds to</td><td><code>content_type</code>, <code>attribution</code> <code>ai_assistant</code> role, the sealed payload</td><td>Supplies a machine-readable declaration that AI was involved and how. Does not watermark and cannot identify undeclared AI text.</td></tr>
+        <tr><td>Generative AI use must be disclosed in scholarly submissions</td><td>Publisher policy; the basis for <a href="https://completeaitraining.com/news/springer-nature-retracts-ai-review-article-for-undeclared/">Springer Nature's October 2026 retraction</a> of a 2024 review</td><td><code>attribution</code> <code>ai_assistant</code> role, <code>transformation_history</code></td><td>Supplies a durable, checkable place for the disclosure to live. Cannot compel the disclosure.</td></tr>
+        <tr><td>Students disclose AI use under the policy an instructor sets</td><td>Institutional academic integrity policy</td><td>Education profile roles <code>student_author</code>, <code>ai_assistant</code>; <code>use_conditions</code></td><td>Same as the row above, at course scale.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="wrap">
+    <p class="quiet">For the design behind each limit, see the <a href="/threat-model">Threat model</a>. For the full argument, the <a href="/white-paper">White paper</a>. For who maintains this, <a href="/about">About</a>.</p>
+  </div>
+</section>
+
+</main>
+<footer>
+  <div class="wrap">
+    <div>KNOBE Protocol v1 · CC BY 4.0 · An independent open protocol authored by David Kyle, University of California, Davis. Not a UC Davis product or endorsement.</div>
+    <div class="links"><a href="/">Home</a><a href="/docs/">Docs</a><a href="/about">About</a><a href="https://github.com/KnobeOne/knobe-protocol">GitHub</a><a href="mailto:david@knobe.org">Contact</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

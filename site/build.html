@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build with KNOBE · developers, vibe coders, agent builders</title>
+<meta name="description" content="Add KNOBE to your agent in one line. A plain-text file format with a sealed payload and a local verifier. Read the spec afterward, if you want to.">
+<link rel="canonical" href="https://knobe.org/build">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="KNOBE Protocol">
+<meta property="og:title" content="Build with KNOBE · developers, vibe coders, agent builders">
+<meta property="og:description" content="Add KNOBE to your agent in one line. A plain-text file format with a sealed payload and a local verifier. Read the spec afterward, if you want to.">
+<meta property="og:url" content="https://knobe.org/build">
+<meta property="og:image" content="https://knobe.org/assets/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Build with KNOBE · developers, vibe coders, agent builders">
+<meta name="twitter:description" content="Add KNOBE to your agent in one line. A plain-text file format with a sealed payload and a local verifier. Read the spec afterward, if you want to.">
+<meta name="twitter:image" content="https://knobe.org/assets/share-card.png">
+<link rel="stylesheet" href="/front.css">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#1d4733">
+
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+<nav class="fd" aria-label="Main navigation">
+  <div class="wrap wide">
+    <a href="/" class="brand">KNOBE</a>
+    <div class="links">
+      <a href="/make">Make</a>
+      <a href="/build" class="here" aria-current="page">Build</a>
+      <a href="/decide">Decide</a>
+      <a href="/docs/">Docs</a>
+    </div>
+    <details>
+      <summary aria-label="Menu">Menu</summary>
+      <div class="menu"><a href="/make">Make</a><a href="/build">Build</a><a href="/decide">Decide</a><a href="/docs/">Docs</a></div>
+    </details>
+  </div>
+</nav>
+<main id="main">
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">I build</div>
+    <h1>A file format, a seal, a verifier. That is the whole surface.</h1>
+    <!-- DAVID: framing paragraph drafted by Claude; edit freely -->
+    <p class="lede">A <code>.knobe.md</code> is Markdown with YAML frontmatter and a base64 JSON payload at the end. The payload records attribution, transformation history, fidelity limits, use conditions and accessibility lineage, and carries a SHA-256 hash of itself. One engine, <code>knobe-core.js</code>, creates, verifies and transforms these files; everything else is a thin adapter over it. The MCP server gives any agent five tools. The spec is frozen at v1.0 and nine test vectors cover the conformance surface. You can be sealing files before you have read any of it.</p>
+    <div class="cta-row"><a class="btn btn-primary" href="/agent">Add KNOBE to your agent</a></div>
+  </div>
+</header>
+<section>
+  <div class="wrap">
+    <h2>Start here</h2>
+<ul class="xlate"><li><a href="/agent">Add KNOBE to your agent</a><span class="docname">/agent</span><span class="why">One install command, one paste-ready prompt, a verified file in about a minute.</span></li>
+<li><a href="/mcp">The MCP server</a><span class="docname">MCP server</span><span class="why">Five tools: verify, read, create, transform, and permits, which evaluates an action against the file&#x27;s own sealed terms.</span></li>
+<li><a href="/spec">The rules</a><span class="docname">Spec</span><span class="why">The normative specification, v1.0, frozen.</span></li>
+<li><a href="/test-vectors/">Nine files that test every rule</a><span class="docname">Test vectors</span><span class="why">Covers the full conformance surface. Run them against your implementation.</span></li>
+<li><a href="/implementations">Reference implementations</a><span class="docname">Implementations</span><span class="why">JavaScript, Python and Go. The Go port was audited by algorithmic transliteration from the reference.</span></li>
+<li><a href="/lens">Inspect any file</a><span class="docname">Lens</span><span class="why">A command-line and browser inspector. Exit codes for scripting.</span></li>
+<li><a href="/threat-model">What can go wrong</a><span class="docname">Threat model</span><span class="why">What the seal does and does not protect against, and why verification is advisory.</span></li>
+<li><a href="https://github.com/KnobeOne/knobe-protocol">Source</a><span class="docname">GitHub</span><span class="why">Protocol, engine, MCP server, site and vectors in one repository. CC BY 4.0 for the protocol, Apache 2.0 for the code.</span></li></ul>
+  </div>
+</section>
+
+</main>
+<footer>
+  <div class="wrap">
+    <div>KNOBE Protocol v1 · CC BY 4.0 · An independent open protocol authored by David Kyle, University of California, Davis. Not a UC Davis product or endorsement.</div>
+    <div class="links"><a href="/">Home</a><a href="/docs/">Docs</a><a href="/about">About</a><a href="https://github.com/KnobeOne/knobe-protocol">GitHub</a><a href="mailto:david@knobe.org">Contact</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
