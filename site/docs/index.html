@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KNOBE Documentation: protocol, tools, uses, and project</title>
+<meta name="description" content="KNOBE is an open, plain-text protocol. A .knobe.md file is readable markdown plus a machine-readable, hash-sealed payload carrying attribution, source context, transformation history, fidelity limits, use conditions, and accessibility-adaptation lineage, so a knowledge object can be interpreted correctly by the next human or machine that receives it.">
+<style>
+:root{
+  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#6b8276;
+  --paper:#f7f5ef;--paper-warm:#efece2;--line:#d8d3c4;
+  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;
+  --code-bg:#10231a;--code-ink:#cfe6d6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Georgia,'Times New Roman',serif;background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:740px;margin:0 auto;padding:0 28px}
+.wide{max-width:920px}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.88em;background:var(--paper-warm);padding:1px 5px;border-radius:3px}
+
+nav{position:sticky;top:0;z-index:50;background:rgba(247,245,239,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 28px}
+.brand{font-weight:bold;font-size:1.05rem;color:var(--ink);text-decoration:none}
+.brand .v{color:var(--ink-faint);font-weight:normal;font-size:.8rem}
+.navlinks{display:flex;gap:18px;font-family:-apple-system,system-ui,sans-serif;font-size:.82rem}
+.navlinks a{color:var(--ink-soft);text-decoration:none;transition:color .15s}
+.navlinks a:hover{color:var(--moss)}
+.navlinks a.here{color:var(--moss);border-bottom:1px solid var(--moss)}
+.navlinks{align-items:center}
+.nav-uses{position:relative;display:inline-block}
+.nav-uses>summary{list-style:none;cursor:pointer;color:var(--ink-soft);transition:color .15s}
+.nav-uses>summary::-webkit-details-marker{display:none}
+.nav-uses>summary::after{content:"\25be";font-size:.7em;margin-left:5px}
+.nav-uses>summary:hover,.nav-uses[open]>summary,.nav-uses>summary.here{color:var(--moss)}
+.nav-uses>summary.here{border-bottom:1px solid var(--moss)}
+.nav-menu{position:absolute;top:calc(100% + 10px);left:0;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:7px;min-width:172px;display:flex;flex-direction:column;gap:1px;box-shadow:0 8px 24px rgba(26,40,32,.12);z-index:60}
+.nav-menu a{padding:7px 10px;border-radius:4px;white-space:nowrap;border-bottom:none}
+.nav-menu a:hover{background:var(--paper-warm);color:var(--moss)}
+.nav-menu a.here{color:var(--moss);border-bottom:none}
+@media(max-width:760px){nav .wrap{flex-wrap:wrap;row-gap:6px}.navlinks{width:100%;flex-wrap:wrap;justify-content:flex-start;gap:8px 14px;font-size:.78rem}}
+
+/* Grove callout: featured experiential-demo card after hero */
+.grove-callout{display:flex;align-items:center;gap:18px 24px;flex-wrap:wrap;background:#eef2ec;border:1px solid var(--line);border-left:3px solid var(--moss);border-radius:6px;padding:22px 26px;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+.grove-callout:hover,.grove-callout:focus-visible{border-color:var(--moss);box-shadow:0 2px 18px rgba(47,107,79,.13)}
+.grove-callout .gc-main{flex:1;min-width:240px}
+.grove-callout .gc-kicker{font-family:-apple-system,system-ui,sans-serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:7px}
+.grove-callout .gc-title{font-size:1.25rem;font-weight:normal;color:var(--moss-deep);margin-bottom:6px;letter-spacing:-.01em}
+.grove-callout .gc-desc{font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;color:var(--ink-soft);margin:0}
+.grove-callout .gc-cta{font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;font-weight:600;color:var(--moss);white-space:nowrap}
+.grove-callout:hover .gc-cta,.grove-callout:focus-visible .gc-cta{color:var(--moss-deep)}
+
+/* KNOBE in use: tools list with status + description */
+.inuse{margin:22px 0 0;border-top:1px solid var(--line)}
+.inuse-item{display:grid;grid-template-columns:32px 1fr;gap:0 16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.inuse-num{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.82rem;color:var(--moss);padding-top:3px}
+.inuse-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:5px}
+.inuse-name{font-size:1.05rem;font-weight:bold;color:var(--ink);text-decoration:none}
+a.inuse-name:hover{color:var(--moss)}
+.inuse-tag{font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--moss);margin:3px 0 7px}
+.inuse-open{padding:18px 0;font-family:-apple-system,system-ui,sans-serif;font-size:.88rem;color:var(--ink-soft);line-height:1.65;border-bottom:1px solid var(--line)}
+.inuse-dev-head{font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);padding:14px 0 4px}
+.inuse-desc{font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;color:var(--ink-soft);margin:0;line-height:1.55}
+
+header.hero{padding:80px 0 56px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--moss);margin-bottom:24px}
+h1.claim{font-size:2.35rem;line-height:1.22;font-weight:normal;letter-spacing:-.01em;margin-bottom:24px}
+h1.claim em{font-style:italic;color:var(--moss-deep)}
+.sub{font-size:1.12rem;color:var(--ink-soft);max-width:644px;margin-bottom:24px}
+.refrain{font-size:1.05rem;color:var(--moss-deep);font-style:italic;margin:24px 0 32px;padding-left:18px;border-left:2px solid var(--moss)}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn{font-family:-apple-system,system-ui,sans-serif;font-size:.86rem;font-weight:500;text-decoration:none;padding:11px 20px;border-radius:3px;transition:all .15s;display:inline-block}
+.btn-primary{background:var(--moss-deep);color:var(--paper)}
+.btn-primary:hover{background:var(--moss)}
+.btn-ghost{border:1px solid var(--line);color:var(--ink-soft);background:transparent}
+.btn-ghost:hover{border-color:var(--moss);color:var(--moss)}
+.hero-meta{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--ink-faint);margin-top:30px;letter-spacing:.02em}
+.starthere{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px;font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;color:var(--ink-faint)}
+.starthere a{color:var(--ink-soft);text-decoration:none;border-bottom:1px dotted var(--line)}
+.starthere a:hover{color:var(--moss);border-color:var(--moss)}
+
+section{padding:56px 0;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+section:nth-of-type(odd){background:var(--paper-warm)}
+section:nth-of-type(even){background:var(--paper)}
+.shead{font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:18px}
+h2{font-size:1.6rem;font-weight:normal;line-height:1.3;margin-bottom:18px;letter-spacing:-.01em}
+h3{font-size:1.1rem;font-weight:bold;margin:26px 0 9px}
+p{margin-bottom:16px}
+p.lead{font-size:1.1rem;color:var(--ink-soft)}
+a.inline{color:var(--moss);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+em.kw{font-style:italic;color:var(--moss-deep)}
+strong{font-weight:600;color:var(--ink)}
+
+.filestruct{background:var(--code-bg);border-radius:6px;padding:20px 24px;margin:20px 0;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.8rem;line-height:1.7;overflow-x:auto;white-space:pre}
+.fs-delim{color:#6b8a76}.fs-c1{color:#d9a85a}.fs-c2{color:#7ed99a}.fs-c3{color:#8fb8e8}.fs-comment{color:#4a6555;font-style:italic}
+.filefoot{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;color:var(--ink-faint);text-align:center;margin-top:12px}
+
+.layers{border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:8px 0 0}
+.layer{padding:14px 20px;border-bottom:1px solid var(--line)}
+.layer:last-child{border-bottom:none}
+.layer .ll{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.layer .ld{font-size:.9rem;color:var(--ink-soft)}
+.l1{background:#f3ede0}.l1 .ll{color:var(--amber)}
+.l2{background:#eef2ec}.l2 .ll{color:var(--moss)}
+.l3{background:#e9efe9}.l3 .ll{color:var(--moss-deep)}
+
+.chain{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:24px 0 14px}
+.chain-step{background:var(--paper-warm);border:1px solid var(--line);border-radius:4px;padding:12px 10px;font-family:-apple-system,system-ui,sans-serif;font-size:.72rem}
+.chain-step .cs-title{font-weight:600;color:var(--ink);margin-bottom:8px}
+.chain-step .cs-dots{display:flex;gap:4px;flex-wrap:wrap}
+.cdot{width:8px;height:8px;border-radius:50%;transition:opacity .6s,background .6s,border-color .6s}
+.cdot.on{background:var(--moss)}
+.cdot.off{background:transparent;border:1px solid var(--line)}
+.cdot.fading{opacity:0}
+.chain-caption{font-family:-apple-system,system-ui,sans-serif;font-size:.76rem;color:var(--ink-faint)}
+.replay{font-family:-apple-system,system-ui,sans-serif;font-size:.74rem;color:var(--moss);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px}
+.replay:hover{color:var(--moss-deep)}
+@media(max-width:560px){.chain{grid-template-columns:1fr 1fr}}
+
+.term{background:var(--code-bg);border-radius:6px;padding:18px 22px;margin:20px 0;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.78rem;line-height:1.85;overflow-x:auto}
+.term .tl{color:#6b8a76}.term .tv{color:var(--code-ink)}.term .tm{color:#7ed99a}
+.term .tp{color:#3d5447}.term .tc{color:#a8c9b4}.term .tn{color:#6b8a76;font-style:italic}
+
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.tc-card{background:var(--paper-warm);border:1px solid var(--line);border-radius:6px;padding:18px 20px}
+.tc-card h3{margin-top:0;font-size:1rem}
+.tc-card p{font-size:.9rem;color:var(--ink-soft);margin-bottom:0}
+.tc-card .tcl{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.05em;margin-bottom:8px;text-transform:uppercase}
+.tc-card.ctrl .tcl{color:var(--amber)}
+.tc-card.resp .tcl{color:var(--moss)}
+@media(max-width:560px){.twocol{grid-template-columns:1fr}}
+
+.fields{margin:18px 0}
+.field{border-left:2px solid var(--line);padding:4px 0 4px 16px;margin:14px 0}
+.field .fn{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.82rem;color:var(--moss-deep);font-weight:500}
+.field .fd{font-size:.92rem;color:var(--ink-soft);margin-top:3px}
+
+.implpanel{background:var(--code-bg);border-radius:8px;padding:26px 28px;margin:8px 0}
+.implpanel h3{color:var(--code-ink);margin-top:0;font-family:-apple-system,system-ui,sans-serif;font-size:1rem}
+.implpanel p{color:#9bb5a4;font-size:.88rem;font-family:-apple-system,system-ui,sans-serif}
+.impl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.impl-grid a{display:block;background:rgba(255,255,255,.04);border:1px solid #2a4435;border-radius:4px;padding:12px 14px;text-decoration:none;transition:all .15s}
+.impl-grid a:hover{border-color:var(--moss);background:rgba(126,217,154,.08)}
+.impl-grid .it{color:var(--code-ink);font-family:-apple-system,system-ui,sans-serif;font-size:.88rem;font-weight:500}
+.impl-grid .id{color:#6b8a76;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.68rem;margin-top:3px}
+@media(max-width:560px){.impl-grid{grid-template-columns:1fr}}
+
+.whofor{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;margin:18px 0;font-size:.92rem}
+.whofor div strong{color:var(--moss-deep)}
+.whofor div p{font-size:.86rem;color:var(--ink-soft);margin:2px 0 0}
+@media(max-width:560px){.whofor{grid-template-columns:1fr}}
+
+.gains{list-style:none;margin:24px 0;padding:0;display:grid;gap:12px}
+.gains li{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px 18px;color:var(--ink-soft);line-height:1.6;font-size:.94rem}
+.gains .gn{flex:none;width:25px;height:25px;border-radius:50%;background:var(--moss);color:#fff;font-family:-apple-system,system-ui,sans-serif;font-size:.78rem;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.gains li strong{display:block;color:var(--ink);margin-bottom:3px}
+@media(max-width:560px){.gains{grid-template-columns:1fr}}
+
+.dls{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}
+.dl{background:var(--paper-warm);border:1px solid var(--line);border-radius:6px;overflow:hidden;transition:border-color .15s}
+a.dl{display:block;padding:16px 18px;text-decoration:none}
+a.dl:hover{border-color:var(--moss);background:#eef2ec}
+div.dl:hover{border-color:var(--moss)}
+.dl .dt{font-weight:bold;color:var(--ink);font-size:.98rem}
+.dl .dd{font-family:-apple-system,system-ui,sans-serif;font-size:.78rem;color:var(--ink-faint);margin-top:2px}
+.dl .dh{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.66rem;color:var(--moss);margin-top:7px;word-break:break-all}
+.kp-btn{display:block;width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:14px 18px 12px;font-family:inherit;font-size:inherit;line-height:inherit;transition:background .15s}
+.kp-btn:hover{background:#eef2ec}
+.kp-btn-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.kp-read-badge{font-family:-apple-system,system-ui,sans-serif;font-size:.67rem;color:var(--moss);font-weight:500;opacity:.85}
+.kp-bar{padding:5px 18px 7px;border-top:1px solid var(--line);background:var(--paper);display:flex;justify-content:flex-end}
+.kp-bar-raw{font-family:-apple-system,system-ui,sans-serif;font-size:.7rem;color:var(--ink-faint);text-decoration:none}
+.kp-bar-raw:hover{color:var(--moss)}
+@media(max-width:560px){.dls{grid-template-columns:1fr}}
+
+/* Preview modal */
+.kp-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,20,15,.72);display:flex;align-items:flex-start;justify-content:center;padding:5vh 20px 40px;overflow-y:auto}
+.kp-overlay[hidden]{display:none!important}
+.kp-panel{background:var(--paper);border-radius:8px;max-width:720px;width:100%;display:flex;flex-direction:column;max-height:88vh;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.28)}
+.kp-head{display:flex;align-items:center;justify-content:space-between;padding:15px 24px;border-bottom:1px solid var(--line);flex-shrink:0;gap:16px}
+.kp-title{font-family:Georgia,serif;font-size:1rem;font-weight:bold;color:var(--ink)}
+.kp-close{background:none;border:none;cursor:pointer;font-size:1.15rem;color:var(--ink-faint);padding:3px 8px;border-radius:4px;line-height:1;transition:all .15s;flex-shrink:0}
+.kp-close:hover{color:var(--ink);background:var(--paper-warm)}
+.kp-body{padding:26px 30px;overflow-y:auto;flex:1;font-family:Georgia,serif;line-height:1.8;font-size:.97rem;color:var(--ink)}
+.kp-body h1{font-size:1.45rem;font-weight:normal;margin:0 0 20px;border-bottom:1px solid var(--line);padding-bottom:12px;letter-spacing:-.01em}
+.kp-body h2{font-size:1.1rem;font-weight:bold;margin:28px 0 9px;color:var(--moss-deep)}
+.kp-body h3{font-size:1rem;font-weight:bold;margin:20px 0 7px}
+.kp-body p{margin:0 0 15px}
+.kp-body ul,.kp-body ol{padding-left:24px;margin:0 0 15px}
+.kp-body li{margin-bottom:5px}
+.kp-body hr{border:none;border-top:1px solid var(--line);margin:26px 0}
+.kp-body code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.84em;background:var(--paper-warm);padding:1px 5px;border-radius:3px}
+.kp-body pre{background:var(--code-bg);color:var(--code-ink);padding:16px 20px;border-radius:6px;overflow-x:auto;font-size:.8rem;line-height:1.65;margin:0 0 15px}
+.kp-body pre code{background:none;padding:0}
+.kp-body blockquote{margin:0 0 15px;padding:4px 0 4px 18px;border-left:3px solid var(--moss);color:var(--moss-deep);font-style:italic}
+.kp-foot{padding:11px 24px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--paper-warm);gap:14px}
+.kp-foot-note{font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;color:var(--ink-faint)}
+.kp-foot-dl{font-family:-apple-system,system-ui,sans-serif;font-size:.76rem;font-weight:500;color:var(--moss);text-decoration:none;border:1px solid var(--line);padding:5px 12px;border-radius:3px;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.kp-foot-dl:hover{border-color:var(--moss)}
+@media(max-width:560px){.kp-overlay{padding:0;align-items:flex-end}.kp-panel{border-radius:8px 8px 0 0;max-height:92dvh}.kp-body{padding:20px 22px}.kp-foot{flex-direction:column;align-items:flex-start;gap:8px}}
+
+
+.gov dt{font-weight:bold;margin-top:18px;margin-bottom:4px;font-size:.98rem}
+.gov dd{color:var(--ink-soft);font-size:.95rem;margin-bottom:4px}
+
+/* Sitemap */
+.smap{display:grid;grid-template-columns:repeat(4,1fr);gap:32px 40px;margin-top:28px;font-family:-apple-system,system-ui,sans-serif}
+@media(max-width:660px){.smap{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:380px){.smap{grid-template-columns:1fr}}
+.smap-head{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--moss);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--moss)}
+.smap-link{display:block;font-size:.95rem;color:var(--ink-soft);text-decoration:none;padding:5px 0;line-height:1.4;border-bottom:1px solid transparent;transition:color .12s,border-color .12s}
+.smap-link:hover{color:var(--moss-deep);border-bottom-color:var(--moss)}
+
+footer{padding:46px 0 60px;font-family:-apple-system,system-ui,sans-serif;font-size:.82rem;color:var(--ink-faint)}
+footer .frow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+footer a{color:var(--ink-soft);text-decoration:none}
+footer a:hover{color:var(--moss)}
+footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep);margin-bottom:14px;font-size:.95rem}
+.seal-line{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.68rem;color:var(--line);margin-top:22px;word-break:break-all}
+
+.filestruct .fs-layer{display:block;border-radius:3px;padding:0 4px;margin:0 -4px;cursor:pointer;transition:background .15s}
+.filestruct .fs-layer:hover,.filestruct .fs-layer.lit{background:rgba(126,217,154,.1)}
+.layers .layer.lit{box-shadow:inset 3px 0 0 var(--moss)}
+.fs-hint{font-family:-apple-system,system-ui,sans-serif;font-size:.74rem;color:var(--ink-faint);text-align:center;margin-top:8px}
+
+.runbtn{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;font-weight:600;color:var(--moss-deep);background:rgba(47,107,79,.1);border:1px solid var(--moss);border-radius:4px;padding:7px 15px;cursor:pointer;transition:all .15s;margin-bottom:14px}
+.runbtn:hover{background:rgba(47,107,79,.18);border-color:var(--moss-deep)}
+.runbtn:disabled{opacity:.5;cursor:default}
+
+.copywrap{position:relative}
+.copybtn{position:absolute;top:8px;right:8px;font-family:-apple-system,system-ui,sans-serif;font-size:.68rem;color:#9bb5a4;background:rgba(255,255,255,.06);border:1px solid #2a4435;border-radius:3px;padding:3px 9px;cursor:pointer;transition:all .15s;z-index:2}
+.copybtn:hover{color:var(--code-ink);border-color:var(--moss)}
+.copybtn.copied{color:#7ed99a;border-color:#7ed99a}
+
+@media(prefers-reduced-motion:reduce){.cdot{transition:none}}
+.social-icon{display:inline-flex;align-items:center;vertical-align:middle;margin-left:8px;color:var(--ink-faint);transition:color .15s;line-height:1}
+.social-icon:hover{color:var(--moss)}
+.social-icon svg{display:block}
+
+/* ---- skip link (accessibility) ---- */
+/* ---- hero definition + pull ---- */
+.defn{font-family:Georgia,serif;font-size:1.12rem;color:var(--moss-deep);border-left:3px solid var(--moss);padding:14px 18px;background:var(--paper-warm);border-radius:0 6px 6px 0;margin-top:22px;line-height:1.6}
+.pull{display:inline-block;margin-top:18px;font-family:-apple-system,system-ui,sans-serif;font-size:.95rem;font-weight:600;color:var(--moss);text-decoration:none}
+.pull:hover{text-decoration:underline}
+/* ---- inline verify demo ---- */
+.demo{margin-top:26px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:18px 20px}
+.demo-head{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px}
+.demo-file{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.74rem;line-height:1.5;max-height:150px;overflow:auto;border-radius:6px;margin:0 0 10px;white-space:pre-wrap;word-break:break-word;padding:10px 12px}
+.demo-file.fm{background:#eef1f6;color:#333f52}
+.demo-file.dbody{background:var(--paper-warm);color:var(--ink)}
+.demo-file.payload{background:var(--code-bg);color:var(--code-ink)}
+.demo-btn{font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;font-weight:600;border:1px solid var(--moss);border-radius:6px;background:var(--moss);color:#fff;padding:8px 16px;cursor:pointer;margin:4px 10px 4px 0}
+.demo-btn.ghost{background:transparent;color:var(--moss)}
+.demo-verdict{font-family:-apple-system,system-ui,sans-serif;font-size:.95rem;font-weight:600;margin-top:10px;padding:10px 14px;border-radius:6px;border:1px solid var(--line)}
+.demo-verdict.pass{border-color:#2f6b4f;background:#eef5f0;color:#1d4733}
+.demo-verdict.fail{border-color:#a33;background:#f7ecec;color:#7a2222}
+.demo-note{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;color:var(--ink-faint);margin-top:8px}
+/* ---- intent router ---- */
+.intent{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+@media(max-width:760px){.intent{grid-template-columns:1fr}}
+.intent-card{border:1px solid var(--line);border-radius:10px;background:#fff;padding:18px 20px}
+.intent-q{font-family:-apple-system,system-ui,sans-serif;font-style:normal;font-weight:600;font-size:1rem;color:var(--ink);margin:0 0 8px}
+.intent-d{font-family:-apple-system,system-ui,sans-serif;font-size:.85rem;color:var(--ink-soft);margin:0 0 12px}
+.intent-card a{display:inline-block;font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;font-weight:600;color:var(--moss);text-decoration:none;margin:0 14px 6px 0}
+.intent-card a:hover{text-decoration:underline}
+.smap-details{margin-top:22px}
+.smap-details>summary{cursor:pointer;font-family:-apple-system,system-ui,sans-serif;font-size:.85rem;color:var(--ink-faint)}
+.skip{position:absolute;left:-9999px;top:0;background:var(--moss-deep);color:var(--paper);
+  font-family:-apple-system,system-ui,sans-serif;font-size:.85rem;padding:10px 16px;border-radius:0 0 4px 0;z-index:100}
+.skip:focus{left:0}
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.viz-cta{text-align:center;border-bottom:none}
+.viz-cta a{font-family:Georgia,serif;font-size:1.28rem;color:var(--moss-deep);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:3px;transition:border-color .15s}
+.viz-cta a:hover{border-color:var(--moss)}
+.viz-cta a:focus-visible{outline:2px solid var(--moss);outline-offset:4px;border-radius:2px}
+.viz-cta .sub{font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;color:var(--ink-faint);margin-top:14px}
+</style>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#7c3aed">
+<link rel="canonical" href="https://knobe.org/docs/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KNOBE Protocol">
+<meta property="og:title" content="KNOBE Documentation">
+<meta property="og:description" content="An open, plain-text protocol for knowledge objects that carry their context (attribution, source, transformations, and fidelity limits) in a hash-sealed payload alongside readable markdown.">
+<meta property="og:url" content="https://knobe.org/docs/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="KNOBE Documentation">
+<meta name="twitter:description" content="An open, plain-text protocol for knowledge objects that carry their context (attribution, source, transformations, and fidelity limits) in a hash-sealed payload alongside readable markdown.">
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+
+<nav aria-label="Main navigation">
+  <div class="wrap wide">
+    <a href="/" class="brand">KNOBE <span class="v">Protocol v1</span></a>
+    <div class="navlinks">
+      <a href="/studio/">Studio</a>
+      <a href="/teaching">Teaching</a>
+      <a href="/spec">Spec</a>
+      <a href="/white-paper">White paper</a>
+      <details class="nav-uses">
+        <summary>Trust</summary>
+        <div class="nav-menu">
+          <a href="/related-work">Related work</a>
+          <a href="/threat-model">Threat model</a>
+        </div>
+      </details>
+      <details class="nav-uses">
+        <summary>Uses</summary>
+        <div class="nav-menu">
+          <a href="/accessibility">Accessibility</a>
+          <a href="/education-profile">Education</a>
+          <a href="/enterprise-profile">Enterprise</a>
+          <a href="/government-profile">Government</a>
+          <a href="/research-profile">Research</a>
+        </div>
+      </details>
+      <details class="nav-uses">
+        <summary>Build</summary>
+        <div class="nav-menu">
+          <a href="/downloads">Downloads</a>
+          <a href="https://github.com/KnobeOne/knobe-protocol">GitHub</a>
+          <a href="/implementations">Implementations</a>
+          <a href="/lens">Lens</a>
+          <a href="/mcp">MCP server</a>
+          <a href="/test-vectors/">Test vectors</a>
+        </div>
+      </details>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</nav>
+<script>/* nav dropdown ux */(function(){var ds=document.querySelectorAll('.nav-uses');ds.forEach(function(d){d.addEventListener('toggle',function(){if(d.open)ds.forEach(function(o){if(o!==d)o.open=false});});});document.addEventListener('keydown',function(e){if(e.key==='Escape')ds.forEach(function(o){o.open=false});});document.addEventListener('click',function(e){if(!e.target.closest('.nav-uses'))ds.forEach(function(o){o.open=false});});})();</script>
+
+<a id="top"></a>
+
+<header class="hero" id="main">
+  <div class="wrap">
+    <div class="eyebrow">Documentation · Open protocol · Plain text · Local verification · v1 frozen</div>
+    <h1 class="claim">Context that travels with the object.</h1>
+    <p class="defn">KNOBE is a plain-text format for knowledge objects that need to keep their source, history, limits, and obligations attached as they move across tools, institutions, and AI systems.</p>
+    <p class="sub">When a transcript, lesson, research note, accessibility adaptation, or AI-assisted summary leaves the system where it was created, its context can become hard to reconstruct. KNOBE helps selected context stay part of the file.</p>
+    <p class="sub">A KNOBE file can be read like ordinary Markdown. It also holds a sealed payload that records declared provenance, transformations, fidelity limits, use conditions, and an integrity hash. Verification shows whether that sealed record has changed.</p>
+    <a class="pull" href="#problem">View an example</a>
+  </div>
+</header>
+
+
+
+<section id="problem">
+  <div class="wrap">
+    <h2>When context separates from content</h2>
+    <p class="lead">Knowledge objects move. The context that makes them interpretable usually doesn't.</p>
+    <p>A graduate student records an oral history. The transcript carries consent terms, a do-not-quote request, and contextual notes. A semester later, an excerpt is pasted into an AI assistant to draft an abstract. The abstract is summarized for a newsletter. A sentence from the newsletter appears in a grant report.</p>
+    <p class="vh">Illustration: as the material moves from the transcript to an AI abstract to a newsletter to a grant report, the interpretive conditions attached to it fall away. Four of four remain at the transcript, two at the AI abstract, and none at the newsletter or the grant report.</p>
+    <div class="chain" aria-hidden="true">
+      <div class="chain-step"><div class="cs-title">transcript</div><div class="cs-dots"><span class="cdot on"></span><span class="cdot on"></span><span class="cdot on"></span><span class="cdot on"></span></div></div>
+      <div class="chain-step"><div class="cs-title">AI abstract</div><div class="cs-dots"><span class="cdot off"></span><span class="cdot on"></span><span class="cdot off"></span><span class="cdot on"></span></div></div>
+      <div class="chain-step"><div class="cs-title">newsletter</div><div class="cs-dots"><span class="cdot off"></span><span class="cdot off"></span><span class="cdot off"></span><span class="cdot off"></span></div></div>
+      <div class="chain-step"><div class="cs-title">grant report</div><div class="cs-dots"><span class="cdot off"></span><span class="cdot off"></span><span class="cdot off"></span><span class="cdot off"></span></div></div>
+    </div>
+    <p class="chain-caption">Every step was reasonable. By the fourth, the words still circulate, but the consent terms, the do-not-quote request, and the notes that governed them are gone, and no one downstream knows they ever existed. The <a href="/white-paper" style="color:var(--ink-soft)">white paper</a> names the failure: compression without portable interpretive obligation. <button class="replay" id="chainReplay">Replay ↻</button></p>
+    <div id="gap" style="margin-top:36px;padding-top:28px;border-top:1px solid var(--line)">
+      <div class="shead">A file-level gap</div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:4px">
+        <div style="flex:1;min-width:220px">
+          <div style="font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--moss);margin-bottom:6px">Software has version control</div>
+          <p style="font-size:.95rem;margin:0">Software history is preserved through version control, commits, diffs, and inspectable change records.</p>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <div style="font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:6px">Knowledge materials often lack one</div>
+          <p style="font-size:.95rem;margin:0">Knowledge work has no equally ordinary habit for carrying the history of an idea as it moves through systems.</p>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <div style="font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px">The AI boundary</div>
+          <p style="font-size:.95rem;margin:0">When knowledge crosses an AI boundary, its origin, fidelity limits, and context often stop traveling reliably. The content may remain usable, while the object's interpretive conditions become harder to inspect. Transparency obligations under the EU AI Act arrive in August 2026; a sealed file gives disclosures a durable, checkable place to live.</p>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:26px;font-size:1.08rem"><strong>In a KNOBE, selected context is stored inside the file, so it can travel with the work.</strong></p>
+  </div>
+</section>
+
+<section id="related">
+  <div class="wrap">
+    <h2>What changes</h2>
+    <ul class="gains" role="list">
+      <li><span class="gn" aria-hidden="true">1</span><span class="gt"><strong>Context remains attached.</strong> Source, transformations, consent terms, fidelity limits, accessibility lineage, and any AI involvement can be recorded inside the file, alongside the readable text.</span></li>
+      <li><span class="gn" aria-hidden="true">2</span><span class="gt"><strong>Use conditions are visible.</strong> A later reader, or a cooperating tool, can inspect the declared terms before reuse, quotation, transformation, publication, or AI processing. Whether to act on them stays with the reader or the tool.</span></li>
+      <li><span class="gn" aria-hidden="true">3</span><span class="gt"><strong>The file can leave the system.</strong> A KNOBE can carry selected provenance outside the database, repository, LMS, or platform where it was created, and the same file still opens in a plain-text editor or a screen reader. A repository preserves materials within a managed environment; a KNOBE helps an individual file carry selected context when it leaves one.</span></li>
+      <li><span class="gn" aria-hidden="true">4</span><span class="gt"><strong>Verification is advisory.</strong> The published verifier compares the file to its sealed payload and reports whether the record still matches. A mismatch is a reason to inspect the file, not a barrier to reading it, and the text stays readable either way.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="format">
+  <div class="wrap">
+    <h2>One file, three layers</h2>
+    <p>A KNOBE is a single plain-text file. A human reads it in any editor. A machine decodes its payload. A verifier checks its payload hash.</p>
+    <div class="layers">
+      <div class="layer l1" data-layer="1"><div class="ll">layer 1 · yaml frontmatter</div><div class="ld">Human-scannable metadata: title, author, license, date.</div></div>
+      <div class="layer l2" data-layer="2"><div class="ll">layer 2 · markdown body</div><div class="ld">The document itself. No schema. No special software required to read it.</div></div>
+      <div class="layer l3" data-layer="3"><div class="ll">layer 3 · base64 json payload</div><div class="ld">Attribution, source context, transformation history, fidelity limits, use conditions, accessibility lineage, and a SHA-256 integrity hash.</div></div>
+    </div>
+    <div class="demo" id="demo" hidden>
+      <div class="demo-head">A real sealed KNOBE. Verify it in place.</div>
+      <pre class="demo-file fm" id="demoFm" aria-label="Layer 1: YAML frontmatter"></pre>
+      <pre class="demo-file dbody" id="demoBody" aria-label="Layer 2: markdown body"></pre>
+      <pre class="demo-file payload" id="demoPayload" aria-label="Layer 3: sealed payload"></pre>
+      <div>
+        <button class="demo-btn" id="demoVerify" type="button">Verify</button>
+        <button class="demo-btn ghost" id="demoTamper" type="button" hidden>Tamper &amp; re-verify</button>
+        <button class="demo-btn ghost" id="demoReset" type="button" hidden>Reset</button>
+      </div>
+      <div id="demoVerdict" class="demo-verdict" role="status" hidden></div>
+      <p class="demo-note">The check runs in your browser with <a class="inline" href="/knobe-core.js">knobe-core.js</a>; nothing is uploaded. A verified seal proves integrity, not truth.</p>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<section id="grove">
+  <div class="wrap">
+    <a class="grove-callout" href="/grove/" aria-labelledby="gcTitle">
+      <div class="gc-main">
+        <div class="gc-kicker">Optional · learn by doing</div>
+        <div class="gc-title" id="gcTitle">New to KNOBE? Walk the Grove</div>
+        <p class="gc-desc">A short, guided path that teaches the format by building one real sealed <code>.knobe.md</code> with you: no login, nothing to install. It's a friendly way to dig in and learn the idea, not the standard or fastest way to make a KNOBE. <strong>Note:</strong> Grove may take up to a minute to load on first visit.</p>
+      </div>
+      <span class="gc-cta">Enter Grove →</span>
+    </a>
+  </div>
+</section>
+
+<section id="sitemap">
+  <div class="wrap wide">
+    <div class="shead">Next steps</div>
+    <div class="intent">
+      <div class="intent-card">
+        <p class="intent-q">Understand the design</p>
+        <p class="intent-d">The full conceptual case, or a hands-on walk.</p>
+        <a href="/white-paper">White paper →</a><a href="/grove/">Grove →</a><a href="/studio/">Studio →</a>
+      </div>
+      <div class="intent-card">
+        <p class="intent-q">Evaluate a use case</p>
+        <p class="intent-d">Domain guidance, plus the limits and the comparisons.</p>
+        <a href="/education-profile">Education →</a><a href="/teaching">Teaching →</a><a href="/enterprise-profile">Enterprise →</a><a href="/government-profile">Government →</a><a href="/research-profile">Research →</a><a href="/threat-model">Threat model →</a><a href="/related-work">Related work →</a>
+      </div>
+      <div class="intent-card">
+        <p class="intent-q">Implement or integrate</p>
+        <p class="intent-d">The normative rules, the verifiers, the corpus.</p>
+        <a href="/spec">Spec →</a><a href="/lens">Lens →</a><a href="/mcp">MCP server →</a><a href="/test-vectors/">Test vectors →</a><a href="/implementations">Implementations →</a><a href="https://github.com/KnobeOne/knobe-protocol">GitHub →</a>
+      </div>
+    </div>
+    <details class="smap-details">
+      <summary>Every page on this site, by category</summary>
+      <div style="margin-top:14px">
+      <div class="smap">
+      <div>
+        <div class="smap-head">Protocol</div>
+        <a href="/spec" class="smap-link">Spec</a>
+        <a href="/white-paper" class="smap-link">White paper</a>
+        <a href="/threat-model" class="smap-link">Threat model</a>
+        <a href="/related-work" class="smap-link">Related work</a>
+      </div>
+      <div>
+        <div class="smap-head">Tools</div>
+        <a href="/studio/" class="smap-link">Studio</a>
+        <a href="/lens" class="smap-link">Lens</a>
+        <a href="/mcp" class="smap-link">MCP server</a>
+        <a href="/grove/" class="smap-link">Grove</a>
+        <a href="/test-vectors/" class="smap-link">Test vectors</a>
+      </div>
+      <div>
+        <div class="smap-head">Uses</div>
+        <a href="/education-profile" class="smap-link">Education</a>
+        <a href="/teaching" class="smap-link">Teaching</a>
+        <a href="/government-profile" class="smap-link">Government</a>
+        <a href="/enterprise-profile" class="smap-link">Enterprise</a>
+        <a href="/research-profile" class="smap-link">Research</a>
+        <a href="/accessibility" class="smap-link">Accessibility</a>
+      </div>
+      <div>
+        <div class="smap-head">Project</div>
+        <a href="/about" class="smap-link">About</a>
+        <a href="/downloads" class="smap-link">Downloads</a>
+        <a href="https://github.com/KnobeOne/knobe-protocol" class="smap-link">GitHub</a>
+        <a href="mailto:david@knobe.org" class="smap-link">Contact</a>
+      </div>
+    </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<div id="kPreview" class="kp-overlay" role="dialog" aria-modal="true" aria-labelledby="kpTitle" hidden>
+  <div class="kp-panel">
+    <div class="kp-head">
+      <span id="kpTitle" class="kp-title"></span>
+      <button id="kpClose" class="kp-close" aria-label="Close preview">✕</button>
+    </div>
+    <div class="kp-body" id="kpBody"></div>
+    <div class="kp-foot">
+      <span class="kp-foot-note">Human-readable body of a <code>.knobe.md</code> file. Payload and hash not shown.</span>
+      <a id="kpDl" href="#" class="kp-foot-dl">↓ .knobe.md</a>
+    </div>
+  </div>
+</div>
+
+<section class="viz-cta" aria-label="Visual overview">
+  <div class="wrap">
+    <div class="shead">The whole picture</div>
+    <a href="/why-context">See how it fits together: a one-page visual overview &#8594;</a>
+    <p class="sub">The three-layer file, five domain workflows, and why context matters.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="frow">
+      <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 128 128" aria-hidden="true" style="vertical-align:-3px;margin-right:5px"><defs><radialGradient id="kg" cx="50%" cy="40%"><stop offset="0%" stop-color="#fff" stop-opacity=".5"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="128" height="128" rx="24" fill="#7c3aed"/><rect width="128" height="128" rx="24" fill="url(#kg)" opacity=".2"/><g transform="translate(64,64)" fill="#fff"><rect x="-16" y="-42" width="22" height="84" rx="3"/><path d="M6-22L6-10 32-42 46-34 20-2 8-2Z"/><path d="M6 22L6 10 32 42 46 34 20 2 8 2Z"/><circle cx="14" cy="0" r="13" fill="#7c3aed"/></g></svg>KNOBE Protocol v1 · CC BY 4.0</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function syncLayer(n, on){
+    document.querySelectorAll('.fs-layer[data-layer="'+n+'"], .layer[data-layer="'+n+'"]').forEach(function(el){ el.classList.toggle('lit', on); });
+  }
+  document.querySelectorAll('.fs-layer, .layer[data-layer]').forEach(function(el){
+    var n = el.getAttribute('data-layer');
+    el.addEventListener('mouseenter', function(){ syncLayer(n, true); });
+    el.addEventListener('mouseleave', function(){ syncLayer(n, false); });
+    el.addEventListener('click', function(){ [1,2,3].forEach(function(k){ syncLayer(k,false); }); syncLayer(n,true); });
+  });
+
+  var chain = document.querySelector('.chain');
+  function playChain(){
+    if(!chain) return;
+    var steps = chain.querySelectorAll('.chain-step');
+    steps.forEach(function(step){ step.querySelectorAll('.cdot').forEach(function(d){ d.classList.remove('fading'); d.className='cdot on'; }); });
+    if(reduce){ applyFinal(); return; }
+    var loss=[[],[0,2],[0,1,2,3],[0,1,2,3]];
+    steps.forEach(function(step,si){
+      var dots=step.querySelectorAll('.cdot');
+      setTimeout(function(){
+        loss[si].forEach(function(di){ if(dots[di]) dots[di].classList.add('fading'); });
+        setTimeout(function(){ loss[si].forEach(function(di){ if(dots[di]) dots[di].className='cdot off'; }); },600);
+      }, 600*si);
+    });
+  }
+  function applyFinal(){
+    var steps=chain.querySelectorAll('.chain-step'); var loss=[[],[0,2],[0,1,2,3],[0,1,2,3]];
+    steps.forEach(function(step,si){ var dots=step.querySelectorAll('.cdot'); loss[si].forEach(function(di){ if(dots[di]) dots[di].className='cdot off'; }); });
+  }
+  if(chain && 'IntersectionObserver' in window){
+    var seen=false;
+    new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !seen){ seen=true; playChain(); } }); }, {threshold:.5}).observe(chain);
+  } else { applyFinal(); }
+  var rb=document.getElementById('chainReplay'); if(rb) rb.addEventListener('click', playChain);
+
+  var runBtn=document.getElementById('runVerify'), out=document.getElementById('verifyOut');
+  if(runBtn && out){
+    var lines=[
+      '<div style="margin-top:8px"><span class="tl">title:             </span><span class="tv">Oral history: interview 04</span></div>',
+      '<div><span class="tl">spec_version:      </span><span class="tv">1.0</span></div>',
+      '<div><span class="tl">quarantine_status: </span><span class="tv">quarantine</span></div>',
+      '<div><span class="tl">computed_hash:     </span><span class="tv">a6c5de4313586170c7600cb9065a858d…</span></div>',
+      '<div><span class="tl">stored_hash:       </span><span class="tv">a6c5de4313586170c7600cb9065a858d…</span></div>',
+      '<div><span class="tl">status:            </span><span class="tm">verified</span></div>',
+      '<div><span class="tl">body_hash:         </span><span class="tm">match</span></div>',
+      '<div style="margin-top:8px"><span class="tn">integrity verified. Integrity is not truth. Inspect before trusting.</span></div>'
+    ];
+    runBtn.addEventListener('click', function(){
+      runBtn.disabled=true; out.innerHTML='';
+      if(reduce){ out.innerHTML=lines.join(''); runBtn.disabled=false; runBtn.textContent='▸ Run again'; return; }
+      var i=0;(function next(){ if(i>=lines.length){ runBtn.disabled=false; runBtn.textContent='▸ Run again'; return; } out.insertAdjacentHTML('beforeend',lines[i]); i++; setTimeout(next,180); })();
+    });
+  }
+
+  document.querySelectorAll('.copybtn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text=btn.getAttribute('data-copy').replace(/&#10;/g,'\n').replace(/&quot;/g,'"');
+      var done=function(){ var l=btn.textContent; btn.textContent='copied ✓'; btn.classList.add('copied'); setTimeout(function(){ btn.textContent=l; btn.classList.remove('copied'); },1400); };
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done,done); }
+      else { var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); done(); }
+    });
+  });
+
+})();
+</script>
+<script>
+/* KNOBE preview panel */
+(function(){
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function inl(s){
+    return s.replace(/`([^`]+)`/g,function(_,c){ return '<code>'+esc(c)+'</code>'; })
+            .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+            .replace(/\*([^*]+)\*/g,'<em>$1</em>');
+  }
+  function mdToHtml(md){
+    var lines=md.split('\n'),out=[],inCode=false,inPre=false,inUl=false,inOl=false,inBq=false;
+    function closeList(){ if(inUl){out.push('</ul>');inUl=false;} if(inOl){out.push('</ol>');inOl=false;} }
+    function closeBq(){ if(inBq){out.push('</blockquote>');inBq=false;} }
+    function closePre(){ if(inPre){ while(out.length&&out[out.length-1]===''){out.pop();} out.push('</code></pre>'); inPre=false; } }
+    lines.forEach(function(line){
+      if(/^```/.test(line)){ closeList(); closeBq(); closePre(); if(inCode){out.push('</code></pre>');inCode=false;}else{out.push('<pre><code>');inCode=true;} return; }
+      if(inCode){ out.push(esc(line)); return; }
+      if(inPre){
+        if(/^    /.test(line)){ out.push(esc(line.replace(/^    /,''))); return; }
+        if(line.trim()===''){ out.push(''); return; }
+        closePre();
+      } else if(/^    \S/.test(line)){ closeList(); closeBq(); out.push('<pre><code>'); inPre=true; out.push(esc(line.replace(/^    /,''))); return; }
+      if(/^### /.test(line)){ closeList(); closeBq(); out.push('<h3>'+inl(esc(line.slice(4)))+'</h3>'); return; }
+      if(/^## /.test(line)){ closeList(); closeBq(); out.push('<h2>'+inl(esc(line.slice(3)))+'</h2>'); return; }
+      if(/^# /.test(line)){ closeList(); closeBq(); out.push('<h1>'+inl(esc(line.slice(2)))+'</h1>'); return; }
+      if(/^---+$/.test(line.trim())){ closeList(); closeBq(); out.push('<hr>'); return; }
+      var bq=line.match(/^> ?(.*)$/); if(bq){ closeList(); if(!inBq){out.push('<blockquote>');inBq=true;} out.push(inl(esc(bq[1]))+' '); return; }
+      closeBq();
+      var ulm=line.match(/^[-*] (.*)$/); if(ulm){ if(!inUl){out.push('<ul>');inUl=true;} out.push('<li>'+inl(esc(ulm[1]))+'</li>'); return; }
+      var olm=line.match(/^\d+\. (.*)$/); if(olm){ if(!inOl){out.push('<ol>');inOl=true;} out.push('<li>'+inl(esc(olm[1]))+'</li>'); return; }
+      closeList();
+      if(line.trim()==='') out.push('');
+      else out.push('<p>'+inl(esc(line))+'</p>');
+    });
+    closeList(); closeBq(); closePre();
+    return out.join('\n');
+  }
+  function parseKnobe(text){
+    var body=text;
+    if(text.slice(0,3)==='---'){
+      var end=text.indexOf('\n---',3);
+      if(end!==-1) body=text.slice(end+4);
+    }
+    /* Strip the real payload: the LAST newline-anchored marker, per protocol
+       ("prefer the last well-formed payload block"). Indented example markers
+       inside the body (e.g. the illustration in section 3) are ignored. */
+    var re=/(?:^|\n)-----BEGIN KNOBE B64-----/g, m, last=-1;
+    while((m=re.exec(body))!==null){ last=m.index; }
+    if(last!==-1) body=body.slice(0,last);
+    return body.trim();
+  }
+  var overlay=document.getElementById('kPreview');
+  var titleEl=document.getElementById('kpTitle');
+  var bodyEl=document.getElementById('kpBody');
+  var dlEl=document.getElementById('kpDl');
+  if(!overlay) return;
+  function openPreview(src,title){
+    titleEl.textContent=title;
+    bodyEl.innerHTML='<p style="color:var(--ink-faint);font-family:-apple-system,system-ui,sans-serif;font-size:.9rem">Loading…</p>';
+    dlEl.href=src; dlEl.textContent='↓ '+src.split('/').pop();
+    overlay.removeAttribute('hidden');
+    document.body.style.overflow='hidden';
+    fetch(src).then(function(r){return r.text();}).then(function(txt){
+      bodyEl.innerHTML=mdToHtml(parseKnobe(txt));
+    }).catch(function(){
+      bodyEl.innerHTML='<p style="color:var(--warn)">Could not load file.</p>';
+    });
+  }
+  function closePreview(){
+    overlay.setAttribute('hidden','');
+    document.body.style.overflow='';
+  }
+  document.querySelectorAll('.kp-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){ openPreview(btn.getAttribute('data-src'),btn.getAttribute('data-title')); });
+  });
+  var cl=document.getElementById('kpClose'); if(cl) cl.addEventListener('click',closePreview);
+  overlay.addEventListener('click',function(e){ if(e.target===overlay) closePreview(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!overlay.hasAttribute('hidden')) closePreview(); });
+})();
+</script>
+<script type="module">
+import { verify } from '/knobe-core.js';
+const $=(q)=>document.querySelector(q);
+let original=null, displayed=null;
+function b64wrap(bytes){let bin='';for(const b of bytes)bin+=String.fromCharCode(b);const b=btoa(bin);const out=[];for(let i=0;i<b.length;i+=76)out.push(b.slice(i,i+76));return out.join('\n');}
+function split(t){const m=t.match(/^(---\n[\s\S]*?\n---\n)([\s\S]*?)(-----BEGIN KNOBE B64-----[\s\S]*?-----END KNOBE B64-----\s*)$/);return m?{fm:m[1],body:m[2],payload:m[3]}:{fm:'',body:'',payload:t};}
+function render(){const L=split(displayed);$('#demoFm').textContent=L.fm.trim();$('#demoBody').textContent=L.body.trim();const p=L.payload.trim();$('#demoPayload').textContent=p.length>640?p.slice(0,640)+'\n… (truncated for display; the full block is what gets verified)':p;}
+function verdict(cls,text){const v=$('#demoVerdict');v.hidden=false;v.className='demo-verdict '+cls;v.textContent=text;}
+async function runVerify(){const r=await verify(displayed);
+  if(r.state==='verified'){verdict('pass','✓ Integrity verified: the payload matches its seal.');$('#demoTamper').hidden=false;}
+  else if(r.state==='verified-body-modified'){verdict('pass','✓ Payload seal intact: the readable body was changed after sealing.');}
+  else if(r.state==='failed'){verdict('fail','✕ Modified since sealing: the check detected the changed character.');$('#demoReset').hidden=false;}
+  else{verdict('fail','✕ Unreadable: this file cannot be evaluated as a KNOBE.');$('#demoReset').hidden=false;}}
+$('#demoVerify').addEventListener('click',runVerify);
+$('#demoTamper').addEventListener('click',async()=>{
+  const m=displayed.match(/-----BEGIN KNOBE B64-----\n([\s\S]*?)\n-----END KNOBE B64-----/);if(!m)return;
+  const bytes=Uint8Array.from(atob(m[1].replace(/\s+/g,'')),c=>c.charCodeAt(0));
+  const json=new TextDecoder().decode(bytes);
+  const tampered=json.replace(/("title":")(.)/,(s,a,c)=>a+(c==='X'?'Y':'X'));
+  const b64=b64wrap(new TextEncoder().encode(tampered));
+  displayed=displayed.replace(m[0],'-----BEGIN KNOBE B64-----\n'+b64+'\n-----END KNOBE B64-----');
+  render();await runVerify();$('#demoTamper').hidden=true;$('#demoReset').hidden=false;});
+$('#demoReset').addEventListener('click',()=>{displayed=original;render();$('#demoVerdict').hidden=true;$('#demoTamper').hidden=true;$('#demoReset').hidden=true;});
+try{const res=await fetch('/knobe-education-reading.knobe.md');if(res.ok){original=displayed=await res.text();render();$('#demo').hidden=false;}}catch{}
+</script>
+</body>
+</html>
