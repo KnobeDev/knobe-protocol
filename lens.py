@@ -55,7 +55,7 @@ Exit codes:
   1  status verified/verified-body-modified but conformance invalid, OR status failed
   2  status unreadable, OR a usage/file error
 """
-import sys, re, json, base64, hashlib, unicodedata, datetime
+import sys, re, json, math, base64, hashlib, unicodedata, datetime
 
 SUPPORTED_SPEC_VERSIONS = {"1.0"}
 
@@ -100,6 +100,28 @@ def _no_duplicate_keys(pairs):
 
 def _reject_constant(token):
     raise NonJSONConstantError(token)
+
+
+def _finite_float(lexeme):
+    """parse_float hook: a float lexeme that overflows (e.g. 1e400) parses to
+    inf, which has no canonical form; reject it like NaN/Infinity."""
+    value = float(lexeme)
+    if math.isinf(value):
+        raise NonJSONConstantError(lexeme)
+    return value
+
+
+def _has_lone_surrogate(obj):
+    """True if any key or string value holds an unpaired surrogate (from a
+    \\uD800-style escape). Such text cannot be UTF-8 encoded, so it can be
+    neither canonicalized nor printed; reject before hashing or display."""
+    if isinstance(obj, str):
+        return any(0xD800 <= ord(ch) <= 0xDFFF for ch in obj)
+    if isinstance(obj, dict):
+        return any(_has_lone_surrogate(k) or _has_lone_surrogate(v) for k, v in obj.items())
+    if isinstance(obj, list):
+        return any(_has_lone_surrogate(v) for v in obj)
+    return False
 
 
 def normalize_body(text):
@@ -337,7 +359,8 @@ def verify(path):
         decoded = base64.b64decode("".join(blocks[-1].split()), validate=True)
         text = decoded.decode("utf-8")
         payload = json.loads(text, object_pairs_hook=_no_duplicate_keys,
-                             parse_constant=_reject_constant)
+                             parse_constant=_reject_constant,
+                             parse_float=_finite_float)
     except DuplicateKeyError as e:
         return _unreadable(f"payload contains duplicate JSON key: {safe(str(e))} "
                            f"(ambiguous; rejected)", blocks)
@@ -352,6 +375,12 @@ def verify(path):
         return _unreadable(f"payload is not a JSON object "
                            f"(got {type(payload).__name__})", blocks)
 
+    # Unpaired surrogates anywhere (including payload_hash, which the hash
+    # excludes) cannot be encoded for hashing or output -> reject.
+    if _has_lone_surrogate(payload):
+        return _unreadable("payload contains characters that cannot be UTF-8 "
+                           "encoded (e.g. an unpaired surrogate); rejected", blocks)
+
     # P0-4: NFC key collisions make canonicalization ambiguous -> reject
     collisions = find_nfc_collisions(payload)
     if collisions:
@@ -361,7 +390,7 @@ def verify(path):
     # P0-5: unsupported spec_version -> unreadable (cannot honestly verify a
     # file sealed under semantics this v1 verifier does not implement).
     sv = payload.get("spec_version")
-    if sv is not None and sv not in SUPPORTED_SPEC_VERSIONS:
+    if sv is not None and not (isinstance(sv, str) and sv in SUPPORTED_SPEC_VERSIONS):
         r = _unreadable(f"unsupported spec_version: {safe(str(sv))}", blocks, payload=payload)
         r["conformance_issues"] = [
             f"unsupported spec_version: {safe(str(sv))} "
@@ -500,7 +529,10 @@ if __name__ == "__main__":
         print(USAGE, file=sys.stderr)
         sys.exit(2)
 
-    r = verify(args[0])
+    try:
+        r = verify(args[0])
+    except Exception as e:  # defense in depth: hostile input must never traceback
+        r = _unreadable(f"verifier error ({type(e).__name__}); rejected", [])
     if as_json:
         out = {k: r.get(k) for k in (
             "state", "computed", "stored", "body_verified", "conformance",
