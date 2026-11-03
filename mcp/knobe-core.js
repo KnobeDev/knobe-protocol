@@ -489,7 +489,7 @@ function findBodyStart(pre) {
 // ---------------------------------------------------------------------------
 
 function b64decodeStrict(s) {
-  const clean = s.replace(/\s+/gu, ""); // Python: "".join(block.split())
+  const clean = s.replace(/[ \t\r\n]+/g, ""); // ASCII whitespace only (ERRATA)
   if (clean.length % 4 !== 0) throw new Error("invalid base64 length");
   if (!/^[A-Za-z0-9+/]*={0,2}$/.test(clean)) throw new Error("invalid base64 alphabet");
   const bin = atob(clean);

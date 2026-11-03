@@ -76,8 +76,10 @@ CANONICAL_VOCAB = {
     "privacy_level": {"public","internal","sensitive","restricted"},
     "identity_status": {"declared","signed"},
 }
-ISO_DATE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
-HEX64 = re.compile(r'^[0-9a-f]{64}$')
+# \Z, not $: Python's $ also matches before a trailing newline. [0-9], not \d:
+# \d matches every Unicode decimal digit.
+ISO_DATE = re.compile(r'^[0-9]{4}-[0-9]{2}-[0-9]{2}\Z')
+HEX64 = re.compile(r'^[0-9a-f]{64}\Z')
 
 
 class DuplicateKeyError(ValueError):
@@ -334,7 +336,9 @@ def verify(path):
 
     # --- decode + parse the last block, rejecting ambiguous/illegal JSON ---
     try:
-        decoded = base64.b64decode("".join(blocks[-1].split()), validate=True)
+        # Only ASCII whitespace may wrap a block (str.split() would also drop
+        # U+001C-U+001F, U+0085 and other Unicode spaces).
+        decoded = base64.b64decode(re.sub(r"[ \t\r\n]", "", blocks[-1]), validate=True)
         text = decoded.decode("utf-8")
         payload = json.loads(text, object_pairs_hook=_no_duplicate_keys,
                              parse_constant=_reject_constant)
