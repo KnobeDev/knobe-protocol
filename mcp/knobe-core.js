@@ -307,7 +307,10 @@ export function parseJSONStrict(text) {
       // Beyond 2^53, Number loses precision; BigInt keeps Python-int parity.
       return Number.isSafeInteger(n) ? n : BigInt(lexeme);
     }
-    return new KFloat(Number(lexeme));   // preserve float-ness for canon parity
+    const n = Number(lexeme);
+    // An overflowing lexeme (e.g. 1e400) has no canonical form: reject it like NaN.
+    if (!Number.isFinite(n)) fail("number out of range");
+    return new KFloat(n);   // preserve float-ness for canon parity
   }
 
   const v = parseValue();
