@@ -4,7 +4,7 @@
 [![knobe-mcp on npm](https://img.shields.io/npm/v/knobe-mcp?label=knobe-mcp)](https://www.npmjs.com/package/knobe-mcp)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21298913.svg)](https://doi.org/10.5281/zenodo.21298913)
 
-**An open, plain-text protocol for knowledge objects that keep their context when they move.**
+**Portable knowledge objects: plain-text files that carry the knowing, who made them, under what terms, with what limits, wherever they move.**
 
 A KNOBE is a single markdown file with three layers:
 
