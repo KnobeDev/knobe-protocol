@@ -43,6 +43,7 @@ nav.fd details{display:none}
 
 /* type */
 h1{font-size:48px;line-height:1.12;font-weight:normal;letter-spacing:-.015em;margin:0 0 28px}
+h1 .l2{display:block;margin-top:.4em}
 h2{font-size:30px;line-height:1.2;font-weight:normal;letter-spacing:-.01em;margin:0 0 20px}
 h3{font-size:1.15rem;font-weight:bold;margin:0 0 8px}
 p{margin:0 0 18px}
