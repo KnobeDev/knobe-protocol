@@ -203,10 +203,10 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
 }</pre>
     <ul>
       <li><strong>Claude Desktop</strong>: add the block to <code>claude_desktop_config.json</code> (Settings &#8594; Developer &#8594; Edit Config).</li>
-      <li><strong>Claude Code</strong>: <code>claude mcp add knobe -- node /absolute/path/to/knobe-protocol/mcp/server.mjs</code></li>
+      <li><strong>Claude Code</strong>: <code>claude mcp add knobe -- npx -y knobe-mcp</code></li>
       <li><strong>Cursor / Windsurf / others</strong>: add the same server block to the client's MCP configuration file.</li>
     </ul>
-    <p>Requires Node 20 or later. Once the package is published to npm as <code>knobe-mcp</code>, the command becomes <code>npx -y knobe-mcp</code> with no checkout needed.</p>
+    <p>Requires Node 20 or later. The package is published to npm as <code>knobe-mcp</code>, so no checkout is needed; to run from a local checkout instead, point the command at <code>mcp/server.mjs</code>.</p>
 
     <h2>Data flow and verification</h2>
     <p>Files are read from the paths you pass (or from pasted text), processed in the server process, and optionally written to a path you name. Nothing is transmitted anywhere; the server has no network code.</p>

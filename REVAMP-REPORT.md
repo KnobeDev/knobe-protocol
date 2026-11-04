@@ -38,7 +38,7 @@ Branch `front-door`, seven commits on top of `main` at `c7ada1f`. Built against 
 2. **Scene wording.** The oral-history example was replaced by three scenes in `site/stage.js` (KNOBE_SCENES): a house, a job, a product, a study (pilot dataset to policy brief), an agent (pricing memo to automated reply). Station names, chips, captions and the two verdict stamps per scene are all in that one array. The front door opens on the house, /make on the study, /build on the agent, /decide on the job; /policy carries the job case as prose above the obligation map. If you change the house chips or verdicts, regenerate the share cards.
 3. **Acronym expansion in the footer.** No preference given; omitted. The footer is in `site/index.html` and in the generator's `FOOT` template for the other pages.
 4. **Door framing paragraphs** (`site/make.html`, `site/build.html`, `site/decide.html`, each marked `<!-- DAVID: framing paragraph drafted by Claude; edit freely -->`).
-5. **Policy obligation map** (`site/policy.html`). The Decree 179/2026 rows rest on PwC Italia and Il Sole 24 ORE reporting. Remove the amber under-review note once confirmed against the decree text.
+5. **Policy obligation map** (`site/policy.html`). The Decree 179/2026 rows were checked against the decree text (Gazzetta Ufficiale n. 234, 8 Oct 2026): art. 41(1) and 41(3) confirm the human-decision rule and the two-part explanation right; the "contribution of human intervention" element appears only in secondary coverage and its row now says so. The amber note states this and comes off after your final read.
 6. **Manifesto text** (`site/portability.html`). Two em dashes in the supplied draft were replaced with commas, in the heading "Reverse the dependency, without abolishing the platform" and in "what remains ours, and what remains intelligible". Revert if you prefer the dashes. The eyebrow calls it a working publication draft; change when it is final.
 7. **Zenodo and a DOI** for the manifesto are not part of this build.
 
@@ -53,7 +53,7 @@ The all-paper page read calm to David ("like picking out a mattress"), so the li
 ## Findings while building
 
 - **Studio works.** The review's note that Studio reported "engine could not be loaded" was an artifact of fetching the page without a browser. In headless Chromium it loads with no console errors.
-- **`/mcp` is stale on one line.** It still says "Once the package is published to npm as knobe-mcp, the command becomes npx -y knobe-mcp". The package is published (badge on the README), so that sentence and the preceding `node /absolute/path` command can be replaced with the npm form. Not changed, since the brief said not to touch the docs layer.
+- **`/mcp` stale line fixed.** The Claude Code install command now uses the published npm package (`npx -y knobe-mcp`), with the local-checkout form mentioned as the alternative.
 - **`/why-context`** exists, is in the sitemap, and is not in the docs nav. Left alone.
 - **Pretty URLs.** The site relies on Netlify mapping `/make` to `/make.html`. The new pages follow that convention; the local static server used for checks needed the `.html` suffix.
 

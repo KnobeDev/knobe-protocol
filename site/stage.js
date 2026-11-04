@@ -5,7 +5,7 @@
 var KNOBE_SCENES=[
   { key:'home', label:'A house', stations:['Inspection report','Listing summary','Buyer\u2019s AI brief','Loan file'],
     chips:['Inspector: R. Ortiz','Inspected in June','Attic not entered','Roof not assessed'],
-    caption:'A home inspector writes up a house. The report names the inspector, the June date, and two limits: the attic was not entered and the roof was not assessed. The listing agent summarizes it. The buyer asks an AI assistant for a brief. The brief goes into the loan file. Every step was reasonable. By the fourth, the file says the roof is in good condition, and nobody downstream knows the roof was never looked at.',
+    caption:'A home inspector writes up a house, with two limits on the record: the attic was not entered, the roof was not assessed. The listing agent summarizes the report. The buyer asks an AI for a brief. The brief goes into the loan file. Every step was reasonable. By the fourth, nobody knows the roof was never looked at.',
     verdicts:{ without:'\u201cRoof in good condition.\u201d', withk:'\u201cRoof not assessed. Attic not entered.\u201d' } },
   { key:'work', label:'A job', stations:['Manager\u2019s notes','HR summary','AI-drafted reference','Hiring decision'],
     chips:['Written by Priya','One quarter only','Disputed by Sam','Draft, not final'],
