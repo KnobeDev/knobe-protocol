@@ -3,16 +3,26 @@
    Without KNOBE: station 0 keeps all four conditions, station 1 keeps the first two, stations 2 and 3 keep none.
    With KNOBE: all four at every station, with a seal. */
 var KNOBE_SCENES=[
-  { key:'home', label:'A house', stations:['Inspection report','Listing summary','Buyer’s AI brief','Loan file'],
+  { key:'home', label:'A house', stations:['Inspection report','Listing summary','Buyer\u2019s AI brief','Loan file'],
     chips:['Inspector: R. Ortiz','Inspected in June','Attic not entered','Roof not assessed'],
     caption:'A home inspector writes up a house. The report names the inspector, the June date, and two limits: the attic was not entered and the roof was not assessed. The listing agent summarizes it. The buyer asks an AI assistant for a brief. The brief goes into the loan file. Every step was reasonable. By the fourth, the file says the roof is in good condition, and nobody downstream knows the roof was never looked at.',
     verdicts:{ without:'\u201cRoof in good condition.\u201d', withk:'\u201cRoof not assessed. Attic not entered.\u201d' } },
-  { key:'work', label:'A job', stations:['Manager’s notes','HR summary','AI-drafted reference','Hiring decision'],
+  { key:'work', label:'A job', stations:['Manager\u2019s notes','HR summary','AI-drafted reference','Hiring decision'],
     chips:['Written by Priya','One quarter only','Disputed by Sam','Draft, not final'],
-    caption:'A manager writes notes on one quarter of someone’s work. The notes are a draft, and the employee disputes a line. HR summarizes them. An AI drafts a reference from the summary. A hiring decision rests on the reference. Every step was reasonable. By the fourth, a disputed draft about one quarter reads as a settled judgment about a person.' },
+    caption:'A manager writes notes on one quarter of someone\u2019s work. The notes are a draft, and the employee disputes a line. HR summarizes them. An AI drafts a reference from the summary. A hiring decision rests on the reference. Every step was reasonable. By the fourth, a disputed draft about one quarter reads as a settled judgment about a person.',
+    verdicts:{ without:'\u201cConsistently underperforms.\u201d', withk:'\u201cDraft. One quarter. Disputed.\u201d' } },
   { key:'product', label:'A product', stations:['Lab test memo','Spec sheet','Retailer page','Support chatbot'],
-    chips:['Engineer: M. Lin','Batch 7 only','Tested at 20°C','Not for outdoor use'],
-    caption:'An engineer tests a device and writes a memo: batch 7 only, tested at 20°C, not for outdoor use. The spec sheet keeps the engineer’s name and the batch. The retailer page keeps neither limit. The support chatbot, answering from the retailer page, tells a customer it is fine outdoors. Every step was reasonable. The chatbot was not wrong about the page it read; the page had already lost the knowing.' }
+    chips:['Engineer: M. Lin','Batch 7 only','Tested at 20\u00b0C','Not for outdoor use'],
+    caption:'An engineer tests a device and writes a memo: batch 7 only, tested at 20\u00b0C, not for outdoor use. The spec sheet keeps the engineer\u2019s name and the batch. The retailer page keeps neither limit. The support chatbot, answering from the retailer page, tells a customer it is fine outdoors. Every step was reasonable. The chatbot was not wrong about the page it read; the page had already lost the knowing.',
+    verdicts:{ without:'\u201cYes, fine for outdoor use.\u201d', withk:'\u201cNot rated for outdoor use.\u201d' } },
+  { key:'research', label:'A study', stations:['Pilot dataset','Working paper','AI literature summary','Policy brief'],
+    chips:['Lead: Dr. A. Okafor','Pilot, n = 42','Not yet peer reviewed','Correlation, not cause'],
+    caption:'A research team runs a pilot: 42 participants, correlational, not yet peer reviewed. The working paper keeps the lead author and the sample size. An AI literature summary keeps neither caveat. A policy brief cites the summary. Every step was reasonable. By the fourth, a 42-person correlation reads as settled evidence that the treatment works.',
+    verdicts:{ without:'\u201cThe treatment works.\u201d', withk:'\u201cPilot, n = 42. Correlation only.\u201d' } },
+  { key:'agent', label:'An agent', stations:['Pricing memo','Agent A digest','Agent B proposal','Automated reply'],
+    chips:['From: finance team','Draft, not approved','Internal only','Expires Dec 31'],
+    caption:'A finance team drafts a pricing memo: a draft, internal only, expiring December 31. One agent digests it into the knowledge base. A second agent drafts a proposal from the digest. An automated reply sends a customer the number. After the memo, no person touches the chain. The quote is confident, current, and wrong in three ways the memo itself declared.',
+    verdicts:{ without:'\u201c$14 per seat, locked in.\u201d', withk:'\u201cDraft. Internal. Expires Dec 31.\u201d' } }
 ];
 function knobeStage(root, opts){
   var HOP=1800, SLIDE=600, scenes=opts.scenes||KNOBE_SCENES;
@@ -47,7 +57,7 @@ function knobeStage(root, opts){
   }
   function setCount(st,n){ var c=st.querySelector('.count'); c.textContent=n+' of 4'; c.className='count'+(n===4?' full':(n===0?' zero':'')); }
   function stamp(show){ var el=stage.querySelector('.stamp'); if(!el) return;
-    if(!show){ el.className='stamp'; el.textContent=''; return; }
+    if(!show||!scene.verdicts){ el.className='stamp'; el.textContent=''; return; }
     el.textContent=(act==='with'?scene.verdicts.withk:scene.verdicts.without);
     el.className='stamp show '+(act==='with'?'good':'bad'); }
   function moveTo(i){ var r=stations[i].getBoundingClientRect(), s=stage.getBoundingClientRect(); traveler.style.left=(r.left-s.left+r.width/2-15)+'px'; traveler.style.top=(r.top-s.top-19)+'px'; }
