@@ -38,7 +38,14 @@ var KNOBE_SCENES=[
     keeps:[[1,1,1,1],[1,0,1,0],[1,0,0,0],[0,0,0,0]],
     caption:'A finance team drafts a pricing memo: a draft, internal only, expiring December 31. Ingestion keeps the metadata it can see, the sender and the audience, and loses the two flags that lived in the prose: draft and expiry. The second agent keeps the source line. The reply keeps nothing. After the memo, no person touches the chain, and the quote that reaches the customer is confident, current, and wrong in three ways the memo itself declared.',
     verdicts:{ without:'“$14 per seat, locked in.”', withk:'“Draft. Internal. Expires Dec 31.”' },
-    impact:{ without:'A customer holds a quote no human approved, at a price that expired. The company’s first notice is the complaint, and the audit finds no step where anyone decided anything.', withk:'Agent B reads the sealed terms before proposing: draft, internal, expiring. The automated reply asks a human instead of quoting, which is what terms that travel are for.' } }
+    impact:{ without:'A customer holds a quote no human approved, at a price that expired. The company’s first notice is the complaint, and the audit finds no step where anyone decided anything.', withk:'Agent B reads the sealed terms before proposing: draft, internal, expiring. The automated reply asks a human instead of quoting, which is what terms that travel are for.' } },
+  { key:'access', label:'An adaptation', stations:['Accessible module','Team template','AI refresh','Published course'],
+    systems:['authoring tool','document platform','AI assistant','learning platform'],
+    chips:['Adapted by: T. Abara','Access work: 14 hours','Screen-reader tested','Charts described'],
+    keeps:[[1,1,1,1],[1,0,0,1],[1,0,0,0],[1,0,0,0]],
+    caption:'A low-vision designer builds a training module that actually works with a screen reader: fourteen hours of access work, every chart described in text. The team template keeps her name and her descriptions. The AI refresh keeps only the name, replacing described charts with new images and automatic alt text. The published course keeps the credit and asserts a checkbox. She is cited on a course she can no longer read.',
+    verdicts:{ without:'“Meets accessibility standards.”', withk:'“Tested. Described. By T. Abara.”' },
+    impact:{ without:'The next cohort’s screen-reader users hit unreadable charts, and the work is redone from scratch because nobody can see it was ever done. Fourteen hours of method, lost as styling.', withk:'The refresh inherits the descriptions and the testing record, so the new charts ship described. The adaptation is citable work by a named adapter, not invisible labor.' } }
 ];
 function knobeStage(root, opts){
   var HOP=1800, SLIDE=600, scenes=(opts&&opts.scenes)||KNOBE_SCENES;
