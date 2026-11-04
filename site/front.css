@@ -67,6 +67,7 @@ header.hero .btn-primary:hover{background:var(--night-accent);color:var(--night)
 header.hero .btn-ghost{border-color:rgba(207,230,214,.35);color:var(--night-ink)}
 header.hero .btn-ghost:hover{border-color:var(--night-accent);color:var(--night-accent)}
 header.hero .cta-row .alt{color:var(--night-soft)}
+header.hero .gloss{color:var(--night-soft);margin:-24px 0 36px;font-size:.88rem}
 header.hero .cta-row .alt a{color:var(--night-soft)}
 header.hero .equation{color:var(--night-ink)}
 header.hero .equation .k{color:var(--night-accent)}
@@ -99,9 +100,10 @@ header.hero .equation .op{color:var(--night-soft)}
 .stage-controls .scenes{margin-right:8px}
 .stage-controls .replay{margin-left:auto;background:none;border:0;color:var(--moss);cursor:pointer;font-family:var(--sans);font-size:.88rem;text-decoration:underline;text-underline-offset:2px}
 .stage{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:start;padding-bottom:34px}
-.station{position:relative;border:1px solid var(--line);border-radius:2px 8px 8px 8px;background:#fff;padding:16px 14px 12px;min-height:208px;box-shadow:0 1px 2px rgba(26,40,32,.06),0 10px 26px -14px rgba(26,40,32,.22)}
+.station{position:relative;border:1px solid var(--line);border-radius:2px 8px 8px 8px;background:#fff;padding:16px 14px 12px;min-height:226px;box-shadow:0 1px 2px rgba(26,40,32,.06),0 10px 26px -14px rgba(26,40,32,.22)}
 .station::before{content:"";position:absolute;top:0;left:0;width:0;height:0;border-style:solid;border-width:14px 14px 0 0;border-color:var(--paper-warm) transparent transparent transparent;filter:drop-shadow(1px 1px 0 rgba(26,40,32,.08))}
-.station .name{padding-bottom:8px;border-bottom:1px solid var(--paper-warm)}
+.station .name{padding-bottom:2px}
+.station .sys{font-family:var(--sans);font-size:.68rem;letter-spacing:.04em;color:var(--ink-faint);text-align:center;padding-bottom:8px;border-bottom:1px solid var(--paper-warm);margin-bottom:0}
 .station .name{font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:10px;text-align:center}
 .station .chips{display:flex;flex-direction:column;gap:6px;min-height:114px}
 .chip{font-family:var(--sans);font-size:.78rem;line-height:1;padding:6px 8px;border-radius:4px;border:1px solid var(--line);color:var(--ink-faint);background:transparent;transition:transform .7s cubic-bezier(.55,0,1,.45),opacity .7s ease-in,background .3s,color .3s,border-color .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -130,6 +132,7 @@ header.hero .equation .op{color:var(--night-soft)}
 @media(max-width:640px){.stage-controls{gap:8px}.stage-controls .replay{margin-left:0}}
 @media(max-width:760px){
   .stage{grid-template-columns:1fr;gap:14px;max-width:360px;margin:0 auto}
+  .station .sys{text-align:left;border-bottom:none;padding-bottom:0}
   .stamp{bottom:-26px}
   .station{min-height:0;display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center}
   .station .name{text-align:left;margin:0;grid-column:1}
