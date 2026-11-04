@@ -107,7 +107,7 @@ function knobeStage(root, opts){
     if(reduce){ finalFrame(); return; }
     for(var i=1;i<4;i++){ (function(i){ later(function(){ moveTo(i); later(function(){ arrive(i); if(i===3) later(function(){ stamp(true); atEnd=true; },SLIDE+700); },SLIDE); }, i*HOP); })(i); }
   }
-  function setActButtons(){ bWithout.setAttribute('aria-pressed',act==='without'); bWith.setAttribute('aria-pressed',act==='with'); }
+  function setActButtons(){ bWithout.setAttribute('aria-pressed',act==='without'); bWith.setAttribute('aria-pressed',act==='with'); root.setAttribute('data-act',act); }
   function chooseAct(a){ act=a; setActButtons(); play(); }
   function chooseScene(key){ scene=scenes.filter(function(s){ return s.key===key; })[0]||scenes[0]; act='without'; setActButtons(); build(); play(); }
   bWithout.addEventListener('click',function(){ chooseAct('without'); });
@@ -115,7 +115,7 @@ function knobeStage(root, opts){
   replay.addEventListener('click',play);
   sceneBtns.forEach(function(b){ b.addEventListener('click',function(){ chooseScene(b.getAttribute('data-scene')); }); });
   window.addEventListener('resize',function(){ if(stage && !timers.length) moveTo(atEnd?3:0); });
-  scene=scenes.filter(function(s){ return s.key===(opts&&opts.start); })[0]||scenes[0]; build();
+  scene=scenes.filter(function(s){ return s.key===(opts&&opts.start); })[0]||scenes[0]; build(); setActButtons();
   if('IntersectionObserver' in window && !reduce){
     var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !played){ played=true; play(); io.disconnect(); } }); },{threshold:.4});
     resetStage(); io.observe(stage);
