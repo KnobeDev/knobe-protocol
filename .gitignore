@@ -24,3 +24,6 @@ __pycache__/
 *.zip
 !site/kits/education/knobe-instructor-kit.zip
 *.tar.gz
+
+# local transfer artifact, never committed
+/knobe-front-door.bundle
