@@ -128,6 +128,9 @@ header.hero .equation .op{color:var(--night-soft)}
 .caption .act-line-with{display:none}
 .stage-wrap[data-act="with"] + .caption .act-line-without{display:none}
 .stage-wrap[data-act="with"] + .caption .act-line-with{display:inline}
+.stage .file-with{display:none}
+.stage.with .file-without{display:none}
+.stage.with .file-with{display:inline}
 .station .count{font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);text-align:center;margin-top:12px;letter-spacing:.03em}
 .station .count.full{color:var(--moss)}
 .station .count.zero{color:var(--alarm-deep);font-weight:700}
