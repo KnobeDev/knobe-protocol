@@ -6,7 +6,7 @@ Branch `front-door`, seven commits on top of `main` at `c7ada1f`. Built against 
 
 | Path | Status | Notes |
 | --- | --- | --- |
-| `/` | replaced | New front door: hero, equation, two-act illustration, Severed knowledge, three layers, collapsed real example reusing the existing verifier, three doors, footer. 387 prose words above the doors; 450 including interface labels and buttons. |
+| `/` | replaced | New front door: hero, equation, two-act illustration, Severed knowledge, three layers, collapsed real example reusing the existing verifier, three doors, footer. 492 words above the doors including the active scene caption; the three-scene illustration added its captions to the count. |
 | `/docs/` | new | The previous homepage, byte-for-byte except title, canonical, og:title/url, and the word "Documentation" added to its eyebrow. |
 | `/make`, `/build`, `/decide` | new | Door pages. Framing paragraphs are drafted and marked `<!-- DAVID: ... -->` in the source. |
 | `/agent` | new | Install tabs (Claude Code, Cursor/VS Code, no-tools chat), paste-ready prompt, four-step path, pull quote from white paper section 5. |
@@ -21,7 +21,7 @@ Branch `front-door`, seven commits on top of `main` at `c7ada1f`. Built against 
 
 | Check | Result |
 | --- | --- |
-| Front door word count above the doors ≤ 350 | **Not met as written.** 387 prose words; 450 with interface labels. The overage is the Severance paragraph (74 words), which is David's to cut or keep. Everything else was trimmed. |
+| Front door word count above the doors ≤ 350 | **Not met as written.** 492 words including the active scene caption and interface labels. David chose three switchable scenes over one, and each needs its caption; the overage is that choice plus the Severance paragraph, both his calls. |
 | The word "context" does not appear on the front door | Met. The fourth chip was renamed from "Context notes" to "Interview notes" to satisfy this. |
 | Every URL that resolved before still resolves | Met. 31 paths checked against the static tree, including all 20 sitemap entries, the engine, the example file, and the new pages. |
 | Illustration plays both acts, honors prefers-reduced-motion, reads at 375px | Met. Verified by screenshot in all three states. Stations stack vertically on mobile; the traveling glyph is hidden there and under reduced motion, where the final frame renders statically. |
@@ -35,12 +35,16 @@ Branch `front-door`, seven commits on top of `main` at `c7ada1f`. Built against 
 ## Items for David
 
 1. **Severance paragraph** (`site/index.html`, section "Severed knowledge"). Drafted by Claude per the brief; no settled phrasing was supplied. Edit in place.
-2. **Fourth chip name.** No preference was given; "Source" was used, and the existing "Context notes" became "Interview notes" to keep the word "context" off the front door. Both are in `site/index.html` (four stations) and in the share cards. If you change the chip names, regenerate the cards.
+2. **Scene wording.** The oral-history example was replaced by three scenes in `site/stage.js` (KNOBE_SCENES): a house (inspection report to loan file), a job (manager's notes to hiring decision), a product (lab memo to support chatbot). Station names, chips, captions and the two verdict stamps per scene are all in that one array. The front door and /make open on the house, /build on the product, /decide on the job; /policy carries the job case as prose above the obligation map. If you change the house chips or verdicts, regenerate the share cards.
 3. **Acronym expansion in the footer.** No preference given; omitted. The footer is in `site/index.html` and in the generator's `FOOT` template for the other pages.
 4. **Door framing paragraphs** (`site/make.html`, `site/build.html`, `site/decide.html`, each marked `<!-- DAVID: framing paragraph drafted by Claude; edit freely -->`).
 5. **Policy obligation map** (`site/policy.html`). The Decree 179/2026 rows rest on PwC Italia and Il Sole 24 ORE reporting. Remove the amber under-review note once confirmed against the decree text.
 6. **Manifesto text** (`site/portability.html`). Two em dashes in the supplied draft were replaced with commas, in the heading "Reverse the dependency, without abolishing the platform" and in "what remains ours, and what remains intelligible". Revert if you prefer the dashes. The eyebrow calls it a working publication draft; change when it is final.
 7. **Zenodo and a DOI** for the manifesto are not part of this build.
+
+## The illustration, after the scene swap
+
+Three scenes, one mechanism, switchable in place: the scene tabs (A house, A job, A product) sit beside the Without/With toggle. Each run ends with a stamped verdict on the last station: in act one the false confidence ("Roof in good condition." / "Consistently underperforms." / "Yes, fine for outdoor use."), in act two the preserved truth. Chips fall with weight (rotation and gravity easing), stations render as paper documents with a folded corner, and the stamp thunks in half a second after the last arrival. Reduced motion renders the final frame with the stamp, no animation. The share cards carry the house scene with its stamp.
 
 ## Findings while building
 

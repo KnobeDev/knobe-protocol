@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://knobe.org/assets/share-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Four stations, transcript to grant report. The conditions attached to the knowledge fall away at each hop.">
+<meta property="og:image:alt" content="Four stations, inspection report to loan file. The conditions attached to the knowledge fall away at each hop.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="KNOBE: knowledge that keeps its knowing">
 <meta name="twitter:description" content="A plain-text file format that lets a document carry who made it, under what terms, with what limits, wherever it goes, including through AI.">
@@ -81,68 +81,9 @@
 </header>
 
 <section id="see" class="warm" aria-labelledby="see-h">
-  <div class="wrap"><h2 id="see-h">Watch the knowing fall away.</h2></div>
-  <div class="stage-wrap">
-    <div class="stage-controls">
-      <div class="seg" role="group" aria-label="Choose an act">
-        <button type="button" id="actWithout" aria-pressed="true">Without KNOBE</button>
-        <button type="button" id="actWith" aria-pressed="false">With KNOBE</button>
-      </div>
-      <button type="button" class="replay" id="replay">Replay</button>
-    </div>
-    <div class="stage" id="stage" aria-label="Four stations: transcript, AI abstract, newsletter, grant report. Without KNOBE the four conditions attached at the transcript fall away by the third station. With KNOBE all four arrive at every station." role="img">
-      <div class="traveler" id="traveler" aria-hidden="true"></div>
-      <div class="station" data-i="0">
-        <div class="seal" aria-hidden="true"></div>
-        <div class="name">Transcript</div>
-        <div class="chips">
-          <div class="chip" data-k="0">Source</div>
-          <div class="chip" data-k="1">Consent terms</div>
-          <div class="chip" data-k="2">Do not quote</div>
-          <div class="chip" data-k="3">Interview notes</div>
-        </div>
-        <div class="count">4 of 4</div>
-      </div>
-      <div class="station" data-i="1">
-        <div class="seal" aria-hidden="true"></div>
-        <div class="name">AI abstract</div>
-        <div class="chips">
-          <div class="chip" data-k="0">Source</div>
-          <div class="chip" data-k="1">Consent terms</div>
-          <div class="chip" data-k="2">Do not quote</div>
-          <div class="chip" data-k="3">Interview notes</div>
-        </div>
-        <div class="count">&nbsp;</div>
-      </div>
-      <div class="station" data-i="2">
-        <div class="seal" aria-hidden="true"></div>
-        <div class="name">Newsletter</div>
-        <div class="chips">
-          <div class="chip" data-k="0">Source</div>
-          <div class="chip" data-k="1">Consent terms</div>
-          <div class="chip" data-k="2">Do not quote</div>
-          <div class="chip" data-k="3">Interview notes</div>
-        </div>
-        <div class="count">&nbsp;</div>
-      </div>
-      <div class="station" data-i="3">
-        <div class="seal" aria-hidden="true"></div>
-        <div class="name">Grant report</div>
-        <div class="chips">
-          <div class="chip" data-k="0">Source</div>
-          <div class="chip" data-k="1">Consent terms</div>
-          <div class="chip" data-k="2">Do not quote</div>
-          <div class="chip" data-k="3">Interview notes</div>
-        </div>
-        <div class="count">&nbsp;</div>
-      </div>
-    </div>
-    <p class="vh" id="stageText">Without KNOBE: at the transcript, four of four conditions are present. At the AI abstract, two of four. At the newsletter and the grant report, none. With KNOBE: four of four at every station, and the file carries a seal.</p>
-  </div>
-  <div class="caption">
-    <p>A graduate student records an oral history. The transcript carries consent terms, a do-not-quote request, and the notes that explain them. A semester later an excerpt goes into an AI assistant for an abstract. The abstract feeds a newsletter. A line from the newsletter lands in a grant report. Every step was reasonable. By the fourth, nobody downstream knows the terms ever existed.</p>
-    <p class="quiet">The white paper calls this compression without portable interpretive obligation. Most people call it losing the thread.</p>
-  </div>
+  <div class="wrap"><h2 id="see-h">Watch the knowing fall away.</h2><p class="quiet">Three scenes, one pattern. Pick any of them.</p></div>
+  <div class="stage-wrap" id="stage-root"></div>
+  <div class="caption"><p class="quiet">The white paper calls this compression without portable interpretive obligation. Most people call it losing the thread.</p></div>
 </section>
 
 <section aria-labelledby="sev-h">
@@ -221,72 +162,8 @@
   </div>
 </footer>
 
-<script>
-/* The illustration. Two acts over the same four stations. */
-(function(){
-  var stage=document.getElementById('stage'), stations=[].slice.call(stage.querySelectorAll('.station'));
-  var traveler=document.getElementById('traveler'), bWithout=document.getElementById('actWithout'), bWith=document.getElementById('actWith'), replay=document.getElementById('replay');
-  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var act='without', timers=[], HOP=1800, SLIDE=600;
-  // which chips survive at station i, by act
-  function keep(i,k){ return act==='with' ? true : (i===0 ? true : (i===1 ? k<2 : false)); }
-  function later(fn,ms){ timers.push(setTimeout(fn,ms)); }
-  function clear(){ timers.forEach(clearTimeout); timers=[]; }
-  function countText(n){ return n+' of 4'; }
-  function setCount(st,n){ var c=st.querySelector('.count'); c.textContent=countText(n); c.className='count'+(n===4?' full':(n===0?' zero':'')); }
-  function moveTo(i){
-    var r=stations[i].getBoundingClientRect(), s=stage.getBoundingClientRect();
-    traveler.style.left=(r.left-s.left+r.width/2-15)+'px';
-    traveler.style.top=(r.top-s.top-19)+'px';
-  }
-  function resetStage(){
-    clear(); stage.className='stage'+(act==='with'?' with':'');
-    stations.forEach(function(st,i){
-      st.classList.remove('sealed');
-      [].slice.call(st.querySelectorAll('.chip')).forEach(function(ch){ ch.className='chip'+(i===0?' on':' empty'); });
-      var c=st.querySelector('.count'); if(i===0){setCount(st,4);} else {c.innerHTML='&nbsp;'; c.className='count';}
-    });
-    if(act==='with') stations[0].classList.add('sealed');
-    traveler.style.transition='none'; moveTo(0); void traveler.offsetWidth; traveler.style.transition='';
-  }
-  function finalFrame(){
-    stage.className='stage'+(act==='with'?' with':'');
-    stations.forEach(function(st,i){
-      var n=0;
-      [].slice.call(st.querySelectorAll('.chip')).forEach(function(ch,k){ var on=keep(i,k); if(on)n++; ch.className='chip'+(on?' on':' lost'); });
-      setCount(st,n); if(act==='with') st.classList.add('sealed');
-    });
-    moveTo(3);
-  }
-  function arrive(i){
-    var st=stations[i], chips=[].slice.call(st.querySelectorAll('.chip')), n=0;
-    chips.forEach(function(ch,k){
-      ch.className='chip on';
-      if(!keep(i,k)){ later(function(){ ch.classList.add('falling'); },120+k*80); later(function(){ ch.className='chip lost'; },120+k*80+SLIDE); } else { n++; }
-    });
-    later(function(){ setCount(st,n); if(act==='with') st.classList.add('sealed'); }, 120+SLIDE);
-  }
-  function play(){
-    resetStage();
-    atEnd=false;
-    if(reduce){ finalFrame(); atEnd=true; return; }
-    var i;
-    for(i=1;i<4;i++){ (function(i){ later(function(){ moveTo(i); later(function(){ arrive(i); if(i===3){ later(function(){ atEnd=true; clear(); },SLIDE+600); } },SLIDE); }, i*HOP); })(i); }
-  }
-  function choose(a){ act=a; bWithout.setAttribute('aria-pressed',a==='without'); bWith.setAttribute('aria-pressed',a==='with'); play(); }
-  bWithout.addEventListener('click',function(){ choose('without'); });
-  bWith.addEventListener('click',function(){ choose('with'); });
-  replay.addEventListener('click',play);
-  var atEnd=false;
-  window.addEventListener('resize',function(){ if(!timers.length) moveTo(atEnd?3:0); });
-  // autoplay act one once, when the stage first comes into view
-  var played=false;
-  if('IntersectionObserver' in window && !reduce){
-    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !played){ played=true; play(); io.disconnect(); } }); },{threshold:.4});
-    resetStage(); io.observe(stage);
-  } else { play(); }
-})();
-</script>
+<script src="/stage.js"></script>
+<script>knobeStage(document.getElementById('stage-root'),{start:'home'});</script>
 <script>
 /* example: load the verifier only when the section is opened */
 (function(){
