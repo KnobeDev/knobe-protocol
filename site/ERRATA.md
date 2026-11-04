@@ -95,6 +95,26 @@ The rulings below are authoritative for v1. The published test vectors and their
 **Ruling:** Either spelling is conforming. The mandated value under §7 is `omitted`; JSON output may spell it as the string `"omitted"` or as `null`, and tables may write a dash. The reference itself uses both spellings: `lens.py --json` emits `"omitted"` for `failed` files and `null` for `unreadable` files, two spellings of the same §7 mandate. A consumer of machine output must treat `null` and `"omitted"` as equivalent in this position.
 
 **Origin note:** this entry exists because a third implementation, following §7's text, emitted the string `"omitted"` for unreadable files, while the reference's JSON output emits `null` there. Cross-implementation testing surfaced the reference's own inconsistent spelling. Both readings follow the specification; this ruling records that both are conforming so the next implementer does not have to guess. This is exactly the kind of gap independent implementation work exists to catch.
+## E12. Value formats and block whitespace are ASCII-strict
+
+**Question:** `lens.py` accepted a trailing newline inside date and hash
+strings (Python's `$`), accepted non-ASCII digits (`\d`), and stripped any
+Unicode whitespace from a payload block before base64 decoding;
+`knobe-core.js` did none of the first two and stripped a different
+whitespace set. The same file could verify under one reference engine and
+be unreadable under the other.
+
+**Ruling:** Strict readings govern. A date is exactly ten ASCII characters
+matching `[0-9]{4}-[0-9]{2}-[0-9]{2}` with nothing following; a hash is
+exactly 64 lowercase ASCII hex characters with nothing following. Only
+ASCII space, tab, CR and LF may be stripped from a payload block; any
+other character inside the block makes the base64 invalid and the file
+unreadable. No published vector or canonical artifact changes verdict
+under this ruling, checked across all 37 published files.
+
+**Pinned by:** not yet pinned; a vector
+(`test-vectors/interpretation/nel-block-whitespace.knobe.md`, expected:
+unreadable) should be added.
 
 ---
 
