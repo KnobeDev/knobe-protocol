@@ -73,15 +73,15 @@
     <p class="lede">A <code>.knobe.md</code> is a plain-text file: portable, interoperable, readable by people, machines and screen readers. But a portable file is not yet portable knowledge. A KNOBE also carries the knowing, who made it, under what terms, with what limits, so what arrives downstream is knowledge rather than loose content.</p>
     <p class="equation" aria-label="known plus knowing equals knowledge"><span class="k">known</span><span class="op">+</span><span class="k">knowing</span><span class="op">=</span>knowledge</p>
     <div class="cta-row">
-      <a class="btn btn-primary" href="#see">See it happen</a>
-      <a class="btn btn-ghost" href="/agent">Make one in sixty seconds</a>
+      <a class="btn btn-primary" href="#see">See how it happens</a>
+      <a class="btn btn-ghost" href="/agent">Create a sealed file</a>
       <span class="alt">or <a href="/studio/">open Studio</a></span>
     </div>
   </div>
 </header>
 
 <section id="see" class="warm" aria-labelledby="see-h">
-  <div class="wrap"><h2 id="see-h">Watch the knowing fall away.</h2><p class="quiet">Five scenes, one pattern. Pick any of them.</p></div>
+  <div class="wrap"><h2 id="see-h">How the knowing falls away</h2><p class="quiet">Five scenes, one pattern. Pick any of them.</p></div>
   <div class="stage-wrap" id="stage-root"></div>
   <div class="caption"><p class="quiet">The white paper calls this compression without portable interpretive obligation. Most people call it losing the thread.</p></div>
 </section>
@@ -109,7 +109,7 @@
   <div class="wrap">
     <p>A verified seal proves the record is intact. It does not prove the record is true. That distinction is the whole design.</p>
     <details class="example" id="example">
-      <summary class="btn btn-ghost">Show me a real one</summary>
+      <summary class="btn btn-ghost">Show a real sealed file</summary>
       <div class="inner">
         <p class="quiet">This is a real sealed file. Press Verify and your browser checks the seal. Press Tamper, change a word, and watch the check fail. The block at the bottom is the machine-readable record; you are not expected to read it.</p>
         <div class="demo" id="demo" hidden>
@@ -130,18 +130,40 @@
   </div>
 </section>
 
-<section aria-labelledby="doors-h">
+<section aria-labelledby="status-h">
+  <div class="wrap">
+    <h2 id="status-h">Where the project stands</h2>
+    <p>Year two of development. The protocol is small on purpose, it works today, and the parts that do not exist yet are listed as not existing. As of November 2026.</p>
+  </div>
+  <div class="wrap wide">
+    <table>
+      <thead><tr><th>Component</th><th>State</th></tr></thead>
+      <tbody>
+        <tr><td>Specification</td><td><a href="/spec">v1.0</a>, frozen, published 2026. Changes are recorded in the open in the <a href="/ERRATA.md">errata</a>.</td></tr>
+        <tr><td>Conformance</td><td><a href="/test-vectors/">Nine test vectors</a> covering the full conformance surface.</td></tr>
+        <tr><td>Implementations</td><td>JavaScript, Python and Go. The JavaScript and Python verifiers are <a href="/implementations">checked against each other</a> across the published corpus.</td></tr>
+        <tr><td>Agent access</td><td><a href="/mcp">knobe-mcp</a> v0.1.1 on npm: five tools, runs locally, no telemetry.</td></tr>
+        <tr><td>Browser tools</td><td><a href="/studio/">Studio</a>, <a href="/grove/">Grove</a> and <a href="/lens">Lens</a>. No account; nothing is uploaded.</td></tr>
+        <tr><td>Institutional pilots</td><td>UC Davis pilots are planned. None are active yet.</td></tr>
+        <tr><td>Known limits</td><td>Documented in the <a href="/threat-model">threat model</a> and restated as the six refusals on the <a href="/policy">policy page</a>.</td></tr>
+        <tr><td>Stewardship</td><td>Independent. Protocol CC BY 4.0, code Apache-2.0.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="warm" aria-labelledby="doors-h">
   <div class="wrap"><h2 id="doors-h">Where do you want to start?</h2></div>
   <div class="wrap wide">
     <div class="doors">
       <a class="door" href="/make">
         <h3>I make or teach with knowledge</h3>
-        <p>Instructors, researchers, oral historians, writers. Seal your first file in a minute, no account needed.</p>
+        <p>Instructors, researchers, oral historians, writers. Seal a first file in the browser; no account needed.</p>
         <span class="go">Make →</span>
       </a>
       <a class="door" href="/build">
         <h3>I build</h3>
-        <p>Developers and vibe coders. Add KNOBE to your agent in one line. Read the spec afterward, if you want to.</p>
+        <p>Developers and agent builders. Install the server in one line; the spec and test vectors are there when you need them.</p>
         <span class="go">Build →</span>
       </a>
       <a class="door" href="/decide">

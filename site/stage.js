@@ -50,7 +50,7 @@ function knobeStage(root, opts){
       scene.chips.forEach(function(c,k){ s+='<div class="chip" data-k="'+k+'" style="--r:'+[-7,5,-4,8][k]+'deg">'+esc(c)+'</div>'; });
       s+='</div><div class="count">'+(i===0?'4 of 4':'&nbsp;')+'</div>'+(i===3?'<div class="stamp" aria-hidden="true"></div>':'')+'</div>';
     });
-    s+='</div><p class="vh">'+esc('Without KNOBE: four of four at '+scene.stations[0]+', two of four at '+scene.stations[1]+', none at '+scene.stations[2]+' or '+scene.stations[3]+'. With KNOBE: four of four at every station, and the file carries a seal.')+'</p>';
+    s+='</div><p class="vh">'+esc('Without KNOBE: four of four conditions at '+scene.stations[0]+', two of four at '+scene.stations[1]+', none at '+scene.stations[2]+' or '+scene.stations[3]+', and the run ends with the last station asserting '+scene.verdicts.without+' With KNOBE: four of four at every station, the file carries a seal, and the run ends '+scene.verdicts.withk)+'</p>';
     slot.innerHTML=s; cap.textContent=scene.caption;
     stage=slot.querySelector('.stage'); stations=[].slice.call(stage.querySelectorAll('.station')); traveler=stage.querySelector('.traveler');
     sceneBtns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-scene')===scene.key); });
