@@ -83,7 +83,7 @@ header.hero .equation .op{color:var(--night-soft)}
 .equation{font-size:34px;letter-spacing:-.01em;color:var(--moss-deep);margin:0 0 40px;line-height:1.2}
 .equation .op{color:var(--ink-faint);margin:0 .25em}
 .equation .k{font-style:italic}
-@media(max-width:640px){.equation{font-size:28px}}
+@media(max-width:640px){.equation{font-size:22px}}
 
 /* buttons */
 .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
