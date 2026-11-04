@@ -71,6 +71,7 @@ header.hero .btn-ghost{border-color:rgba(207,230,214,.35);color:var(--night-ink)
 header.hero .btn-ghost:hover{border-color:var(--night-accent);color:var(--night-accent)}
 header.hero .cta-row .alt{color:var(--night-soft)}
 header.hero .gloss{color:var(--night-soft);margin:-24px 0 36px;font-size:.88rem}
+header.hero .hl,section.night .hl{color:#fff}
 header.hero .cta-row .alt a{color:var(--night-soft)}
 header.hero .equation{color:var(--night-ink)}
 header.hero .equation .k{color:var(--night-accent)}
