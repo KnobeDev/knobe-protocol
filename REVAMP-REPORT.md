@@ -46,6 +46,10 @@ Branch `front-door`, seven commits on top of `main` at `c7ada1f`. Built against 
 
 Five scenes, one mechanism, switchable in place: the scene tabs (A house, A job, A product, A study, An agent) sit beside the Without/With toggle. The study runs a pilot dataset to a policy brief (the stamp: "The treatment works." against "Pilot, n = 42. Correlation only."); the agent runs a pricing memo through two agent hops to an automated reply with no person in the chain ("$14 per seat, locked in." against "Draft. Internal. Expires Dec 31."). /make now opens on the study, /build on the agent. Each run ends with a stamped verdict on the last station: in act one the false confidence ("Roof in good condition." / "Consistently underperforms." / "Yes, fine for outdoor use."), in act two the preserved truth. Chips fall with weight (rotation and gravity easing), stations render as paper documents with a folded corner, and the stamp thunks in half a second after the last arrival. Reduced motion renders the final frame with the stamp, no animation. The share cards carry the house scene with its stamp.
 
+## The night pass
+
+The all-paper page read calm to David ("like picking out a mattress"), so the lighting now carries the argument: the masthead, hero and Severed-knowledge band sit on a near-black green (--night), the explanation and tools stay on paper, and red (--alarm) appears only on loss states: lost chips, zero counters, the act-one stamp. The share cards moved to the night background, white documents on dark. Contrast ratios on the dark surfaces run 8:1 or better. Georgia is unchanged throughout.
+
 ## Findings while building
 
 - **Studio works.** The review's note that Studio reported "engine could not be loaded" was an artifact of fetching the page without a browser. In headless Chromium it loads with no console errors.
