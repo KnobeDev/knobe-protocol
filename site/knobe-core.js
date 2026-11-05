@@ -124,9 +124,16 @@ function isDict(x) {
  * limit keeps the whole text, as None does there.
  */
 export function safe(value, limit = 300) {
+  if (typeof value === "bigint") return value.toString();   // as Python's repr() of an int
   if (typeof value !== "string") {
-    // approximate Python repr() for non-strings — display-only
-    try { return JSON.stringify(value) ?? String(value); } catch { return String(value); }
+    // approximate Python repr() for non-strings — display-only. Never throws:
+    // a BigInt inside an object is written as a string, and an object the
+    // parser built has no prototype, so String() of it would throw.
+    try {
+      return JSON.stringify(value, (k, v) => (typeof v === "bigint" ? v.toString() : v)) ?? String(value);
+    } catch {
+      return Object.prototype.toString.call(value);
+    }
   }
   let out = "";
   for (const ch of value) {
