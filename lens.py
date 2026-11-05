@@ -173,7 +173,12 @@ def find_nfc_collisions(obj, path=""):
 def safe(value, limit=300):
     """Render a (possibly payload-derived) value safely for terminal output:
     escape C0/C1 control characters and DEL so a crafted string cannot spoof
-    the report or inject ANSI escape sequences. Non-strings -> repr."""
+    the report or inject ANSI escape sequences; escape bidi overrides and
+    isolates and line/paragraph separators (U+202A-202E, U+2066-2069,
+    U+2028/2029), which can visually reorder text, as knobe-core.js safe()
+    does; and escape unpaired surrogates (from a \\uD800 escape, or a file
+    name that is not UTF-8), which cannot be printed as UTF-8. Non-strings ->
+    repr. limit=None keeps the whole text."""
     if not isinstance(value, str):
         return repr(value)
     out = []
@@ -181,10 +186,13 @@ def safe(value, limit=300):
         o = ord(ch)
         if o < 0x20 or o == 0x7f or 0x80 <= o <= 0x9f:
             out.append(f"\\x{o:02x}")
+        elif (0x202a <= o <= 0x202e or 0x2066 <= o <= 0x2069 or o in (0x2028, 0x2029)
+              or 0xd800 <= o <= 0xdfff):
+            out.append(f"\\u{o:04x}")
         else:
             out.append(ch)
     rendered = "".join(out)
-    if len(rendered) > limit:
+    if limit is not None and len(rendered) > limit:
         rendered = rendered[:limit] + "…"
     return rendered
 
@@ -340,9 +348,9 @@ def verify(path):
         with open(path, "rb") as fh:
             raw_bytes = fh.read()
     except FileNotFoundError:
-        return _unreadable(f"file not found: {path}", [])
+        return _unreadable(f"file not found: {safe(path, None)}", [])
     except IsADirectoryError:
-        return _unreadable(f"path is a directory, not a file: {path}", [])
+        return _unreadable(f"path is a directory, not a file: {safe(path, None)}", [])
     except OSError as e:
         return _unreadable(f"could not read file: {e}", [])
     try:
@@ -493,7 +501,7 @@ def _print_human(r):
         print(f"status:            unreadable ({safe(str(r.get('reason')))})")
         print(f"conformance:       {r['conformance']}")
         for issue in r.get("conformance_issues", []):
-            print(f"  - {issue}")
+            print(f"  - {safe(issue, None)}")
         return _exit_code(r)
 
     p = r["payload"]
@@ -502,7 +510,7 @@ def _print_human(r):
     print(f"quarantine_status: {safe(str(p.get('quarantine_status')))}")
     print(f"privacy_level:     {safe(str(p.get('privacy_level')))}")
     print(f"computed_hash:     {r['computed']}")
-    print(f"stored_hash:       {r['stored']}")
+    print(f"stored_hash:       {safe(str(r['stored']))}")
     print(f"status:            {st}")
     if r["multiple_blocks"]:
         print(f"WARNING:           multiple payload blocks present. Evaluated "
@@ -510,7 +518,7 @@ def _print_human(r):
     print(f"body_verified:     {r['body_verified']}")
     print(f"conformance:       {r['conformance']}")
     for issue in r["conformance_issues"]:
-        print(f"  - {issue}")
+        print(f"  - {safe(issue, None)}")
     if st in ("verified", "verified-body-modified"):
         print("note: integrity verified. Integrity is not truth — inspect before trusting.")
     if st == "verified-body-modified":
