@@ -12,6 +12,31 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### 2026-11-05
+
+- Pinning vectors for the hardening in PRs #11, #12 and #19, which
+  landed without any: the seven candidate files from issue #20, added
+  byte for byte as the steward supplied them, three renamed.
+  `test-vectors/interpretation/nel-block-whitespace` pins ERRATA E12; the
+  adversarial set gains `float-overflow`, `lone-surrogate`,
+  `spec-version-array`, `bigint-payload`, `bidi-title` and
+  `null-payload-hash`. The cross-language corpus grows from 37 to 44
+  files.
+- `knobe-core.selftest.mjs` now holds both engines to the expected
+  results published in the three test-vectors READMEs, not only to each
+  other, fails on a vector with no README row, and requires every sealed
+  example to be `verified` and `valid`. A change that broke both engines
+  the same way used to pass. It also compares reason and issue text word
+  for word (two files with known wording differences are listed), and
+  fails if `lens.py`'s human report or `knobe-core.js`'s `safe()` shows a
+  raw control, bidi or separator character or an unpaired surrogate.
+- `parity.yml` gains a copy-drift job: every copy under `site/` and
+  `mcp/` must be byte-identical to its source. `site/lens.py`, the
+  download served at knobe.org/lens.py, was still the file from before
+  PR #11 and is now in sync.
+- `.gitattributes` keeps `.knobe.md` files byte-exact, so a Windows
+  checkout with `core.autocrlf` does not turn every vector unreadable.
+
 ### 2026-07-08
 
 - `ERRATA.md` added: eleven documented interpretations of questions
