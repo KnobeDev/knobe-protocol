@@ -1,6 +1,6 @@
 # KNOBE Protocol v1 — Adversarial Hardening Set
 
-Sixteen additional `.knobe.md` files probing edge cases and hostile input beyond the nine conformance vectors in the parent directory. These are **not** part of the canonical-compatibility bar — an implementation is conforming if it reproduces the nine core results — but a robust verifier should handle all sixteen of these without crashing, misreporting, or rendering unsafe output.
+Seventeen additional `.knobe.md` files probing edge cases and hostile input beyond the nine conformance vectors in the parent directory. These are **not** part of the canonical-compatibility bar — an implementation is conforming if it reproduces the nine core results — but a robust verifier should handle all seventeen of these without crashing, misreporting, or rendering unsafe output.
 
 Verify each with the reference implementation:
 
@@ -22,6 +22,7 @@ python3 lens.py adversarial/<file>
 | `float-overflow.knobe.md` | unreadable | — | invalid | a float literal (`1e400`) that overflows to infinity, which has no canonical form; formerly a `lens.py` traceback (PR #11) |
 | `lone-surrogate.knobe.md` | unreadable | — | invalid | an unpaired surrogate escape (`\ud800`) in a string value, which cannot be UTF-8 encoded; both reference verifiers give the same reason (PR #11, PR #19) |
 | `multi-block-warning.knobe.md` | verified (last block, with warning) | omitted | warnings | two payload blocks; verifier evaluates the last per spec §3.3 and MUST surface a warning |
+| `nested-payload-hash.knobe.md` | verified | omitted | valid | a `parents` entry carries the parent's `payload_hash`. Spec §5 leaves out only the top-level `payload_hash`, so the nested one is covered by the seal; a verifier that removes `payload_hash` at every depth computes a different hash and reports failed (#23) |
 | `nfc-key-collision.knobe.md` | unreadable | — | invalid | keys distinct as bytes but identical after NFC normalization; ambiguous, MUST be rejected |
 | `no-frontmatter-valid-payload.knobe.md` | verified | omitted | invalid | YAML frontmatter missing entirely; payload intact but file is nonconforming (`spec_version` required in frontmatter) |
 | `null-payload-hash.knobe.md` | failed | omitted | invalid | `payload_hash` is JSON `null`; integrity fails, and machine output reports `stored` as `null` in both reference verifiers. Most required fields are absent (PR #19) |

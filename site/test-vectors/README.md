@@ -31,7 +31,7 @@ python3 lens.py minimal-valid.knobe.md
 
 ## Adversarial hardening set
 
-The [`adversarial/`](adversarial/) subdirectory contains sixteen additional hostile-input files — duplicate keys, NFC key collisions, control-character and bidi injection, unsupported spec versions, numbers and strings with no canonical form — with expected results in [`adversarial/README.md`](adversarial/README.md). They are not part of the canonical-compatibility bar; they test verifier robustness.
+The [`adversarial/`](adversarial/) subdirectory contains seventeen additional hostile-input files — duplicate keys, NFC key collisions, control-character and bidi injection, unsupported spec versions, numbers and strings with no canonical form — with expected results in [`adversarial/README.md`](adversarial/README.md). They are not part of the canonical-compatibility bar; they test verifier robustness.
 
 ## Interpretation set
 
