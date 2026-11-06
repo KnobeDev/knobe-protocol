@@ -112,9 +112,8 @@ other character inside the block makes the base64 invalid and the file
 unreadable. No published vector or canonical artifact changes verdict
 under this ruling, checked across all 37 published files.
 
-**Pinned by:** not yet pinned; a vector
-(`test-vectors/interpretation/nel-block-whitespace.knobe.md`, expected:
-unreadable) should be added.
+**Pinned by:** `test-vectors/interpretation/nel-block-whitespace.knobe.md`
+(expected: unreadable · invalid).
 
 ---
 
