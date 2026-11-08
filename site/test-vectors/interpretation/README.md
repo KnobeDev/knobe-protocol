@@ -1,6 +1,6 @@
 # KNOBE Protocol v1 — Interpretation Set
 
-Six additional `.knobe.md` files pinning the documented interpretations in [ERRATA.md](../../ERRATA.md): places where the steward, building a Go verifier from the specification text alone, reported a genuine ambiguity, and the steward has ruled which reading is authoritative. These are **not** part of the canonical-compatibility bar (an implementation is canonically compatible if it reproduces the nine core results in the parent directory), but a verifier that matches the reference on all six is following the published rulings, and each ruling cites its vector here.
+Six additional `.knobe.md` files pinning the documented interpretations in [ERRATA.md](../../ERRATA.md): places where building the steward-commissioned Go verifier from the specification text (with lens.py consulted for ambiguous edge cases) exposed a genuine ambiguity, and the steward has ruled which reading is authoritative. These are **not** part of the canonical-compatibility bar (an implementation is canonically compatible if it reproduces the nine core results in the parent directory), but a verifier that matches the reference on all six is following the published rulings, and each ruling cites its vector here.
 
 Every expected result below was produced by both reference implementations (`lens.py` and `knobe-core.js`) in agreement before publication. Verify each from the repository root with:
 
