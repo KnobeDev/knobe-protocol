@@ -7,9 +7,9 @@
 <meta name="description" content="What KNOBE Protocol v1 makes evident, what it does not, and the boundary between the two, for security-focused audiences.">
 <style>
 :root{
-  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#6b8276;
+  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#536a5e;
   --paper:#f7f5ef;--paper-warm:#efece2;--line:#d8d3c4;
-  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;
+  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;--amber-deep:#8a5115;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,'Times New Roman',serif;background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
@@ -60,7 +60,7 @@ code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.87em;backgrou
 .scenario.low{border-left:4px solid var(--amber);background:#fdf8f0}
 .scenario .label{font-family:-apple-system,system-ui,sans-serif;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
 .scenario.high .label{color:var(--moss-deep)}
-.scenario.low .label{color:var(--amber)}
+.scenario.low .label{color:var(--amber-deep)}
 .scenario h3{margin-top:0;font-size:1.15rem}
 .scenario p:last-child{margin-bottom:0}
 
@@ -178,10 +178,10 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
     <p>The protocol's high-value domain is context loss through <em class="kw">entropy</em>, not adversarial forgery. Context is stripped away as artifacts move through pipelines, summarization tools, copy-paste workflows, and AI ingestion systems. The protocol's primary opponent is not a malicious actor; it is the loss of interpretive context that occurs automatically every time a document is reduced, restructured, or repurposed.</p>
 
     <div class="scenario high">
-      <div class="label">Maximally adversarial: high value</div>
+      <div class="label">Non-adversarial loss: high value</div>
       <h3>Entropy and the lossy middleman</h3>
-      <p>KNOBE v1.0 makes context stripping evident. The primary "adversary" is an automated pipeline: a RAG scraper that drops metadata, an LLM ingestion engine that summarizes without provenance, a corporate wiki that flattens attribution, a copy-paste action that detaches a document from its source. By sealing context (fidelity limits, attribution, quarantine status, accessibility lineage) and binding it to the text with a mathematical hash, KNOBE makes any subsequent tampering evident.</p>
-      <p>It proves what context was attached to the text <em>at the moment of sealing</em>. Downstream actors who want to misuse the text must now actively strip the cryptographic block, leaving an auditable trail of destruction rather than passively benefiting from context that has already evaporated.</p>
+      <p>KNOBE v1.0 makes changes to sealed context detectable. The primary "adversary" is an automated pipeline: a RAG scraper that drops metadata, an LLM ingestion engine that summarizes without provenance, a corporate wiki that flattens attribution, a copy-paste action that detaches a document from its source. By sealing context (fidelity limits, attribution, quarantine status, accessibility lineage) with a mathematical hash, and binding the text to it when a body hash is sealed, KNOBE lets a verifier detect any later change to that sealed record. Altered content that is resealed carries a new seal, not a detected change.</p>
+      <p>It proves what context was declared <em>at the moment of sealing</em> and, when a body hash was sealed, which text it was declared for. A copy that keeps the block keeps that context; a copy that drops it no longer verifies. A stripped file does not announce the loss to a recipient who never saw the original, so stripping is evident only to a receiver who expects a seal.</p>
     </div>
 
     <p>This is the protocol's main job. Knowledge objects that traditionally lost their interpretive obligations in transit now carry them in plain text, verifiable without infrastructure, and visible to any tool or human downstream that chooses to look.</p>
@@ -191,7 +191,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
     <p>The protocol does not defend against active identity forgery. This is a design choice, not an oversight. The v1 open layer is deliberately authority-free: anyone can produce a sealed KNOBE locally, and the verifier cannot distinguish a genuine seal from a fraudulent one.</p>
 
     <div class="scenario low">
-      <div class="label">Minimally adversarial: zero or negative value</div>
+      <div class="label">Deliberate forgery: zero or negative value</div>
       <h3>Active forgery in a zero-verification culture</h3>
       <p>KNOBE v1.0 provides zero protection against active identity forgery. If a malicious actor creates a fraudulent policy document, attributes it to "The Office of the Provost," and seals it locally, the math is completely sound. A verifier will report <code>status: verified</code>. The seal is intact. The lie is preserved exactly as the attacker wrote it.</p>
       <p>If downstream human receivers conflate cryptographic <code>verified</code> (the file has not changed since sealing) with organizational <em>authentic</em> (the Provost actually wrote this), the protocol can actively harm the receiver by providing security theater. KNOBE fails as an identity-trust mechanism when deployed without a PKI overlay, an institutional signing tier, or a ledger anchor.</p>
@@ -201,7 +201,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     <div class="boundary">
       <h3>What <code>status: verified</code> proves</h3>
-      <p>The payload of this file is byte-identical to what someone sealed at some point. The author's declared attribution, fidelity limits, use conditions, and interpretive context are intact as the author wrote them.</p>
+      <p>The canonical form of this file's payload is unchanged since someone sealed it at some point. The author's declared attribution, fidelity limits, use conditions, and interpretive context are intact as the author wrote them.</p>
     </div>
 
     <div class="boundary">
@@ -223,13 +223,13 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     <p>The deliberate v1 posture: provide an integrity layer that does not require any of these to function, and let each be added by composition where the trust requirements demand it.</p>
 
-    <p>Classroom-scale patterns that compose these paths with nothing installed (the time sandwich, cohort receipts, and the signet design) are described on the <a class="inline" href="/teaching">teaching page</a>.</p>
+    <p>Classroom-scale patterns that compose these paths with nothing installed (the time sandwich and cohort receipts) are described on the <a class="inline" href="/teaching">teaching page</a>.</p>
 
     <h2>Adversaries the protocol does and does not resist</h2>
 
     <h3>Resists</h3>
     <ul>
-      <li><strong>The lossy pipeline.</strong> RAG scrapers, summarization tools, AI ingestion engines that drop metadata. The sealed payload travels with the body or is visibly stripped.</li>
+      <li><strong>The lossy pipeline.</strong> RAG scrapers, summarization tools, AI ingestion engines that drop metadata. The sealed payload travels with the body or, once stripped, no longer verifies.</li>
       <li><strong>The post-hoc revisionist.</strong> If the object was sealed with a <code>body_hash</code>, an actor who edits the document after the fact produces a mismatch that the verifier detects (<code>verified-body-modified</code>). The original narrative cannot be silently rewritten without triggering this state or stripping the seal entirely. If the originator omitted <code>body_hash</code>, this protection is not available: the verifier will report <code>verified · body_verified: omitted</code>, which is itself the receiver's signal that body integrity was never sealed.</li>
       <li><strong>The shadow-payload appender.</strong> An adversary who appends a second payload block to a legitimate file cannot do so silently: verifiers MUST surface multiple-block presence per spec §3.3.</li>
       <li><strong>The lineage forger detected at traversal.</strong> An author who fabricates a parent hash seals a lie; any graph-traversal application that tries to resolve the parent chain will find the broken link.</li>

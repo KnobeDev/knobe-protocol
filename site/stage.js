@@ -56,7 +56,7 @@ var KNOBE_SCENES=[
 function knobeStage(root, opts){
   var HOP=1800, SLIDE=600, scenes=(opts&&opts.scenes)||KNOBE_SCENES;
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var act='without', timers=[], atEnd=false, played=false, scene=null;
+  var act='without', timers=[], atEnd=false, scene=null;
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
   function keep(i,k){ return act==='with' ? true : scene.keeps[i][k]===1; }
   function later(fn,ms){ timers.push(setTimeout(fn,ms)); }
@@ -73,7 +73,7 @@ function knobeStage(root, opts){
   function counts(){ return scene.keeps.map(function(row){ return row.reduce(function(a,b){return a+b;},0); }); }
   function build(){
     var cs=counts();
-    var aria='Four stations, each a different human and machine system: '+scene.stations.map(function(n,i){return n+' ('+scene.systems[i]+', '+scene.files[i]+' without KNOBE, a sealed or resealed .knobe.md with it)';}).join(', ')+'. Without KNOBE, of the four conditions attached at the start ('+scene.chips.join(', ')+'), the counts surviving at each station are '+cs.join(', ')+', and the run ends with the last station asserting '+scene.verdicts.without+' '+scene.impact.without+' With KNOBE all four arrive at every station, the file carries a seal, and the run ends '+scene.verdicts.withk+' '+scene.impact.withk;
+    var aria='Four stations, each a different human and machine system: '+scene.stations.map(function(n,i){return n+' ('+scene.systems[i]+', '+scene.files[i]+' without KNOBE, a sealed or resealed .knobe.md with it)';}).join(', ')+'. Without KNOBE, of the four conditions attached at the start ('+scene.chips.join(', ')+'), the counts surviving at each station are '+cs.join(', ')+', and the run ends with the last station asserting '+scene.verdicts.without+' With KNOBE all four arrive at every station, the file carries a seal, and the run ends '+scene.verdicts.withk;
     var s='<div class="stage" role="img" aria-label="'+esc(aria)+'"><div class="traveler" aria-hidden="true"></div>';
     scene.stations.forEach(function(name,i){
       s+='<div class="station" data-i="'+i+'"><div class="seal" aria-hidden="true"></div><div class="name">'+esc(name)+'</div><div class="sys">'+esc(scene.systems[i])+' \u00b7 <span class="file-without">'+esc(scene.files[i])+'</span><span class="file-with">'+(i===0?'sealed .knobe.md':'resealed .knobe.md')+'</span></div><div class="chips">';
@@ -128,9 +128,7 @@ function knobeStage(root, opts){
   replay.addEventListener('click',play);
   sceneBtns.forEach(function(b){ b.addEventListener('click',function(){ chooseScene(b.getAttribute('data-scene')); }); });
   window.addEventListener('resize',function(){ if(stage && !timers.length) moveTo(atEnd?3:0); });
+  /* Nothing moves until the reader asks: start on the final frame (WCAG 2.2.2). */
   scene=scenes.filter(function(s){ return s.key===(opts&&opts.start); })[0]||scenes[0]; build(); setActButtons();
-  if('IntersectionObserver' in window && !reduce){
-    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !played){ played=true; play(); io.disconnect(); } }); },{threshold:.4});
-    resetStage(); io.observe(stage);
-  } else { play(); }
+  resetStage(); traveler.style.transition='none'; finalFrame(); void traveler.offsetWidth; traveler.style.transition='';
 }

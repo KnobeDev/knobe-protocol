@@ -118,6 +118,8 @@ Two JavaScript verifiers already exist. The browser Lens ([`site/lens.html`](sit
 | Verifier code: `lens.py`, `knobe-core.js`, and the browser Lens (`site/lens.html`) | [Apache-2.0](LICENSE-CODE) |
 | Test vectors (`test-vectors/`) | [CC0-1.0](test-vectors/LICENSE): copy them into your test suite freely, no attribution required |
 
+The copyright notice, the license for each part including the `knobe-mcp` package, and the preferred citation are in [LICENSING.md](LICENSING.md).
+
 The steward asserts no patents covering KNOBE Protocol v1 and will not assert any patent against conformant implementations. See [GOVERNANCE.md](GOVERNANCE.md).
 
 ## Contributing

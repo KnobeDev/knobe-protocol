@@ -55,7 +55,7 @@ Exit codes:
   1  status verified/verified-body-modified but conformance invalid, OR status failed
   2  status unreadable, OR a usage/file error
 """
-import sys, re, json, base64, hashlib, unicodedata, datetime
+import sys, re, json, math, base64, hashlib, unicodedata, datetime
 
 SUPPORTED_SPEC_VERSIONS = {"1.0"}
 
@@ -76,8 +76,10 @@ CANONICAL_VOCAB = {
     "privacy_level": {"public","internal","sensitive","restricted"},
     "identity_status": {"declared","signed"},
 }
-ISO_DATE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
-HEX64 = re.compile(r'^[0-9a-f]{64}$')
+# \Z, not $: Python's $ also matches before a trailing newline. [0-9], not \d:
+# \d matches every Unicode decimal digit.
+ISO_DATE = re.compile(r'^[0-9]{4}-[0-9]{2}-[0-9]{2}\Z')
+HEX64 = re.compile(r'^[0-9a-f]{64}\Z')
 
 
 class DuplicateKeyError(ValueError):
@@ -100,6 +102,28 @@ def _no_duplicate_keys(pairs):
 
 def _reject_constant(token):
     raise NonJSONConstantError(token)
+
+
+def _finite_float(lexeme):
+    """parse_float hook: a float lexeme that overflows (e.g. 1e400) parses to
+    inf, which has no canonical form; reject it like NaN/Infinity."""
+    value = float(lexeme)
+    if math.isinf(value):
+        raise NonJSONConstantError(lexeme)
+    return value
+
+
+def _has_lone_surrogate(obj):
+    """True if any key or string value holds an unpaired surrogate (from a
+    \\uD800-style escape). Such text cannot be UTF-8 encoded, so it can be
+    neither canonicalized nor printed; reject before hashing or display."""
+    if isinstance(obj, str):
+        return any(0xD800 <= ord(ch) <= 0xDFFF for ch in obj)
+    if isinstance(obj, dict):
+        return any(_has_lone_surrogate(k) or _has_lone_surrogate(v) for k, v in obj.items())
+    if isinstance(obj, list):
+        return any(_has_lone_surrogate(v) for v in obj)
+    return False
 
 
 def normalize_body(text):
@@ -149,7 +173,12 @@ def find_nfc_collisions(obj, path=""):
 def safe(value, limit=300):
     """Render a (possibly payload-derived) value safely for terminal output:
     escape C0/C1 control characters and DEL so a crafted string cannot spoof
-    the report or inject ANSI escape sequences. Non-strings -> repr."""
+    the report or inject ANSI escape sequences; escape bidi overrides and
+    isolates and line/paragraph separators (U+202A-202E, U+2066-2069,
+    U+2028/2029), which can visually reorder text, as knobe-core.js safe()
+    does; and escape unpaired surrogates (from a \\uD800 escape, or a file
+    name that is not UTF-8), which cannot be printed as UTF-8. Non-strings ->
+    repr. limit=None keeps the whole text."""
     if not isinstance(value, str):
         return repr(value)
     out = []
@@ -157,10 +186,13 @@ def safe(value, limit=300):
         o = ord(ch)
         if o < 0x20 or o == 0x7f or 0x80 <= o <= 0x9f:
             out.append(f"\\x{o:02x}")
+        elif (0x202a <= o <= 0x202e or 0x2066 <= o <= 0x2069 or o in (0x2028, 0x2029)
+              or 0xd800 <= o <= 0xdfff):
+            out.append(f"\\u{o:04x}")
         else:
             out.append(ch)
     rendered = "".join(out)
-    if len(rendered) > limit:
+    if limit is not None and len(rendered) > limit:
         rendered = rendered[:limit] + "…"
     return rendered
 
@@ -316,9 +348,9 @@ def verify(path):
         with open(path, "rb") as fh:
             raw_bytes = fh.read()
     except FileNotFoundError:
-        return _unreadable(f"file not found: {path}", [])
+        return _unreadable(f"file not found: {safe(path, None)}", [])
     except IsADirectoryError:
-        return _unreadable(f"path is a directory, not a file: {path}", [])
+        return _unreadable(f"path is a directory, not a file: {safe(path, None)}", [])
     except OSError as e:
         return _unreadable(f"could not read file: {e}", [])
     try:
@@ -334,10 +366,13 @@ def verify(path):
 
     # --- decode + parse the last block, rejecting ambiguous/illegal JSON ---
     try:
-        decoded = base64.b64decode("".join(blocks[-1].split()), validate=True)
+        # Only ASCII whitespace may wrap a block (str.split() would also drop
+        # U+001C-U+001F, U+0085 and other Unicode spaces).
+        decoded = base64.b64decode(re.sub(r"[ \t\r\n]", "", blocks[-1]), validate=True)
         text = decoded.decode("utf-8")
         payload = json.loads(text, object_pairs_hook=_no_duplicate_keys,
-                             parse_constant=_reject_constant)
+                             parse_constant=_reject_constant,
+                             parse_float=_finite_float)
     except DuplicateKeyError as e:
         return _unreadable(f"payload contains duplicate JSON key: {safe(str(e))} "
                            f"(ambiguous; rejected)", blocks)
@@ -352,6 +387,12 @@ def verify(path):
         return _unreadable(f"payload is not a JSON object "
                            f"(got {type(payload).__name__})", blocks)
 
+    # Unpaired surrogates anywhere (including payload_hash, which the hash
+    # excludes) cannot be encoded for hashing or output -> reject.
+    if _has_lone_surrogate(payload):
+        return _unreadable("payload contains characters that cannot be UTF-8 "
+                           "encoded (e.g. an unpaired surrogate); rejected", blocks)
+
     # P0-4: NFC key collisions make canonicalization ambiguous -> reject
     collisions = find_nfc_collisions(payload)
     if collisions:
@@ -361,7 +402,7 @@ def verify(path):
     # P0-5: unsupported spec_version -> unreadable (cannot honestly verify a
     # file sealed under semantics this v1 verifier does not implement).
     sv = payload.get("spec_version")
-    if sv is not None and sv not in SUPPORTED_SPEC_VERSIONS:
+    if sv is not None and not (isinstance(sv, str) and sv in SUPPORTED_SPEC_VERSIONS):
         r = _unreadable(f"unsupported spec_version: {safe(str(sv))}", blocks, payload=payload)
         r["conformance_issues"] = [
             f"unsupported spec_version: {safe(str(sv))} "
@@ -460,7 +501,7 @@ def _print_human(r):
         print(f"status:            unreadable ({safe(str(r.get('reason')))})")
         print(f"conformance:       {r['conformance']}")
         for issue in r.get("conformance_issues", []):
-            print(f"  - {issue}")
+            print(f"  - {safe(issue, None)}")
         return _exit_code(r)
 
     p = r["payload"]
@@ -469,7 +510,7 @@ def _print_human(r):
     print(f"quarantine_status: {safe(str(p.get('quarantine_status')))}")
     print(f"privacy_level:     {safe(str(p.get('privacy_level')))}")
     print(f"computed_hash:     {r['computed']}")
-    print(f"stored_hash:       {r['stored']}")
+    print(f"stored_hash:       {safe(str(r['stored']))}")
     print(f"status:            {st}")
     if r["multiple_blocks"]:
         print(f"WARNING:           multiple payload blocks present. Evaluated "
@@ -477,7 +518,7 @@ def _print_human(r):
     print(f"body_verified:     {r['body_verified']}")
     print(f"conformance:       {r['conformance']}")
     for issue in r["conformance_issues"]:
-        print(f"  - {issue}")
+        print(f"  - {safe(issue, None)}")
     if st in ("verified", "verified-body-modified"):
         print("note: integrity verified. Integrity is not truth — inspect before trusting.")
     if st == "verified-body-modified":
@@ -500,7 +541,10 @@ if __name__ == "__main__":
         print(USAGE, file=sys.stderr)
         sys.exit(2)
 
-    r = verify(args[0])
+    try:
+        r = verify(args[0])
+    except Exception as e:  # defense in depth: hostile input must never traceback
+        r = _unreadable(f"verifier error ({type(e).__name__}); rejected", [])
     if as_json:
         out = {k: r.get(k) for k in (
             "state", "computed", "stored", "body_verified", "conformance",

@@ -7,7 +7,7 @@
 <meta name="description" content="KNOBE Protocol v1 has a Python reference verifier (lens.py) and two JavaScript verifiers (the in-page browser Lens and the sibling engine knobe-core.js) whose verdicts agree across the published test corpus, with one documented deferral.">
 <style>
 :root{
-  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#6b8276;
+  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#5d7568;
   --paper:#f7f5ef;--paper-warm:#efece2;--line:#d8d3c4;
   --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;
   --code-bg:#10231a;--code-ink:#cfe6d6;
@@ -86,11 +86,11 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KNOBE Protocol">
 <meta property="og:title" content="KNOBE — Implementations">
-<meta property="og:description" content="The KNOBE Protocol v1 specification, built more than once: a Python reference verifier and two JavaScript verifiers whose verdicts agree across the published corpus.">
+<meta property="og:description" content="The KNOBE Protocol v1 specification: a Python reference verifier and two JavaScript verifiers whose verdicts agree across the published corpus, with one documented exception.">
 <meta property="og:url" content="https://knobe.org/implementations">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="KNOBE — Implementations">
-<meta name="twitter:description" content="The KNOBE spec, built more than once: three verifiers, one shared verdict corpus.">
+<meta name="twitter:description" content="The KNOBE spec: a Python reference verifier and JavaScript verifiers, checked against one shared test corpus.">
 <style>.returnbar{font-family:-apple-system,system-ui,sans-serif;font-size:.78rem;background:#efece2;border-bottom:1px solid #d8d3c4}.returnbar .rb-in{max-width:920px;margin:0 auto;padding:6px 28px;display:flex;gap:16px}.returnbar a{color:#3d5447;text-decoration:none}.returnbar a:hover{color:#2f6b4f}</style>
 </head>
 <body>
@@ -142,7 +142,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 <header class="top">
   <div class="wrap">
     <div class="eyebrow">Implementations</div>
-    <h1>The spec, <em>built more than once</em>.</h1>
+    <h1>One spec, <em>one shared test corpus</em>.</h1>
   </div>
 </header>
 
@@ -154,7 +154,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
     <p><code>lens.py</code> is the reference verifier: a single Python file that uses only the standard library, with no external dependencies. The published test vectors and their expected results are the arbiter of conformance; where they leave a detail undecided, <code>lens.py</code> is canonical for serialization ambiguity under spec &sect;5, and rulings for everything else are documented in <a class="inline" href="https://github.com/KnobeOne/knobe-protocol/blob/main/ERRATA.md">ERRATA.md</a>, with normative text prevailing over observed reference behaviour and any conflict recorded there.</p>
 
     <h2>The browser Lens</h2>
-    <p>The browser Lens (<a class="inline" href="/lens">knobe.org/lens</a>, <code>site/lens.html</code>) is a JavaScript verifier that runs entirely in the page: drop in a <code>.knobe.md</code> file and see the verdict, with nothing uploaded. It reproduces <code>lens.py</code>'s verdicts across the vectors, with one deliberate exception: in a browser, where numeric canonicalization cannot match Python's guarantees, it declines to issue a hash verdict on bare-numeric payloads (a §5 violation) and defers to <code>lens.py</code> as canonical for that case.</p>
+    <p>The browser Lens (<a class="inline" href="/lens">knobe.org/lens</a>, <code>site/lens.html</code>) is a JavaScript verifier that runs entirely in the page: drop in a <code>.knobe.md</code> file and see the verdict, with nothing uploaded. It reproduces <code>lens.py</code>'s verdicts across the 37 published test files, with one deliberate exception: in a browser, where numeric canonicalization cannot match Python's guarantees, it declines to issue a hash verdict on bare-numeric payloads (a §5 violation) and defers to <code>lens.py</code> as canonical for that case. That agreement was last checked in November 2026 with a harness that is not part of the repository's automated checks.</p>
 
     <h2>A JavaScript sibling engine</h2>
     <p><code>knobe-core.js</code> is a JavaScript sibling verifier: a single standalone file, with no dependencies, that runs in Node and in the browser. It was written by closely studying <code>lens.py</code>: a <em class="kw">sibling</em>, sharing no code but sharing lineage.</p>
@@ -169,8 +169,8 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
     <p>To be listed, a project needs: a named maintainer; public source; if it verifies, behaviour checked against the published <a class="inline" href="/test-vectors/">test vectors</a>; and a plain statement of what it does and does not do. <a class="inline" href="https://github.com/KnobeOne/knobe-protocol/issues">Open an issue</a> with those four things and it goes in the list. For how to name a tool that builds on KNOBE, so people can tell it from the reference tools, see <a class="inline" href="https://github.com/KnobeOne/knobe-protocol/blob/main/GOVERNANCE.md#name-and-mark-use">Name and mark use</a> in the governance doc.</p>
 
     <h2>What has been checked</h2>
-    <p><code>knobe-core.js</code> and the reference verifier were run against the 37 published test files in this repository (the conformance vectors, the adversarial hardening set, the interpretation set, and the sealed examples) and against roughly 61,000 additional, automatically generated adversarial inputs: malformed structure, Unicode edge cases, numeric formatting, oversized and deeply nested payloads, invalid encodings, and mutations of the fixtures.</p>
-    <p>Across all of them, the two verifiers returned identical verdicts (status, conformance level, body result, computed and stored hash, block counts, and exit code) with no disagreements and no crashes within that generated set. An earlier run did surface a divergence: a floating-point value that the two languages formatted differently. It was traced, fixed, and re-checked clean.</p>
+    <p><code>knobe-core.js</code> and the reference verifier are run against the 37 published test files in this repository (the conformance vectors, the adversarial hardening set, the interpretation set, and the sealed examples). On every one, the two verifiers return identical verdicts: status, conformance level, body result, computed and stored hash, block counts, and exit code.</p>
+    <p>An unpublished generated-input run (about 61,000 inputs, July 2026) found no disagreements after an earlier run surfaced a floating-point formatting divergence, which was fixed. The harness is not public. Later review by the project's technical contributor found crash cases, fixed in November 2026.</p>
     <p>The corpus is also how the specification improves. When an implementer building from the text reports an ambiguity, the steward resolves it as a documented ruling in <a class="inline" href="https://github.com/KnobeOne/knobe-protocol/blob/main/ERRATA.md">ERRATA.md</a>, pinned where practical by a new vector both reference engines agree on before publication; the third verifier, built from the specification text alone, surfaced erratum E11 exactly this way. As of July 2026, no implementation independent of the steward, as <a class="inline" href="https://github.com/KnobeOne/knobe-protocol/blob/main/GOVERNANCE.md">GOVERNANCE.md</a> defines independence, has passed the full vector set: that is the open milestone the shared-governance triggers turn on, and the door is the <a class="inline" href="https://github.com/KnobeOne/knobe-protocol/issues">issue tracker</a>.</p>
 
     <h2>Running the check yourself</h2>

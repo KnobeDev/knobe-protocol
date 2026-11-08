@@ -17,8 +17,10 @@ multilingual glossary, an alternative explanation, a low-cognitive-load
 study guide. The object is never the learner. This profile defines no field
 that names, counts, or characterizes the people who use the adaptation.
 
-Two conforming examples already exist in the published corpus and verify
-against the reference verifier:
+Two draft examples exist in the published corpus. Both verify against the
+reference verifier as v1 files, but neither conforms to this profile yet:
+each sets fidelity_limits.supersedes to a sentence rather than "no", and
+neither carries intended_audience. Treat them as non-conforming drafts:
 
 - examples/knobe-v1-plain-language-summary.knobe.md
   (payload_hash 3b7423d456f3f6f0b1b0e9c7c51a97e520c61166a726a04d56c0345d85668a0c)
@@ -55,7 +57,8 @@ per-student anything. See docs/education-safety-profile.md.
 
 ## Validation rules
 
-A checker for this profile (layered on a passing v1 verification) reports:
+A checker for this profile is not yet implemented. As specified, it would
+run after a passing v1 verification and report:
 
 1. content_type is "adaptation": else not this profile.
 2. parents present with relationship "adaptation_of"; warn if the source
@@ -74,8 +77,10 @@ A checker for this profile (layered on a passing v1 verification) reports:
 ## Agent behavior rules
 
 For any agent handling a conforming adaptation (enforced today via the
-shipped knobe_permits MCP tool and the permits() engine, which already
-gates on integrity and surfaces namespaced obligations):
+knobe_permits MCP tool and the permits() engine in this repository, which
+already gate on integrity and surface namespaced obligations; the
+published npm package, knobe-mcp 0.1.1 as of 2026-11-08, ships an earlier
+engine than the repository):
 
 - Before transforming or redistributing, call permits(action). A failed or
   unreadable seal permits nothing; that gate already exists in the engine.

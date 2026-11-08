@@ -2,9 +2,9 @@
 
 ## Scope — what counts as a vulnerability
 
-- Any input that causes `lens.py` or the browser Lens to report **`verified` when the payload has been altered** (verification bypass).
+- Any input that causes `lens.py`, `knobe-core.js`, the browser Lens, or the `knobe-mcp` server to report **`verified` when the payload has been altered** (verification bypass).
 - Any ambiguity in the canonical hash rule (spec §5) that lets two conforming implementations compute **different hashes for the same payload**.
-- Crashes or unsafe behavior in a reference verifier on hostile input — it must fail to `unreadable`, never execute content or misreport.
+- Crashes or unsafe behavior in a reference verifier, `knobe-core.js`, or the `knobe-mcp` server on hostile input — it must fail to `unreadable`, never execute content or misreport.
 - Flaws in multi-block or body-hash handling that let tampering evade the defined verification states.
 - Output-rendering hazards: payload strings that can spoof verifier output if echoed unescaped (see `test-vectors/adversarial/control-character-title.knobe.md`).
 

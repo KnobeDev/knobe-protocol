@@ -175,7 +175,7 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
     </table>
 
     <h2>Resources and a prompt</h2>
-    <p>The 31-fixture corpus ships with the package and is browsable as MCP resources: <code>knobe://examples/&#8230;</code> (sealed real-world KNOBEs), <code>knobe://vectors/&#8230;</code> (conformance and adversarial vectors with known verdicts), and <code>knobe://guide</code> (orientation for agents). A <code>knobe-guarded-summarize</code> prompt encodes the basic procedure: verify, consult the sealed terms, then act, qualify, or decline with a cited clause.</p>
+    <p>The package ships 31 fixture files, browsable as MCP resources under <code>knobe://examples/&#8230;</code> (twelve sealed real-world KNOBEs) and <code>knobe://vectors/&#8230;</code> (the nine core conformance vectors and ten adversarial vectors, with known verdicts; the six interpretation vectors are not included). A further resource, <code>knobe://guide</code>, orients agents. A <code>knobe-guarded-summarize</code> prompt encodes the basic procedure: verify, consult the sealed terms, then act, qualify, or decline with a cited clause.</p>
 
     <h2>What knobe_permits returns</h2>
     <p>The evaluation reads the sealed record itself: quarantine status, privacy level, license posture, and any namespaced extension terms the author declared. The verdict is <code>true</code>, <code>false</code>, or <code>"conditional"</code>, with the obligations that apply and a <code>basis</code> list citing each sealed field that produced it:</p>

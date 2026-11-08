@@ -4,19 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Add KNOBE to your agent</title>
-<meta name="description" content="Install the MCP server, paste the prompt, and you will have a real .knobe.md with a verifiable seal in about a minute.">
+<meta name="description" content="Install the MCP server, paste the prompt, and you will have a real .knobe.md with a verifiable seal.">
 <link rel="canonical" href="https://knobe.org/agent">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="KNOBE Protocol">
 <meta property="og:title" content="Add KNOBE to your agent">
-<meta property="og:description" content="Install the MCP server, paste the prompt, and you will have a real .knobe.md with a verifiable seal in about a minute.">
+<meta property="og:description" content="Install the MCP server, paste the prompt, and you will have a real .knobe.md with a verifiable seal.">
 <meta property="og:url" content="https://knobe.org/agent">
 <meta property="og:image" content="https://knobe.org/assets/share-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Add KNOBE to your agent">
-<meta name="twitter:description" content="Install the MCP server, paste the prompt, and you will have a real .knobe.md with a verifiable seal in about a minute.">
+<meta name="twitter:description" content="Install the MCP server, paste the prompt, and you will have a real .knobe.md with a verifiable seal.">
 <meta name="twitter:image" content="https://knobe.org/assets/share-card.png">
 <link rel="stylesheet" href="/front.css">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -38,7 +38,7 @@
       <a href="/docs/">Docs</a>
     </div>
     <details>
-      <summary aria-label="Menu">Menu</summary>
+      <summary>Menu</summary>
       <div class="menu"><a href="/make">Make</a><a href="/build">Build</a><a href="/decide">Decide</a><a href="/docs/">Docs</a></div>
     </details>
   </div>
@@ -47,9 +47,9 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">Sixty-second path</div>
+    <div class="eyebrow">Three-step path</div>
     <h1>Add KNOBE to your agent.</h1>
-    <p class="lede">Your agent can create, verify and transform sealed knowledge files. Install the server, paste the prompt, and you will have <span class="hl">a real <code>.knobe.md</code> with a verifiable seal in about a minute</span>.</p>
+    <p class="lede">Your agent can create, verify and transform sealed knowledge files. Install the server, paste the prompt, and you will have <span class="hl">a real <code>.knobe.md</code> with a verifiable seal</span>.</p>
   </div>
 </header>
 <section class="warm">
@@ -57,8 +57,8 @@
     <h2>1. Install</h2>
     <div class="tabs" role="tablist" aria-label="Choose your tool">
       <button role="tab" aria-selected="true" aria-controls="tab-cc" id="tabbtn-cc">Claude Code</button>
-      <button role="tab" aria-selected="false" aria-controls="tab-cu" id="tabbtn-cu">Cursor or VS Code</button>
-      <button role="tab" aria-selected="false" aria-controls="tab-no" id="tabbtn-no">Any chat without tools</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-cu" id="tabbtn-cu" tabindex="-1">Cursor or VS Code</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-no" id="tabbtn-no" tabindex="-1">Any chat without tools</button>
     </div>
     <div id="tab-cc" role="tabpanel" aria-labelledby="tabbtn-cc">
       <div class="copybox"><pre class="code">claude mcp add knobe -- npx -y knobe-mcp</pre><button type="button" data-copy>Copy</button></div>
@@ -73,7 +73,7 @@
     }
   }
 }</pre><button type="button" data-copy>Copy</button></div>
-      <p class="quiet">Add this block to your client's MCP configuration file. The same block works in Windsurf and most other MCP clients.</p>
+      <p class="quiet">Add this block to your client's MCP configuration file. Configuration formats vary between clients, so check your client's documentation for where it goes. The package's own tests run the server through an in-memory MCP client, not through any particular editor.</p>
     </div>
     <div id="tab-no" role="tabpanel" aria-labelledby="tabbtn-no" hidden>
       <p>Draft here, seal in <a href="/studio/">Studio</a>. A model can write the words and the record; it cannot compute the seal. Ask your assistant to draft the title, a short summary, the attribution and the use conditions, then paste them into Studio and press Seal. Studio runs in your browser and uploads nothing.</p>
@@ -112,10 +112,11 @@ Use the server&#x27;s knobe_create tool to produce the file. Do not compute any 
     <h2>Then</h2>
 <ul class="xlate"><li><a href="/mcp">How the server works</a><span class="docname">MCP server</span><span class="why">The five tools, the data flow, and the boundary between engine and adapter.</span></li>
 <li><a href="/spec">The rules</a><span class="docname">Spec</span><span class="why">The normative specification, v1.0.</span></li>
-<li><a href="/test-vectors/">Nine files that test every rule</a><span class="docname">Test vectors</span><span class="why">Run them against anything that claims to read KNOBE.</span></li></ul>
+<li><a href="/test-vectors/">Nine files that set the compatibility bar</a><span class="docname">Test vectors</span><span class="why">Run them against anything that claims to read KNOBE.</span></li></ul>
   </div>
 </section>
 
+<p class="vh" role="status" id="copyStatus"></p>
 </main>
 <footer>
   <div class="wrap">
@@ -127,8 +128,18 @@ Use the server&#x27;s knobe_create tool to produce the file. Do not compute any 
 <script>
 (function(){
   var tabs=[].slice.call(document.querySelectorAll('[role=tab]'));
-  tabs.forEach(function(t){ t.addEventListener('click',function(){ tabs.forEach(function(o){ o.setAttribute('aria-selected',o===t); document.getElementById(o.getAttribute('aria-controls')).hidden=(o!==t); }); }); });
-  [].slice.call(document.querySelectorAll('[data-copy]')).forEach(function(b){ b.addEventListener('click',function(){ var pre=b.parentNode.querySelector('pre'); navigator.clipboard.writeText(pre.textContent).then(function(){ b.textContent='Copied'; setTimeout(function(){ b.textContent='Copy'; },1500); }); }); });
+  function select(t){ tabs.forEach(function(o){ var on=(o===t); o.setAttribute('aria-selected',on); o.tabIndex=on?0:-1; document.getElementById(o.getAttribute('aria-controls')).hidden=!on; }); }
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){ select(t); });
+    t.addEventListener('keydown',function(e){
+      var n=tabs.length, j=null;
+      if(e.key==='ArrowRight') j=(i+1)%n; else if(e.key==='ArrowLeft') j=(i-1+n)%n; else if(e.key==='Home') j=0; else if(e.key==='End') j=n-1;
+      if(j===null) return;
+      e.preventDefault(); select(tabs[j]); tabs[j].focus();
+    });
+  });
+  var status=document.getElementById('copyStatus');
+  [].slice.call(document.querySelectorAll('[data-copy]')).forEach(function(b){ b.addEventListener('click',function(){ var pre=b.parentNode.querySelector('pre'); if(!navigator.clipboard||!navigator.clipboard.writeText){ status.textContent='Copy failed. Select the text and copy it manually.'; return; } navigator.clipboard.writeText(pre.textContent).then(function(){ b.textContent='Copied'; status.textContent='Copied to clipboard.'; setTimeout(function(){ b.textContent='Copy'; status.textContent=''; },1500); },function(){ status.textContent='Copy failed. Select the text and copy it manually.'; }); }); });
 })();
 </script>
 </body>

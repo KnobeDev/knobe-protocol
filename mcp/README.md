@@ -122,5 +122,5 @@ Where any implementation disagrees with `lens.py`, `lens.py` is right.
 
 ## License
 
-Apache-2.0. The KNOBE specification and documentation are CC BY 4.0 at
-[knobe.org](https://knobe.org).
+Apache-2.0 (full text in [`LICENSE`](LICENSE)). The KNOBE specification and
+documentation are CC BY 4.0 at [knobe.org](https://knobe.org).
