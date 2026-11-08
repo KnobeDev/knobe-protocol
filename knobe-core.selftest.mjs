@@ -84,11 +84,10 @@ function jsDisplayTexts(r) {
 // The published expected results: the tables in test-vectors/README.md,
 // adversarial/README.md and interpretation/README.md. They are the arbiter of
 // conformance, so both engines are held to them, not only to each other.
-// The core table has no body_verified column.
 async function expectedResults() {
   const out = new Map();
   for (const [readme, dir, hasBody] of [
-    ["test-vectors/README.md", "test-vectors/", false],
+    ["test-vectors/README.md", "test-vectors/", true],
     ["test-vectors/adversarial/README.md", "test-vectors/adversarial/", true],
     ["test-vectors/interpretation/README.md", "test-vectors/interpretation/", true],
   ]) {
