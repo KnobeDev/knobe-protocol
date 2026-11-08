@@ -7,7 +7,7 @@
 <meta name="description" content="A one-page visual overview of the KNOBE Protocol: how one plain-text file keeps its source, history, limits, and obligations across education, accessibility, research, government, and AI-agent workflows, and why that matters.">
 <style>
 :root{
-  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#6b8276;
+  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#536a5e;
   --paper:#f7f5ef;--paper-warm:#efece2;--line:#d8d3c4;
   --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;--amber-deep:#8a5115;
 }
@@ -96,7 +96,7 @@ nav .inner{max-width:920px;margin:0 auto;padding:14px 28px;display:flex;align-it
 }
 .mini-file{width:74px;display:flex;flex-direction:column;gap:4px}
 .mini-file .b{height:16px;border-radius:4px}
-.mini-file .b1{background:var(--amber)}
+.mini-file .b1{background:var(--amber-deep)}
 .mini-file .b2{background:var(--moss);height:34px}
 .mini-file .b3{background:var(--moss-deep)}
 .mini-file .b.gone{
@@ -126,7 +126,7 @@ nav .inner{max-width:920px;margin:0 auto;padding:14px 28px;display:flex;align-it
 .band{border-radius:9px;padding:14px 16px;color:var(--paper)}
 .band .bl{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.98rem;font-weight:700}
 .band .bd{font-size:.86rem;opacity:.92;margin-top:2px;line-height:1.45}
-.band.frontmatter{background:var(--amber)}
+.band.frontmatter{background:var(--amber-deep)}
 .band.body{background:var(--moss);padding-top:22px;padding-bottom:22px}
 .band.payload{background:var(--moss-deep)}
 .sealbar{
@@ -365,7 +365,7 @@ footer a:hover{color:var(--moss)}
           </div>
           <div class="band body">
             <p class="bl">Markdown body</p>
-            <p class="bd">the work itself, readable in any editor, on any platform, forever</p>
+            <p class="bd">the work itself, plain UTF-8 Markdown readable in any text editor</p>
           </div>
           <div class="band payload">
             <p class="bl">Sealed payload</p>
@@ -387,8 +387,8 @@ footer a:hover{color:var(--moss)}
             <div class="yes">
               <h4>The seal proves</h4>
               <ul>
-                <li>the payload is byte-identical to what was sealed</li>
-                <li>the body matches its recorded hash</li>
+                <li>the payload's canonical form is unchanged since sealing</li>
+                <li>the body matches its recorded hash, when a body hash was sealed</li>
                 <li>the context record is intact and machine-readable</li>
               </ul>
             </div>

@@ -38,7 +38,7 @@
       <a href="/docs/">Docs</a>
     </div>
     <details>
-      <summary aria-label="Menu">Menu</summary>
+      <summary>Menu</summary>
       <div class="menu"><a href="/make">Make</a><a href="/build">Build</a><a href="/decide">Decide</a><a href="/docs/">Docs</a></div>
     </details>
   </div>
@@ -49,18 +49,17 @@
   <div class="wrap">
     <div class="eyebrow">I build</div>
     <h1>A file format, a seal, a verifier. That is the whole surface.</h1>
-    <!-- DAVID: framing paragraph drafted by Claude; edit freely -->
-    <p class="lede">A <code>.knobe.md</code> is as portable as any Markdown file: plain text, interoperable, human- and machine-readable, accessible by construction. What is new is what travels inside it: a base64 JSON payload at the end of the file. The payload records attribution, transformation history, fidelity limits, use conditions and accessibility lineage, and carries a SHA-256 hash of itself. One engine, <code>knobe-core.js</code>, creates, verifies and transforms these files; everything else is a thin adapter over it. The MCP server gives any agent five tools. The spec is frozen at v1.0 and nine test vectors cover the conformance surface. <span class="hl">Sealing a first file does not require reading any of it first.</span></p>
+    <p class="lede">A <code>.knobe.md</code> is as portable as any Markdown file: plain text, interoperable, human- and machine-readable, accessible by construction. What is new is what travels inside it: a base64 JSON payload at the end of the file. The payload records attribution, transformation history, fidelity limits, use conditions and accessibility lineage, and carries a SHA-256 hash of itself. One engine, <code>knobe-core.js</code>, creates, verifies and transforms these files; everything else is a thin adapter over it. The MCP server gives any agent five tools. The spec is frozen at v1.0; nine core test vectors set the canonical-compatibility bar, and sixteen more probe hostile input or pin errata rulings. <span class="hl">Sealing a first file does not require reading any of it first.</span></p>
     <div class="cta-row"><a class="btn btn-primary" href="/agent">Add KNOBE to your agent</a></div>
   </div>
 </header>
 <section>
   <div class="wrap">
     <h2>Start here</h2>
-<ul class="xlate"><li><a href="/agent">Add KNOBE to your agent</a><span class="docname">/agent</span><span class="why">One install command, one paste-ready prompt, a verified file in about a minute.</span></li>
+<ul class="xlate"><li><a href="/agent">Add KNOBE to your agent</a><span class="docname">/agent</span><span class="why">One install command, one paste-ready prompt, a verified file.</span></li>
 <li><a href="/mcp">The MCP server</a><span class="docname">MCP server</span><span class="why">Five tools: verify, read, create, transform, and permits, which evaluates an action against the file&#x27;s own sealed terms.</span></li>
 <li><a href="/spec">The rules</a><span class="docname">Spec</span><span class="why">The normative specification, v1.0, frozen.</span></li>
-<li><a href="/test-vectors/">Nine files that test every rule</a><span class="docname">Test vectors</span><span class="why">Covers the full conformance surface. Run them against your implementation.</span></li>
+<li><a href="/test-vectors/">Nine files that set the compatibility bar</a><span class="docname">Test vectors</span><span class="why">Nine core vectors, plus sixteen that probe hostile input or pin errata rulings. Run them against your implementation.</span></li>
 <li><a href="/implementations">Reference implementations</a><span class="docname">Implementations</span><span class="why">JavaScript, Python and Go. The Go port was audited by algorithmic transliteration from the reference.</span></li>
 <li><a href="/lens">Inspect any file</a><span class="docname">Lens</span><span class="why">A command-line and browser inspector. Exit codes for scripting.</span></li>
 <li><a href="/threat-model">What can go wrong</a><span class="docname">Threat model</span><span class="why">What the seal does and does not protect against, and why verification is advisory.</span></li>

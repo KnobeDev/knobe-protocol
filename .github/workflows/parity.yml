@@ -25,6 +25,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Distribution copies match the reference
+        run: |
+          cmp lens.py site/lens.py
+          cmp knobe-core.js site/knobe-core.js
+          cmp knobe-core.js mcp/knobe-core.js
       - name: Cross-language parity selftest
         run: node knobe-core.selftest.mjs
 

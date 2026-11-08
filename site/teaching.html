@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KNOBE — Teaching</title>
-<meta name="description" content="An instructor toolkit for KNOBE Protocol v1: define an assignment sequence once, let students seal their work against it, and batch-check a whole cohort. Works with Canvas file uploads. Everything runs locally; student work is never uploaded anywhere.">
+<meta name="description" content="An instructor toolkit for KNOBE Protocol v1: define an assignment sequence once, let students seal their work against it, and batch-check a whole cohort. Designed for Canvas file uploads. Everything runs locally; student work is never uploaded anywhere.">
 <style>
 :root{
-  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#6b8276;
+  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#536a5e;
   --paper:#f7f5ef;--paper-warm:#efece2;--line:#d8d3c4;
-  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;
+  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;--amber-deep:#8a5115;
   --code-bg:#10231a;--code-ink:#cfe6d6;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -141,7 +141,7 @@ details.fold{border:1px solid var(--line);border-radius:6px;margin:14px 0;backgr
 .alayer + .alayer{border-top:1px solid var(--line)}
 .alayer .al{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin-bottom:2px}
 .alayer .ad{display:block;font-size:.85rem;color:var(--ink-soft)}
-.a1{background:#fdf8f0}.a1 .al{color:var(--amber)}
+.a1{background:#fdf8f0}.a1 .al{color:var(--amber-deep)}
 .a2{background:#fff}.a2 .al{color:var(--moss)}
 .a3{background:#eef2ec}.a3 .al{color:var(--moss-deep)}
 
@@ -181,7 +181,7 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KNOBE Protocol">
 <meta property="og:title" content="KNOBE — Teaching">
-<meta property="og:description" content="Define an assignment sequence once, let students seal their work against it, and batch-check a whole cohort. Works with Canvas file uploads. Student work is never uploaded anywhere.">
+<meta property="og:description" content="Define an assignment sequence once, let students seal their work against it, and batch-check a whole cohort. Designed for Canvas file uploads. Student work is never uploaded anywhere.">
 <meta property="og:url" content="https://knobe.org/teaching">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="KNOBE — Teaching">
@@ -333,7 +333,7 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
               <p class="path-what">Read the table, then export the CSV for gradebook cross-reference. For one student's history across the term, use the chain view.</p>
             </div></li>
             <li><span class="path-num">4</span><div>
-              <p class="path-what">Optional: run the same checks from an AI agent with <code>knobe-mcp</code>; it runs locally, so the privacy posture is unchanged.</p>
+              <p class="path-what">Optional: run the same checks from an AI agent with <code>knobe-mcp</code>. The server runs locally, but any content the agent reads through it, including full student text from <code>knobe_read</code>, goes to that agent's model and its provider. That step is outside the no-third-party statement above; use it only where your institution's agreement with that provider covers student records.</p>
               <a class="btn ghost" href="/mcp">About the MCP server</a>
             </div></li>
           </ol>
@@ -400,7 +400,7 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
     </div>
 
     <h2>AI policy, in either direction</h2>
-    <p>The toolkit takes no position on whether AI belongs in your course. It records the position you take. A step sealed under a prohibition carries the student's sole-authorship declaration. A step sealed under a disclosure policy carries a named AI contributor, marked non-rights-bearing, with the student's own account of what the AI did and what they did. The seal does not detect AI use, and nothing here is a detector. It replaces detection with declaration: a signed, hash-anchored statement the student makes at submission time, against the policy you set.</p>
+    <p>The toolkit takes no position on whether AI belongs in your course. It records the position you take. A step sealed under a prohibition carries the student's sole-authorship declaration. A step sealed under a disclosure policy carries a named AI contributor, marked non-rights-bearing, with the student's own account of what the AI did and what they did. The seal does not detect AI use, and nothing here is a detector. It replaces detection with declaration: a sealed, hash-anchored statement the student makes at submission time, against the policy you set.</p>
 
     <h2>Time and identity, without a server</h2>
     <p>The seal proves content, not wall-clock time or legal identity; the <a class="inline" href="/threat-model">threat model</a> states both limits and the application-layer paths that close them. Three patterns give a course most of what it needs with nothing installed.</p>
@@ -411,8 +411,8 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
     <h3>The cohort receipt</h3>
     <p>After a batch check, Cohort check can seal a receipt: one KNOBE attesting that the listed files, with the listed payload hashes, produced the listed verdicts at seal time. Canvas timestamps rot when the course shell is deleted; the receipt is a plain file that survives. Anchor its single hash anywhere with an independent timestamp (an email, a gradebook note) and every listed submission is timestamped at once. Not proved: anything about files it does not list.</p>
 
-    <h3>The signet, designed and arriving next</h3>
-    <p>Continuity of authorship: Studio will generate a keypair that lives in a file the student keeps, and each submission will carry a signature made with it. One anchoring event (in person, or recorded in an enrollment receipt) binds the key fingerprint to the roster; from then on, every signed submission proves the same key holder authored the chain, across a term or a dissertation. The specification reserves <code>identity_status: "signed"</code> for exactly this. Not proved: legal identity; a shared key fails the same way a shared Canvas login does. The signet is for settings that need high-assurance continuity (comprehensive exams, dissertations, certifications), not a default for every section: students lose key files, and each re-enrollment costs real staff time. Most courses get what they need from the sandwich and the receipt. The design charter is public in the repository, and the hardware-credential direction explored with Joshua Hori is the institutional-grade extension of the same path.</p>
+    <h3>The signet: designed, deferred</h3>
+    <p>Continuity of authorship: as designed, Studio would generate a keypair that lives in a file the student keeps, and each submission would carry a signature made with it. One anchoring event (in person, or recorded in an enrollment receipt) would bind the key fingerprint to the roster; from then on, every signed submission would prove the same key holder authored the chain, across a term or a dissertation. The specification reserves <code>identity_status: "signed"</code> for exactly this. Not proved: legal identity; a shared key fails the same way a shared Canvas login does. The signet would be for settings that need high-assurance continuity (comprehensive exams, dissertations, certifications), not a default for every section: students lose key files, and each re-enrollment costs real staff time. Most courses get what they need from the sandwich and the receipt. The signet is deferred and has not been built; its <a class="inline" href="https://github.com/KnobeOne/knobe-protocol/blob/main/docs/signet-design.md">design record</a> is public in the repository, and the hardware-credential direction explored with Joshua Hori is the institutional-grade extension of the same path.</p>
 
     <h2>The kit</h2>
     <p>One page per role, an accessibility guide, and two complete example journeys you can load into Studio unchanged. The examples are sealed KNOBEs and verify like any other.</p>
@@ -433,7 +433,7 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
       <summary>Limits, stated plainly</summary>
       <div class="fold-body">
         <ul>
-          <li>It does not detect AI writing, plagiarism, or contract cheating. It records declarations and verifies integrity; a false declaration remains a conduct matter, now with a signed record of exactly what was declared.</li>
+          <li>It does not detect AI writing, plagiarism, or contract cheating. It records declarations and verifies integrity; a false declaration remains a conduct matter, now with a sealed record of exactly what was declared.</li>
           <li>It does not enforce anything inside Canvas. A student can still upload a plain file with no seal; the Cohort check table shows that as an unreadable row, and your syllabus decides what that means.</li>
           <li>It does not integrate with Canvas beyond files. An LTI 1.3 tool with one-click seal-and-submit would need a server and a Canvas administrator's install. The protocol supports building one; this site does not ship one.</li>
           <li>If you reseal a journey mid-term, earlier submissions still chain to the spec hash that was actually assigned to them. That is the record working correctly, not drifting.</li>

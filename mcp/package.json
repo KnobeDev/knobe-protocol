@@ -1,6 +1,6 @@
 {
   "name": "knobe-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MCP server for KNOBE Protocol v1: verify, read, create, and transform sealed .knobe.md knowledge objects, and evaluate what their sealed terms permit. Runs locally; no telemetry.",
   "type": "module",
   "bin": {
@@ -11,7 +11,8 @@
     "server.mjs",
     "knobe-core.js",
     "fixtures/",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "start": "node server.mjs",
