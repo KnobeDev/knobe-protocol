@@ -57,7 +57,8 @@
     <h2>1. Install</h2>
     <div class="tabs" role="tablist" aria-label="Choose your tool">
       <button role="tab" aria-selected="true" aria-controls="tab-cc" id="tabbtn-cc">Claude Code</button>
-      <button role="tab" aria-selected="false" aria-controls="tab-cu" id="tabbtn-cu" tabindex="-1">Cursor or VS Code</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-cu" id="tabbtn-cu" tabindex="-1">Cursor</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-vs" id="tabbtn-vs" tabindex="-1">VS Code</button>
       <button role="tab" aria-selected="false" aria-controls="tab-no" id="tabbtn-no" tabindex="-1">Any chat without tools</button>
     </div>
     <div id="tab-cc" role="tabpanel" aria-labelledby="tabbtn-cc">
@@ -73,7 +74,19 @@
     }
   }
 }</pre><button type="button" data-copy>Copy</button></div>
-      <p class="quiet">Add this block to your client's MCP configuration file. Configuration formats vary between clients, so check your client's documentation for where it goes. The package's own tests run the server through an in-memory MCP client, not through any particular editor.</p>
+      <p class="quiet">Add this block to <code>.cursor/mcp.json</code> in your project, or to <code>~/.cursor/mcp.json</code> to use it everywhere. The package's own tests run the server through an in-memory MCP client, not through any particular editor.</p>
+    </div>
+    <div id="tab-vs" role="tabpanel" aria-labelledby="tabbtn-vs" hidden>
+      <div class="copybox"><pre class="code">{
+  "servers": {
+    "knobe": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "knobe-mcp"]
+    }
+  }
+}</pre><button type="button" data-copy>Copy</button></div>
+      <p class="quiet">Add this block to <code>.vscode/mcp.json</code> in your workspace. VS Code uses the key <code>servers</code>, not <code>mcpServers</code>, and ignores a block with the wrong key without an error. The package's own tests run the server through an in-memory MCP client, not through any particular editor.</p>
     </div>
     <div id="tab-no" role="tabpanel" aria-labelledby="tabbtn-no" hidden>
       <p>Draft here, seal in <a href="/studio/">Studio</a>. A model can write the words and the record; it cannot compute the seal. Ask your assistant to draft the title, a short summary, the attribution and the use conditions, then paste them into Studio and press Seal. Studio runs in your browser and uploads nothing.</p>
