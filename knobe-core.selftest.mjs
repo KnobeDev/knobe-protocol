@@ -26,7 +26,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { verify, exitCode, safe } from "./knobe-core.js";
+import { verify, exitCode, safe, seal } from "./knobe-core.js";
 
 const execFileP = promisify(execFile);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -212,6 +212,19 @@ for (const f of files) {
 const present = new Set(files.map((f) => relative(HERE, f).split(sep).join("/")));
 for (const rel of EXPECTED.keys()) {
   if (!present.has(rel)) disagreements.push({ f: join(HERE, rel), note: "listed in the test-vectors READMEs, but the file is missing" });
+}
+
+// The reference sealer refuses a code point unassigned in its Unicode tables
+// (issue #33): U+0378 is unassigned in every Unicode version to date.
+const SEALER = join(HERE, "knobe-core.js");
+try {
+  await seal({ spec_version: "1.0", title: "ok \u00e9" });
+} catch (e) { disagreements.push({ f: SEALER, note: "seal() refused an assigned string: " + (e.message || e) }); }
+for (const bad of [{ title: "x\u0378" }, { ["k\u0378"]: "v" }, { a: ["x\u0378"] }]) {
+  try {
+    await seal({ spec_version: "1.0", ...bad });
+    disagreements.push({ f: SEALER, note: "seal() accepted an unassigned code point: " + JSON.stringify(bad) });
+  } catch { /* refused, as required */ }
 }
 
 console.log(`KNOBE verifier parity: ${agree}/${files.length} files agree (knobe-core.js vs lens.py, and both vs the published expected results)`);
