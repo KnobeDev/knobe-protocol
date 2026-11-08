@@ -12,6 +12,14 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### 2026-11-06
+
+- `test-vectors/adversarial/nested-payload-hash` (#23): a valid payload
+  whose `parents` entry carries the parent's `payload_hash`. Spec §5
+  leaves out only the top-level `payload_hash`; a verifier that removes
+  it at every depth matched `lens.py` on every earlier vector, and now
+  reports this one failed. The cross-language corpus grows to 45 files.
+
 ### 2026-11-05
 
 - Pinning vectors for the hardening in PRs #11, #12 and #19, which
