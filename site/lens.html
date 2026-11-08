@@ -7,7 +7,7 @@
 <meta name="description" content="The KNOBE Lens verifies a .knobe.md file entirely in your browser. No upload, no server, no AI. It runs the same canonical hash algorithm as lens.py, the reference verifier, and reports integrity and conformance locally.">
 <style>
 :root{
-  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#6b8276;
+  --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#5d7568;
   --paper:#f7f5ef;--paper-warm:#efece2;--line:#d8d3c4;
   --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;
   --alert:#9e2b1e;--code-bg:#10231a;--code-ink:#cfe6d6;
@@ -76,7 +76,7 @@ h2{font-size:1.3rem;font-weight:normal;color:var(--moss-deep);margin:40px 0 12px
 .drop.drag{border-color:var(--moss);background:#eef2ec}
 .drop .dicon{font-size:1.7rem;color:var(--ink-faint);margin-bottom:10px;font-family:Georgia,serif}
 .drop .dmain{font-size:1.05rem;color:var(--ink-soft);margin-bottom:6px}
-.drop .dhint{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;color:var(--ink-faint)}
+.drop .dhint{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;color:var(--ink-soft)}
 .choose{font-family:-apple-system,system-ui,sans-serif;font-size:.88rem;font-weight:500;margin-top:16px;
   background:var(--moss-deep);color:var(--paper);border:none;border-radius:4px;padding:11px 22px;cursor:pointer;transition:background .15s}
 .choose:hover{background:var(--moss)}
@@ -104,11 +104,11 @@ h2{font-size:1.3rem;font-weight:normal;color:var(--moss-deep);margin:40px 0 12px
   display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;border:2px solid currentColor}
 .verdict .vbody{min-width:0}
 .verdict .vlabel{font-size:1.18rem;font-weight:normal;letter-spacing:-.01em}
-.verdict .vstate{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--ink-faint);margin-top:2px;word-break:break-all}
+.verdict .vstate{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--ink-soft);margin-top:2px;word-break:break-all}
 .v-ok{color:var(--moss-deep)}
 .v-warn{color:var(--amber)}
 .v-bad{color:var(--alert)}
-.v-neutral{color:var(--ink-faint)}
+.v-neutral{color:var(--ink-soft)}
 .verdict.v-ok{background:#eef2ec}
 .verdict.v-warn{background:#f6efe4}
 .verdict.v-bad{background:#f6ebe8}
@@ -129,7 +129,7 @@ h2{font-size:1.3rem;font-weight:normal;color:var(--moss-deep);margin:40px 0 12px
 .tag.ok{color:var(--moss-deep);background:#eef2ec}
 .tag.warn{color:var(--amber);background:#f6efe4}
 .tag.bad{color:var(--alert);background:#f6ebe8}
-.tag.neutral{color:var(--ink-faint);background:var(--paper-warm)}
+.tag.neutral{color:var(--ink-soft);background:var(--paper-warm)}
 .hashmatch{font-family:-apple-system,system-ui,sans-serif;font-size:.74rem;margin-top:3px}
 .hashmatch.ok{color:var(--moss)}
 .hashmatch.bad{color:var(--alert)}
@@ -259,7 +259,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       <div class="dmain">Drag a <code>.knobe.md</code> file here</div>
       <div class="dhint">Your file never leaves this page.</div>
       <button type="button" id="chooseBtn" class="choose">Choose a file</button>
-      <input type="file" id="fileInput" class="visually-hidden" accept=".md,.knobe,.txt,text/markdown,text/plain" aria-label="Choose a .knobe.md file to verify">
+      <input type="file" id="fileInput" hidden accept=".md,.knobe,.txt,text/markdown,text/plain">
     </div>
 
     <div class="altrow">
@@ -286,7 +286,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       </div>
       <p style="margin-top:14px;font-family:-apple-system,system-ui,sans-serif;font-size:.86rem;color:var(--ink-soft)"><strong>Bare-numeric payloads:</strong> When a payload contains bare JSON numeric values (which KNOBE v1 treats as a spec violation), Browser Lens does not issue a hash verdict. This is a browser Lens behavior, not a protocol state. Use <a href="lens.py" class="inline">lens.py</a> for canonical verification of these files.</p>
       <p style="margin-top:14px"><strong>Conformance</strong> is reported separately from integrity. A file can be <em>verified</em> yet still carry conformance <em>warnings</em> or be <em>invalid</em>: for example a missing field, a malformed date, or multiple payload blocks. Integrity asks "is the sealed record unchanged?"; conformance asks "is it well-formed against the spec?"</p>
-      <p>This Lens matches <a href="lens.py" class="inline">lens.py</a> for conforming all-string KNOBE v1 payloads and deliberately declines hash verdicts for bare-numeric payloads, deferring to <code>lens.py</code> as canonical. The engine is verified against 11 sealed public KNOBEs, 9 conformance vectors, and 10 adversarial hardening vectors (30 files total). For automation, audits, and the definitive result, use <a href="lens.py" class="inline">lens.py</a>, a single standard-library Python file with no dependencies. Read the algorithm in the <a href="/spec" class="inline">specification</a>.</p>
+      <p>This Lens matches <a href="lens.py" class="inline">lens.py</a> for conforming all-string KNOBE v1 payloads and deliberately declines hash verdicts for bare-numeric payloads, deferring to <code>lens.py</code> as canonical. The engine has been checked against 12 sealed public KNOBEs, 9 core conformance vectors, 17 adversarial hardening vectors, and 7 interpretation vectors (45 files total). For automation, audits, and the definitive result, use <a href="lens.py" class="inline">lens.py</a>, a single standard-library Python file with no dependencies. Read the algorithm in the <a href="/spec" class="inline">specification</a>.</p>
     </section>
 
   </div>
@@ -311,9 +311,10 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 </footer>
 
 <!-- ============================================================= -->
-<!-- KNOBE verification engine: byte-for-byte conformance-locked   -->
-<!-- to lens.py. Proven by a Node parity harness against all nine   -->
-<!-- conformance vectors plus the adversarial hardening set.        -->
+<!-- KNOBE verification engine, kept in step with lens.py and      -->
+<!-- knobe-core.js. Checked (Nov 2026, Node harness, not in CI)    -->
+<!-- against the 45 published test files; declines bare-numeric    -->
+<!-- payloads by design.                                           -->
 <!-- ============================================================= -->
 <script>
 // lens.js: KNOBE Protocol v1 in-browser verification engine.
@@ -532,8 +533,34 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
     } else if(Array.isArray(o)){ o.forEach((v,k)=>{ out=out.concat(findNfcCollisions(v,`${path}[${k}]`)); }); }
     return out;
   }
+  // True if any key or string value holds a lone UTF-16 surrogate, which has
+  // no UTF-8 form (same check as knobe-core.js hasIllFormed, lens.py
+  // _has_lone_surrogate).
+  function hasIllFormed(x){
+    if(typeof x==='string'){
+      if(typeof x.isWellFormed==='function') return !x.isWellFormed();
+      return /(?:[\uD800-\uDBFF](?![\uDC00-\uDFFF]))|(?:(?<![\uD800-\uDBFF])[\uDC00-\uDFFF])/.test(x);
+    }
+    if(Array.isArray(x)) return x.some(hasIllFormed);
+    if(x&&typeof x==='object'){ for(const k of Object.keys(x)){ if(hasIllFormed(k)||hasIllFormed(x[k])) return true; } }
+    return false;
+  }
+  // Python str.strip() whitespace (same set as knobe-core.js): includes
+  // \x1c-\x1f and \x85, excludes U+FEFF and '-'.
+  const PY_WS_EDGE="[\\t\\n\\v\\f\\r \\x1c-\\x1f\\x85\\xa0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000]+";
   function pyStrip(t){
-    return t.replace(/^[\s-]+/,'').replace(/[\s-]+$/,'');
+    return t.replace(new RegExp("^"+PY_WS_EDGE),'').replace(new RegExp(PY_WS_EDGE+"$"),'');
+  }
+  // Strict Base64, same rule as knobe-core.js and lens.py b64decode(validate=True):
+  // drop ASCII space/tab/CR/LF only; padding required (ERRATA E7).
+  function b64decodeStrict(s){
+    const clean=s.replace(/[ \t\r\n]+/g,'');
+    if(clean.length%4!==0) throw new Error("invalid base64 length");
+    if(!/^[A-Za-z0-9+/]*={0,2}$/.test(clean)) throw new Error("invalid base64 alphabet");
+    const bin=atob(clean);
+    const u8=new Uint8Array(bin.length);
+    for(let j=0;j<bin.length;j++) u8[j]=bin.charCodeAt(j);
+    return u8;
   }
   function normalizeBody(text){
     text=pyStrip(text);
@@ -625,7 +652,8 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
   // ---------- main entry: verify raw file bytes ----------
   function verifyBytes(bytes){
     let raw;
-    try { raw=new TextDecoder("utf-8",{fatal:true}).decode(bytes); }
+    // ignoreBOM:true keeps a leading U+FEFF, as lens.py and knobe-core.js do.
+    try { raw=new TextDecoder("utf-8",{fatal:true,ignoreBOM:true}).decode(bytes); }
     catch(e){ return unreadable("file is not valid UTF-8", []); }
 
     const blocks=findBlocks(raw);
@@ -633,11 +661,8 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     let payload;
     try{
-      const b64=blocks[blocks.length-1].replace(/\s+/g,'');
-      const bin=atob(b64);
-      const u8=new Uint8Array(bin.length);
-      for(let j=0;j<bin.length;j++) u8[j]=bin.charCodeAt(j);
-      const text=new TextDecoder("utf-8",{fatal:true}).decode(u8);
+      const u8=b64decodeStrict(blocks[blocks.length-1]);
+      const text=new TextDecoder("utf-8",{fatal:true,ignoreBOM:true}).decode(u8);
       payload=parseStrict(text);
     }catch(e){
       if(e instanceof DuplicateKeyError) return unreadable(`payload contains duplicate JSON key: ${e.key} (ambiguous; rejected)`, blocks);
@@ -646,6 +671,9 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     if(payload===null||typeof payload!=='object'||Array.isArray(payload))
       return unreadable(`payload is not a JSON object (got ${Array.isArray(payload)?'array':(payload===null?'null':typeof payload)})`, blocks);
+
+    // Lone UTF-16 surrogates cannot be UTF-8 canonicalized: reject cleanly.
+    if(hasIllFormed(payload)) return unreadable("payload contains characters that cannot be UTF-8 encoded (e.g. an unpaired surrogate); rejected", blocks);
 
     const collisions=findNfcCollisions(payload);
     if(collisions.length) return unreadable("payload keys collide under NFC normalization: "+collisions.slice(0,5).join('; '), blocks);

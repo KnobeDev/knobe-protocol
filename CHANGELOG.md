@@ -12,6 +12,38 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### 2026-11-07 (post-freeze, unreleased)
+
+- PR #11, "Fail to unreadable instead of crashing on three hostile
+  payloads": `lens.py` fails to `unreadable` instead of crashing on
+  hostile payloads, and `knobe-core.js` rejects overflowing numbers as
+  `unreadable` instead of throwing.
+- PR #12, "Proposal (needs ERRATA ruling): strict hash/date formats and
+  ASCII-only block whitespace", ruled as erratum E12 in `ERRATA.md`:
+  dates and hashes are ASCII-strict with nothing following, and only
+  ASCII space, tab, CR and LF may be stripped from a payload block. No
+  published vector or canonical artifact changes verdict. E12 is pinned
+  by `test-vectors/interpretation/nel-block-whitespace` (2026-11-05,
+  below). `site/ERRATA.md` synced so E12 is served at
+  knobe.org/ERRATA.md.
+- PR #18, "Front door revamp: new homepage, five-scene illustration,
+  door pages, policy and portability".
+- PR #19, "Never crash printing a report; escape the same characters in
+  lens.py and knobe-core.js".
+- `.github/CODEOWNERS` added: steward review required on every path.
+- Browser Lens decodes the payload block by the same strict Base64 rule
+  as `knobe-core.js` and `lens.py` (padding required, erratum E7; only
+  ASCII space, tab, CR and LF stripped, erratum E12), and strips the
+  body and handles a leading BOM as they do.
+- `knobe-mcp` 0.1.2: packages the current `knobe-core.js` engine and
+  ships its Apache-2.0 license as `mcp/LICENSE`.
+- `LICENSE` now holds the full CC BY 4.0 legal code. The copyright
+  notice and citation moved to `LICENSING.md`, which also lists the
+  license for each part; no license terms changed. `SECURITY.md` scope
+  now names `knobe-core.js` and `knobe-mcp`.
+- Site claims corrected to match what v1 and its tools do and what has
+  been tested.
+
 ### 2026-11-06
 
 - `test-vectors/adversarial/nested-payload-hash` (#23): a valid payload

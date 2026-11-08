@@ -33,7 +33,7 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURES = join(HERE, "fixtures");
-const VERSION = "0.1.1";
+const VERSION = "0.1.2";
 
 // ---------------------------------------------------------------------------
 // helpers
