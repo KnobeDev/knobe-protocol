@@ -12,22 +12,22 @@ python3 lens.py minimal-valid.knobe.md
 
 ### Core six (integrity model)
 
-| file | expected status | expected conformance |
-|------|----------------|----------------------|
-| `minimal-valid.knobe.md` | verified | valid |
-| `full-valid.knobe.md` | verified | valid |
-| `body-modified.knobe.md` | verified-body-modified | valid |
-| `payload-modified.knobe.md` | failed | valid (where readable) |
-| `unreadable.knobe.md` | unreadable | invalid |
-| `unicode-valid.knobe.md` | verified | valid |
+| file | expected status | expected body_verified | expected conformance |
+|------|----------------|------------------------|----------------------|
+| `minimal-valid.knobe.md` | verified | omitted | valid |
+| `full-valid.knobe.md` | verified | yes | valid |
+| `body-modified.knobe.md` | verified-body-modified | modified | valid |
+| `payload-modified.knobe.md` | failed | omitted | valid (where readable) |
+| `unreadable.knobe.md` | unreadable | — | invalid |
+| `unicode-valid.knobe.md` | verified | yes | valid |
 
 ### Additional three (extended spec rules)
 
-| file | expected status | expected conformance | notes |
-|------|----------------|----------------------|-------|
-| `numeric-violation.knobe.md` | verified | invalid | bare integer in payload triggers §5 violation; integrity intact |
-| `omitted-body-hash.knobe.md` | verified | valid | no body_hash field; body_verified MUST be omitted |
-| `multi-block.knobe.md` | verified (last block) | warnings | two payload blocks; verifier surfaces a warning and MUST report body_verified omitted |
+| file | expected status | expected body_verified | expected conformance | notes |
+|------|----------------|------------------------|----------------------|-------|
+| `numeric-violation.knobe.md` | verified | yes | invalid | bare integer in payload triggers §5 violation; integrity intact |
+| `omitted-body-hash.knobe.md` | verified | omitted | valid | no body_hash field; body_verified MUST be omitted |
+| `multi-block.knobe.md` | verified (last block) | omitted | warnings | two payload blocks; verifier surfaces a warning and MUST report body_verified omitted |
 
 ## Adversarial hardening set
 
