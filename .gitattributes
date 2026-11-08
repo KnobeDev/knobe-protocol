@@ -1,0 +1,4 @@
+# Sealed files and test vectors are byte-exact. Converting their line
+# endings (core.autocrlf, the Git for Windows default) makes every one of
+# them unreadable: the payload markers must end in a bare line feed.
+*.knobe.md -text

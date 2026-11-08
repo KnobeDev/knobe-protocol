@@ -25,13 +25,41 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Distribution copies match the reference
-        run: |
-          cmp lens.py site/lens.py
-          cmp knobe-core.js site/knobe-core.js
-          cmp knobe-core.js mcp/knobe-core.js
       - name: Cross-language parity selftest
         run: node knobe-core.selftest.mjs
+
+  copies:
+    # The site and the MCP package serve copies of files whose source lives
+    # at the repository root. A fix that reaches only one copy ships a stale
+    # file, so every copy must stay byte-identical to its source.
+    name: Copies match their source
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare every copy with its source
+        run: |
+          status=0
+          same() {
+            if ! cmp -s "$1" "$2"; then
+              echo "::error file=$2::$2 differs from its source $1"
+              status=1
+            fi
+          }
+          same knobe-core.js mcp/knobe-core.js
+          same knobe-core.js site/knobe-core.js
+          same lens.py site/lens.py
+          same ERRATA.md site/ERRATA.md
+          # site/test-vectors mirrors test-vectors, plus its own index page.
+          if ! diff -r --exclude=index.html test-vectors site/test-vectors; then
+            echo "::error file=site/test-vectors::site/test-vectors differs from test-vectors"
+            status=1
+          fi
+          # Sealed examples the site also serves.
+          for f in site/*.knobe.md; do
+            src="examples/$(basename "$f")"
+            if [ -f "$src" ]; then same "$src" "$f"; fi
+          done
+          exit $status
 
   mcp-smoke:
     name: MCP server smoke test
