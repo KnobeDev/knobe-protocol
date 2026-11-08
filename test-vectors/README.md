@@ -35,7 +35,7 @@ The [`adversarial/`](adversarial/) subdirectory contains ten additional hostile-
 
 ## Interpretation set
 
-The [`interpretation/`](interpretation/) subdirectory contains six files pinning the documented rulings in [ERRATA.md](../ERRATA.md): questions the specification text left open, reported by an implementer building from the text alone, each resolved authoritatively and fixed by a vector both reference verifiers agree on. Expected results in [`interpretation/README.md`](interpretation/README.md).
+The [`interpretation/`](interpretation/) subdirectory contains six files pinning the documented rulings in [ERRATA.md](../ERRATA.md): questions the specification text left open, reported by the steward while building a Go verifier from the text alone, each resolved authoritatively and fixed by a vector both reference verifiers agree on. Expected results in [`interpretation/README.md`](interpretation/README.md).
 
 ## Notes
 

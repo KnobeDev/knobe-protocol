@@ -52,7 +52,7 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 - `ERRATA.md` added: eleven documented interpretations of questions
   raised in real implementation work, each with an authoritative ruling
   and, where practical, a pinning test vector. The questions came from
-  a third verifier (Go) built from the specification text; running it
+  a third verifier (Go) that the steward built from the specification text; running it
   against both reference implementations also surfaced an inconsistent
   spelling in the reference's own JSON output (the string `omitted` for
   failed files, `null` for unreadable ones, both spellings of the same
