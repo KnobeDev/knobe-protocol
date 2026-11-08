@@ -2,7 +2,7 @@
 
 KNOBE Protocol v1 is frozen: nothing here changes the file format, the required fields, the canonical hash rule, or the verification semantics. Under [GOVERNANCE.md](GOVERNANCE.md), the steward may publish errata, meaning clarifications that do not change the behavior of any conforming file or verifier. This document is that record.
 
-Each entry states a question raised in real implementation work, the authoritative answer, and where the answer is pinned by a published test vector. The questions came from a verifier in Go built in July 2026 with an AI coding agent at the steward's direction, from the specification text, with lens.py consulted for ambiguous edge cases. It is steward-commissioned work, so not independent as GOVERNANCE.md defines independence. The questions were reported by the steward, and several were confirmed or refined by running that implementation against the reference verifiers. Where a ruling is pinned by a vector in [`test-vectors/interpretation/`](test-vectors/interpretation/), both reference implementations (`lens.py` and `knobe-core.js`) produced the expected result in agreement before the vector was published.
+Each entry states a question raised in real implementation work, the authoritative answer, and where the answer is pinned by a published test vector. The questions behind E1 to E11 came from a verifier in Go built in July 2026 with an AI coding agent at the steward's direction, from the specification text, with lens.py consulted for ambiguous edge cases. It is steward-commissioned work, so not independent as GOVERNANCE.md defines independence. The questions were reported by the steward, and several were confirmed or refined by running that implementation against the reference verifiers. E12 was proposed in PR #12. Where a ruling is pinned by a vector in [`test-vectors/interpretation/`](test-vectors/interpretation/), both reference implementations (`lens.py` and `knobe-core.js`) produced the expected result in agreement before the vector was published.
 
 The rulings below are authoritative for v1. The published test vectors and their expected results are the arbiter of conformance. Where they leave a detail undecided, `lens.py` is canonical for serialization ambiguity under spec §5, and rulings for everything else are documented here; where observed reference behavior conflicts with explicit normative text, the ruling follows the specification and records the conflict.
 
@@ -112,9 +112,8 @@ other character inside the block makes the base64 invalid and the file
 unreadable. No published vector or canonical artifact changes verdict
 under this ruling, checked across all 37 published files.
 
-**Pinned by:** not yet pinned; a vector
-(`test-vectors/interpretation/nel-block-whitespace.knobe.md`, expected:
-unreadable) should be added.
+**Pinned by:** `test-vectors/interpretation/nel-block-whitespace.knobe.md`
+(expected: unreadable · invalid).
 
 ---
 

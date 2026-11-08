@@ -22,18 +22,15 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
   ASCII-only block whitespace", ruled as erratum E12 in `ERRATA.md`:
   dates and hashes are ASCII-strict with nothing following, and only
   ASCII space, tab, CR and LF may be stripped from a payload block. No
-  published vector or canonical artifact changes verdict. E12 is not yet
-  pinned by a vector. `site/ERRATA.md` synced so E12 is served at
+  published vector or canonical artifact changes verdict. E12 is pinned
+  by `test-vectors/interpretation/nel-block-whitespace` (2026-11-05,
+  below). `site/ERRATA.md` synced so E12 is served at
   knobe.org/ERRATA.md.
 - PR #18, "Front door revamp: new homepage, five-scene illustration,
   door pages, policy and portability".
 - PR #19, "Never crash printing a report; escape the same characters in
   lens.py and knobe-core.js".
 - `.github/CODEOWNERS` added: steward review required on every path.
-- `site/lens.py`, the copy served at knobe.org/lens.py, synced with the
-  reference `lens.py`. The parity workflow now byte-compares `lens.py`
-  with `site/lens.py`, and `knobe-core.js` with `site/knobe-core.js` and
-  `mcp/knobe-core.js`.
 - Browser Lens decodes the payload block by the same strict Base64 rule
   as `knobe-core.js` and `lens.py` (padding required, erratum E7; only
   ASCII space, tab, CR and LF stripped, erratum E12), and strips the
@@ -46,6 +43,39 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
   now names `knobe-core.js` and `knobe-mcp`.
 - Site claims corrected to match what v1 and its tools do and what has
   been tested.
+
+### 2026-11-06
+
+- `test-vectors/adversarial/nested-payload-hash` (#23): a valid payload
+  whose `parents` entry carries the parent's `payload_hash`. Spec §5
+  leaves out only the top-level `payload_hash`; a verifier that removes
+  it at every depth matched `lens.py` on every earlier vector, and now
+  reports this one failed. The cross-language corpus grows to 45 files.
+
+### 2026-11-05
+
+- Pinning vectors for the hardening in PRs #11, #12 and #19, which
+  landed without any: the seven candidate files from issue #20, added
+  byte for byte as the steward supplied them, three renamed.
+  `test-vectors/interpretation/nel-block-whitespace` pins ERRATA E12; the
+  adversarial set gains `float-overflow`, `lone-surrogate`,
+  `spec-version-array`, `bigint-payload`, `bidi-title` and
+  `null-payload-hash`. The cross-language corpus grows from 37 to 44
+  files.
+- `knobe-core.selftest.mjs` now holds both engines to the expected
+  results published in the three test-vectors READMEs, not only to each
+  other, fails on a vector with no README row, and requires every sealed
+  example to be `verified` and `valid`. A change that broke both engines
+  the same way used to pass. It also compares reason and issue text word
+  for word (two files with known wording differences are listed), and
+  fails if `lens.py`'s human report or `knobe-core.js`'s `safe()` shows a
+  raw control, bidi or separator character or an unpaired surrogate.
+- `parity.yml` gains a copy-drift job: every copy under `site/` and
+  `mcp/` must be byte-identical to its source. `site/lens.py`, the
+  download served at knobe.org/lens.py, was still the file from before
+  PR #11 and is now in sync.
+- `.gitattributes` keeps `.knobe.md` files byte-exact, so a Windows
+  checkout with `core.autocrlf` does not turn every vector unreadable.
 
 ### 2026-07-08
 

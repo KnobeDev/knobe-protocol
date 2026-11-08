@@ -31,11 +31,11 @@ python3 lens.py minimal-valid.knobe.md
 
 ## Adversarial hardening set
 
-The [`adversarial/`](adversarial/) subdirectory contains ten additional hostile-input files — duplicate keys, NFC key collisions, control-character injection, unsupported spec versions — with expected results in [`adversarial/README.md`](adversarial/README.md). They are not part of the canonical-compatibility bar; they test verifier robustness.
+The [`adversarial/`](adversarial/) subdirectory contains seventeen additional hostile-input files — duplicate keys, NFC key collisions, control-character and bidi injection, unsupported spec versions, numbers and strings with no canonical form — with expected results in [`adversarial/README.md`](adversarial/README.md). They are not part of the canonical-compatibility bar; they test verifier robustness.
 
 ## Interpretation set
 
-The [`interpretation/`](interpretation/) subdirectory contains six files pinning the documented rulings in [ERRATA.md](../ERRATA.md): questions the specification text left open, reported from the steward-commissioned Go verifier (built from the specification text, with lens.py consulted for ambiguous edge cases), each resolved authoritatively and fixed by a vector both reference verifiers agree on. Expected results in [`interpretation/README.md`](interpretation/README.md).
+The [`interpretation/`](interpretation/) subdirectory contains seven files pinning the documented rulings in [ERRATA.md](../ERRATA.md): questions the specification text left open: six reported from the steward-commissioned Go verifier (built from the specification text, with lens.py consulted for ambiguous edge cases), and one (E12) proposed in PR #12, each resolved authoritatively and fixed by a vector both reference verifiers agree on. Expected results in [`interpretation/README.md`](interpretation/README.md).
 
 ## Notes
 
