@@ -29,6 +29,7 @@ By contributing, you agree your contribution is licensed under the project's ter
 |----------|---------|
 | Specification and prose (including profiles and site copy) | [CC BY 4.0](LICENSE) |
 | Verifier code (`lens.py`, `knobe-core.js`, `knobe-core.selftest.mjs`, the browser Lens in `site/lens.html`) | [Apache-2.0](LICENSE-CODE) |
+| The `knobe-mcp` package (`mcp/`) | [Apache-2.0](mcp/LICENSE) |
 | Test vectors (`test-vectors/`) | [CC0-1.0](test-vectors/LICENSE) |
 
 ## Sign-off (DCO)
