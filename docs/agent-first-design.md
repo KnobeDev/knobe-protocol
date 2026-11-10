@@ -123,9 +123,10 @@ docs/education-safety-profile.md for the education-specific rules.
 
 ## Interoperability
 
-The public comparison lives at knobe.org/related-work (C2PA, W3C PROV,
-RO-Crate, BagIt, Dublin Core, knowledge graphs, JSON-LD, XMP, llms.txt,
-each verified against primary sources). Rows added here for completeness:
+The public comparison lives at knobe.org/related-work (Git, C2PA,
+Verifiable Credentials, W3C PROV, W3C Web Annotation, RO-Crate, BagIt,
+Dublin Core, knowledge graphs, JSON-LD, XMP, EPUB, llms.txt, each
+verified against primary sources). Rows added here for completeness:
 
 | Neighbor | Relationship | Mapping posture |
 |---|---|---|
