@@ -62,9 +62,7 @@ the gap, at whatever strength the stakes demand:
   binding; every later submission signed by the same key inherits it.
 - **High stakes** (comprehensive exams, dissertations, certifications): the
   student states their fingerprint in person, or signs a challenge phrase in
-  a proctored setting, and the record of that event is itself sealed. The
-  hardware-credential and accessible-authentication work explored with
-  Joshua Hori is the institutional-grade version of this anchoring step.
+  a proctored setting, and the record of that event is itself sealed.
 
 ## What it does and does not prove
 
