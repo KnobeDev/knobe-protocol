@@ -217,7 +217,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     <ul>
       <li><strong>Application-tier identity.</strong> An institution that issues credentials to its members can require KNOBE files produced by those members to be wrapped in a signed envelope at submission. The open KNOBE remains plain text; the institutional layer adds the identity guarantee.</li>
-      <li><strong>Ledger anchoring.</strong> A KNOBE's payload hash can be anchored to a distributed register at sealing time, providing existence-at-a-time proof. The open protocol provides integrity; the ledger provides timestamps the open protocol cannot. An anchoring tier integrating KNOBE with Apache ResilientDB (a high-throughput permissioned ledger developed at UC Davis) is being developed by the author and collaborators; other public anchoring options including OpenTimestamps over Bitcoin are also under evaluation.</li>
+      <li><strong>Ledger anchoring.</strong> A KNOBE's payload hash can be anchored to a distributed register at sealing time, providing existence-at-a-time proof. The open protocol provides integrity; the ledger provides timestamps the open protocol cannot.</li>
       <li><strong>Credentialed authoring environments.</strong> Authoring tools that hold institutional credentials can layer signing infrastructure over the open protocol. Files produced inside such an environment inherit institutional identity; files produced outside it do not, and the distinction is visible.</li>
     </ul>
 
