@@ -539,7 +539,9 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
   function hasIllFormed(x){
     if(typeof x==='string'){
       if(typeof x.isWellFormed==='function') return !x.isWellFormed();
-      return /(?:[\uD800-\uDBFF](?![\uDC00-\uDFFF]))|(?:(?<![\uD800-\uDBFF])[\uDC00-\uDFFF])/.test(x);
+      // No lookbehind (same regex as knobe-core.js): Safari on iOS before
+      // 16.4 cannot parse one, and then this whole script fails to load.
+      return /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]/.test(x);
     }
     if(Array.isArray(x)) return x.some(hasIllFormed);
     if(x&&typeof x==='object'){ for(const k of Object.keys(x)){ if(hasIllFormed(k)||hasIllFormed(x[k])) return true; } }
