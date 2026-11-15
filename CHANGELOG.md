@@ -12,6 +12,33 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### Unreleased: permits() and unlisted actions (issue #42)
+
+- `permits()` in `knobe-core.js` (all three copies) no longer gives an
+  action more than the sealed terms grant because of the word used to
+  ask. Before, the license was applied only to the 13 listed
+  distribution and derivative verbs, so `quote`, `paraphrase` or
+  `fine-tune` on an all-rights-reserved object came back `conditional`
+  while `excerpt`, `summarize` and `train` were refused. Now:
+  - `read`, `use`, `inspect` and `verify` are an inspection class that no
+    license refuses;
+  - `quote` and `summarise` are evaluated as `excerpt` and `summarize`;
+  - any other verb is unrecognized and is held to the terms for both
+    distribution and derivative works, with a basis entry that says so.
+    Where the terms grant both, the answer is `conditional` with an
+    obligation naming how the verb was read, never a plain `true`;
+  - `true` is returned only when there are no obligations. A modified
+    body or a non-conformant file used to leave `true` beside the
+    obligation it added; the answer is now `conditional`.
+  Answers only get stricter. No shipped example or vector changes its
+  answer for a listed or inspection verb. A missing `license` is still
+  not evaluated; that is fixed separately.
+  `knobe-core.selftest.mjs` checks these verdicts, and the knobe-mcp
+  smoke test checks them through `knobe_permits`. Its description now
+  says what the inspection verbs do and do not cover and how other verbs
+  are read, and its verdict line escapes and shortens the caller's action
+  text.
+
 ### 2026-11-10
 
 - `knobe-core.js` (all three copies) and the browser Lens no longer use

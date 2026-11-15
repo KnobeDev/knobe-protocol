@@ -26,7 +26,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { verify, exitCode, safe, seal } from "./knobe-core.js";
+import { verify, exitCode, safe, seal, createKnobe, permits } from "./knobe-core.js";
 
 const execFileP = promisify(execFile);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -267,6 +267,110 @@ try {
   disagreements.push({ f: SEALER, note: "verify() threw without isWellFormed: " + (e.message || e) });
 } finally {
   if (IS_WELL_FORMED) Object.defineProperty(String.prototype, "isWellFormed", IS_WELL_FORMED);
+}
+
+// permits() must never give an action more than the sealed terms grant
+// (issue #42). Four inspection verbs are refused by no license. Every other
+// verb is held to the license: the listed distribution and derivative verbs
+// by their class, "quote" and "summarise" as the listed verbs they name, and
+// any verb on no list as both classes at once, because it could be either.
+// A result with obligations is "conditional", never true.
+{
+  const sealedReport = async (fields) => verify((await createKnobe({
+    fields: { title: "t", summary: "s", privacy_level: "public", quarantine_status: "trusted", ...fields },
+    body: "b", author: "A" })).text);
+  const INSPECTION = ["read", "use", "inspect", "verify"];
+  const UNLISTED = ["paraphrase", "fine-tune", "reproduce", "xyzzy", ""];
+  const expectAllowed = (name, report, action, want) => {
+    const got = permits(report, action);
+    if (got.allowed !== want) {
+      disagreements.push({ f: SEALER, note: `permits(${name}, ${JSON.stringify(action)}) is ${JSON.stringify(got.allowed)}, expected ${JSON.stringify(want)}` });
+    }
+    return got;
+  };
+  const basisSays = (name, got, re) => {
+    if (!got.basis.some((b) => re.test(String(b.effect)))) {
+      disagreements.push({ f: SEALER, note: `permits(${name}, ${JSON.stringify(got.action)}) has no basis matching ${re}` });
+    }
+  };
+
+  // All rights reserved: only inspection is left.
+  const reserved = await sealedReport({ license: "All rights reserved" });
+  for (const a of INSPECTION) expectAllowed("all rights reserved", reserved, a, "conditional");
+  for (const a of ["excerpt", "summarize", "train", "redistribute"]) expectAllowed("all rights reserved", reserved, a, false);
+  basisSays("all rights reserved", expectAllowed("all rights reserved", reserved, "quote", false), /evaluated as "excerpt"/);
+  basisSays("all rights reserved", expectAllowed("all rights reserved", reserved, "summarise", false), /evaluated as "summarize"/);
+  expectAllowed("all rights reserved", reserved, "  Quote ", false);
+  for (const a of UNLISTED) {
+    basisSays("all rights reserved", expectAllowed("all rights reserved", reserved, a, false), /unrecognized action: no permission assumed/);
+  }
+  expectAllowed("all rights reserved", reserved, undefined, false);
+  // Case and surrounding whitespace do not change which verb was asked.
+  for (const a of ["READ", " Read ", "\ufeffread\n"]) expectAllowed("all rights reserved", reserved, a, "conditional");
+  // A look-alike or a compound is not the inspection verb it resembles.
+  for (const a of ["\uff52\uff45\uff41\uff44", "read\u200b", "re ad", "read,publish", "use to train", "\u0130nspect"]) {
+    expectAllowed("all rights reserved", reserved, a, false);
+  }
+  // Property names of ordinary objects are just unrecognized verbs.
+  for (const a of ["__proto__", "constructor", "toString", "hasOwnProperty"]) expectAllowed("all rights reserved", reserved, a, false);
+  // Not a string: null, 0 and false read as no action; the rest by their text.
+  for (const a of [null, 0, false, 5, {}, ["read", "publish"]]) expectAllowed("all rights reserved", reserved, a, false);
+  // Verbs the design notes plan to add are unrecognized until they are added.
+  for (const a of ["embed", "archive"]) expectAllowed("all rights reserved", reserved, a, false);
+
+  // A license that grants both classes grants an unlisted verb too, and says how it was read.
+  const ccBy = await sealedReport({ license: "CC BY 4.0" });
+  basisSays("CC BY 4.0", expectAllowed("CC BY 4.0", ccBy, "paraphrase", "conditional"), /unrecognized action: no permission assumed/);
+  expectAllowed("CC BY 4.0", ccBy, "quote", "conditional");
+  expectAllowed("CC BY 4.0", ccBy, "train", "conditional");
+
+  // NoDerivatives: redistribution is licensed, derivatives are not. An
+  // unlisted verb might be a derivative, so it is refused as one.
+  const ccByNd = await sealedReport({ license: "CC BY-ND 4.0" });
+  expectAllowed("CC BY-ND 4.0", ccByNd, "redistribute", "conditional");
+  for (const a of ["excerpt", "quote", "summarise", "paraphrase", "xyzzy"]) expectAllowed("CC BY-ND 4.0", ccByNd, a, false);
+  for (const a of INSPECTION) expectAllowed("CC BY-ND 4.0", ccByNd, a, "conditional");
+
+  // Quarantine and a non-public privacy level refuse distribution; an
+  // unlisted verb might distribute, so they refuse it too.
+  const quarantined = await sealedReport({ license: "CC BY 4.0", quarantine_status: "quarantine" });
+  const internal = await sealedReport({ license: "CC BY 4.0", privacy_level: "internal" });
+  for (const [name, report] of [["quarantined CC BY", quarantined], ["internal CC BY", internal]]) {
+    expectAllowed(name, report, "redistribute", false);
+    for (const a of ["paraphrase", "xyzzy"]) expectAllowed(name, report, a, false);
+    expectAllowed(name, report, "summarize", "conditional");
+    expectAllowed(name, report, "quote", "conditional");
+    for (const a of INSPECTION) expectAllowed(name, report, a, "conditional");
+  }
+
+  // A rejected object and a broken seal permit nothing, inspection included.
+  const rejected = await sealedReport({ license: "CC0-1.0", quarantine_status: "rejected" });
+  for (const a of [...INSPECTION, "summarize", "xyzzy"]) expectAllowed("rejected", rejected, a, false);
+  for (const a of [...INSPECTION, "xyzzy"]) expectAllowed("failed seal", { state: "failed", conformance: "valid" }, a, false);
+
+  // true means no obligations at all. A modified body or a non-conformant
+  // file adds an obligation, so the answer is "conditional".
+  const bare = { license: "CC0-1.0", privacy_level: "public", quarantine_status: "trusted" };
+  expectAllowed("clean CC0", { state: "verified", conformance: "valid", payload: bare }, "read", true);
+  expectAllowed("clean CC0", { state: "verified", conformance: "valid", payload: bare }, "train", true);
+  // An unrecognized verb is never answered with a plain true, even where the terms grant everything.
+  {
+    const got = expectAllowed("clean CC0", { state: "verified", conformance: "valid", payload: bare }, "xyzzy", "conditional");
+    if (!got.obligations.some((o) => o.startsWith("unrecognized action:"))) {
+      disagreements.push({ f: SEALER, note: "permits(clean CC0, \"xyzzy\") names no obligation for the unrecognized action" });
+    }
+  }
+  expectAllowed("CC0, body modified", { state: "verified-body-modified", conformance: "valid", payload: bare }, "read", "conditional");
+  expectAllowed("CC0, non-conformant", { state: "verified", conformance: "invalid", conformance_issues: ["x"], payload: bare }, "read", "conditional");
+  for (const f of files) {
+    const report = await verify(new Uint8Array(await readFile(f)));
+    for (const a of [...INSPECTION, "summarize", "excerpt", "quote", "redistribute", "train", ...UNLISTED]) {
+      const got = permits(report, a);
+      if (got.allowed === true && got.obligations.length) {
+        disagreements.push({ f, note: `permits(${JSON.stringify(a)}) is true with ${got.obligations.length} obligation(s)` });
+      }
+    }
+  }
 }
 
 console.log(`KNOBE verifier parity: ${agree}/${files.length} files agree (knobe-core.js vs lens.py, and both vs the published expected results)`);

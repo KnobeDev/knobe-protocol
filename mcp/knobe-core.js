@@ -1017,9 +1017,14 @@ export async function transformKnobe(originalInput, { fields = {}, body = "", au
 // Governance: permits (v1-honest policy evaluation)
 // ---------------------------------------------------------------------------
 
-// Action classes for governance evaluation.
+// Action classes for governance evaluation. Inspection is refused by no
+// license. An action on none of the three lists is unrecognized: it could
+// distribute or derive, so permits() holds it to the terms for both.
+const INSPECTION_ACTIONS = new Set(["read","use","inspect","verify"]);
 const DISTRIBUTION_ACTIONS = new Set(["redistribute","distribute","publish","share","train","integrate"]);
 const DERIVATIVE_ACTIONS = new Set(["transform","adapt","remix","summarize","translate","excerpt","annotate"]);
+// Other names for a listed action; each is evaluated as the action it names.
+const ACTION_ALIASES = new Map([["quote", "excerpt"], ["summarise", "summarize"]]);
 
 /**
  * Classify a license's redistribution/derivation posture. DEFAULT-DENY: an
@@ -1057,10 +1062,23 @@ function licensePosture(lic) {
  * Returns { action, allowed: true|false|"conditional", obligations:[],
  *           basis:[{field, value, effect}], integrity:{state, conformance} }.
  * This tool cites clauses; it does not practice law. "conditional" means
- * the action is not forbidden by the sealed fields but carries obligations.
+ * the action is not forbidden by the sealed fields but carries obligations;
+ * true is returned only when there are none.
+ *
+ * The action is matched after trimming and lowercasing. Inspection (read,
+ * use, inspect, verify) is refused by no license; a broken seal or a
+ * rejected object still refuses it. "quote" and "summarise" are evaluated
+ * as "excerpt" and "summarize". An action on no list is DEFAULT-DENY like
+ * an unrecognized license: it is held to the terms for distribution and for
+ * derivative works, the basis says so, and the answer is never plain true.
  */
 export function permits(report, action) {
-  const act = String(action || "").toLowerCase().trim();
+  const asked = String(action || "").toLowerCase().trim();
+  const act = ACTION_ALIASES.get(asked) ?? asked;
+  const unrecognized = !INSPECTION_ACTIONS.has(act) && !DISTRIBUTION_ACTIONS.has(act)
+    && !DERIVATIVE_ACTIONS.has(act);
+  const distributes = unrecognized || DISTRIBUTION_ACTIONS.has(act);
+  const derives = unrecognized || DERIVATIVE_ACTIONS.has(act);
   const basis = [];
   const obligations = [];
   let allowed = true;
@@ -1070,7 +1088,7 @@ export function permits(report, action) {
   // Integrity gate: a broken or unreadable seal permits nothing.
   if (report.state === "failed" || report.state === "unreadable") {
     return {
-      action: act, allowed: false, obligations: [],
+      action: asked, allowed: false, obligations: [],
       basis: [{
         field: "integrity", value: report.state,
         effect: report.state === "failed"
@@ -1082,6 +1100,14 @@ export function permits(report, action) {
   }
 
   const p = report.payload ?? {};
+
+  if (act !== asked) {
+    basis.push({ field: "action", value: asked, effect: `evaluated as "${act}"` });
+  }
+  if (unrecognized) {
+    basis.push({ field: "action", value: asked,
+      effect: "unrecognized action: no permission assumed; held to the terms for both distribution and derivative works" });
+  }
 
   if (report.state === "verified-body-modified") {
     obligations.push("the human-readable body differs from the sealed body_hash; "
@@ -1104,7 +1130,7 @@ export function permits(report, action) {
   } else if (q === "quarantine") {
     basis.push({ field: "quarantine_status", value: q,
       effect: "object has not been reviewed and trusted yet" });
-    if (DISTRIBUTION_ACTIONS.has(act)) {
+    if (distributes) {
       allowed = false;
     } else {
       obligations.push("quarantined: inspect and establish trust before relying on the content");
@@ -1117,7 +1143,7 @@ export function permits(report, action) {
   if (priv && priv !== "public") {
     basis.push({ field: "privacy_level", value: priv,
       effect: `content is ${priv}; distribution beyond its intended audience is not permitted` });
-    if (DISTRIBUTION_ACTIONS.has(act)) {
+    if (distributes) {
       allowed = false;
     } else {
       obligations.push(`privacy_level ${priv}: keep within the intended audience`);
@@ -1130,10 +1156,10 @@ export function permits(report, action) {
   const lic = typeof p.license === "string" ? p.license : null;
   if (lic !== null) {
     const pos = licensePosture(lic);
-    if (DISTRIBUTION_ACTIONS.has(act) && !pos.redistribute) {
+    if (distributes && !pos.redistribute) {
       allowed = false;
       basis.push({ field: "license", value: lic, effect: `${pos.note}: redistribution is not licensed` });
-    } else if (DERIVATIVE_ACTIONS.has(act) && !pos.derive) {
+    } else if (derives && !pos.derive) {
       allowed = false;
       basis.push({ field: "license", value: lic, effect: `${pos.note}: derivative works are not licensed` });
     } else {
@@ -1177,7 +1203,19 @@ export function permits(report, action) {
     if (allowed === true) allowed = "conditional";
   }
 
-  return { action: act, allowed, obligations, basis, integrity };
+  // An unrecognized action is never waved through unremarked: where the
+  // sealed terms grant both classes, the caller is still told how it was read.
+  if (unrecognized && allowed !== false) {
+    obligations.push("unrecognized action: it was evaluated as both distribution and derivative work; "
+      + "ask about a listed action where one fits");
+  }
+
+  // true means nothing is asked of the caller. An obligation added above
+  // without touching `allowed` (a modified body, a non-conformant file, an
+  // unrecognized action) makes the answer conditional.
+  if (allowed === true && obligations.length) allowed = "conditional";
+
+  return { action: asked, allowed, obligations, basis, integrity };
 }
 
 export { DuplicateKeyError };

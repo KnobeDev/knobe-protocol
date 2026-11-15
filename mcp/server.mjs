@@ -352,8 +352,14 @@ export async function buildServer() {
       + "governance fields — integrity state, quarantine_status, privacy_level, "
       + "license clauses, attribution, and namespaced extension obligations. "
       + "Returns allowed: true | false | \"conditional\" with the citable clauses. "
-      + "Actions: read, summarize, excerpt, translate, transform, redistribute, "
-      + "publish, share, train, integrate. A file whose seal fails verification "
+      + "Actions: read, use, inspect, verify (viewing only: no license refuses "
+      + "them, and they say nothing about copying, quoting, training or sharing, "
+      + "so ask about the actual action); summarize, excerpt, translate, "
+      + "transform, redistribute, publish, share, train, integrate. quote and "
+      + "summarise are evaluated as excerpt and summarize. Any other verb is "
+      + "unrecognized: it is held to the license terms for both distribution and "
+      + "derivative works and is never answered with a plain yes, so use a listed "
+      + "verb where one fits. A file whose seal fails verification "
       + "permits nothing. The verdict reports what the object declares; "
       + "enforcement belongs to the caller, and this is not legal advice.",
     inputSchema: {
@@ -366,10 +372,13 @@ export async function buildServer() {
     if (!inp.ok && !inp.report) return errorResult(inp.error);
     const r = inp.report ?? await verify(inp.data);
     const g = permits(r, args.action);
+    // The action is the caller's own text: escaped and cut before it is put
+    // on the verdict line, so it cannot add a line or a second verdict to it.
+    const asked = safe(g.action, 80);
     const head =
-      g.allowed === true ? `PERMITTED: "${g.action}" (no sealed obligations found)`
-      : g.allowed === "conditional" ? `PERMITTED WITH OBLIGATIONS: "${g.action}" — honor them or decline`
-      : `NOT PERMITTED: "${g.action}" — cited clauses below`;
+      g.allowed === true ? `PERMITTED: "${asked}" (no sealed obligations found)`
+      : g.allowed === "conditional" ? `PERMITTED WITH OBLIGATIONS: "${asked}" — honor them or decline`
+      : `NOT PERMITTED: "${asked}" — cited clauses below`;
     return textBlocks(head, jsonSafe(g));
   });
 

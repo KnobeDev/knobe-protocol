@@ -79,15 +79,19 @@ metadata cannot make.
 
 ## Policy gate: permits()
 
-Shipping verbs: redistribute, distribute, publish, share, train, integrate
+Shipping verbs: read, use, inspect, verify (inspection class, refused by
+no license); redistribute, distribute, publish, share, train, integrate
 (distribution class); transform, adapt, remix, summarize, translate,
-excerpt, annotate (derivative class). Integrity gate first: failed or
+excerpt, annotate (derivative class). quote and summarise are evaluated as
+excerpt and summarize. A verb on no list is unrecognized: it is held to
+the terms for both the distribution and the derivative class, and is never
+answered with a plain true (issue #42). Integrity gate first: failed or
 unreadable seals permit nothing. Namespaced extension obligations are
 surfaced verbatim for the caller to honor or explicitly decline.
 
 - Add embed and archive as recognized verbs: v1.x-safe (engine vocabulary,
-  not spec).
-- quote: already served by excerpt; alias only if implementers stumble.
+  not spec). Until they are added they are unrecognized verbs.
+- quote: evaluated as excerpt (alias added with issue #42).
 - grade and evaluate: declined deliberately. They are verbs about judging
   work in an institutional relationship, which is exactly the
   person-adjacent territory the doctrine walls off. An agent asked to
