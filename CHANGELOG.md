@@ -12,6 +12,20 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### 2026-11-10
+
+- `knobe-core.js` (all three copies) and the browser Lens no longer use
+  a regex lookbehind. Where `String.prototype.isWellFormed` is missing,
+  the unpaired-surrogate check falls back to a regex, and that regex
+  had a lookbehind. Safari before 16.4 has neither, so on iOS before
+  16.4 the regex could not be parsed and the whole script failed to
+  load. The new regex matches exactly the same strings. Where
+  `isWellFormed` exists, nothing runs differently.
+  `knobe-core.selftest.mjs` now fails if `knobe-core.js` or any script
+  or page under `site/` contains a lookbehind, and runs the fallback
+  with `isWellFormed` removed on payloads with and without unpaired
+  surrogates.
+
 ### 2026-11-07 (post-freeze, unreleased)
 
 - PR #11, "Fail to unreadable instead of crashing on three hostile

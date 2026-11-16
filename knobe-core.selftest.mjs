@@ -227,6 +227,48 @@ for (const bad of [{ title: "x\u0378" }, { ["k\u0378"]: "v" }, { a: ["x\u0378"] 
   } catch { /* refused, as required */ }
 }
 
+// Where String.prototype.isWellFormed is missing, the unpaired-surrogate check
+// falls back to a regular expression. Safari on iOS before 16.4 cannot parse a
+// regex lookbehind, and a script holding one it cannot parse does not load at
+// all, so neither knobe-core.js nor any page or script the site serves may
+// contain one. With isWellFormed removed, the fallback must reject exactly the
+// payloads that hold an unpaired surrogate, in a key, a value or a nested value.
+const SITE = join(HERE, "site");
+const browserFiles = [join(HERE, "knobe-core.js"), ...(await readdir(SITE))
+  .filter((n) => n.endsWith(".js") || n.endsWith(".html")).map((n) => join(SITE, n))];
+for (const file of browserFiles) {
+  if (/\(\?<[=!]/.test(await readFile(file, "utf-8"))) {
+    disagreements.push({ f: file, note: "contains a regex lookbehind, which Safari on iOS before 16.4 cannot parse" });
+  }
+}
+const SURROGATE_PROBES = ["\ud800", "a\udbff", "\ud800a", "\udc00", "a\udfff", "\udc00a",
+  "\udc00\ud800", "\ud800\ud800\udc00", "\ud800\udc00\udc00", "\ud800\udc00", "\udbff\udfff",
+  "e\u0301\u{1F600}x", "\ud7ff\ue000"];
+// Array.from splits a string into code points; an unpaired surrogate stays alone.
+const hasUnpaired = (s) => Array.from(s).some((ch) => ch.length === 1 && ch >= "\ud800" && ch <= "\udfff");
+// JSON.stringify writes an unpaired surrogate as a \uXXXX escape.
+const probeFile = (payload) => "---\ntitle: \"p\"\nspec_version: \"1.0\"\n---\n\nbody\n\n"
+  + "-----BEGIN KNOBE B64-----\n" + Buffer.from(JSON.stringify(payload), "utf-8").toString("base64")
+  + "\n-----END KNOBE B64-----\n";
+const IS_WELL_FORMED = Object.getOwnPropertyDescriptor(String.prototype, "isWellFormed");
+delete String.prototype.isWellFormed;
+try {
+  for (const s of SURROGATE_PROBES) {
+    for (const payload of [{ spec_version: "1.0", a: s }, { spec_version: "1.0", [s]: 1 },
+                           { spec_version: "1.0", a: [{ b: s }] }]) {
+      const r = await verify(probeFile(payload));
+      const rejected = (r.reason || "").startsWith("payload contains characters that cannot be UTF-8 encoded");
+      if (rejected !== hasUnpaired(s)) {
+        disagreements.push({ f: SEALER, note: `without isWellFormed, verify() ${rejected ? "rejects" : "accepts"} ${JSON.stringify(payload)}` });
+      }
+    }
+  }
+} catch (e) {
+  disagreements.push({ f: SEALER, note: "verify() threw without isWellFormed: " + (e.message || e) });
+} finally {
+  if (IS_WELL_FORMED) Object.defineProperty(String.prototype, "isWellFormed", IS_WELL_FORMED);
+}
+
 console.log(`KNOBE verifier parity: ${agree}/${files.length} files agree (knobe-core.js vs lens.py, and both vs the published expected results)`);
 console.log(`  (${KNOWN_TEXT_DIFFS.size} files with known reason or issue wording differences)`);
 for (const d of disagreements) {
