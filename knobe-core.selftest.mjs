@@ -122,13 +122,14 @@ function unexpected(rel, got, want) {
   return out;
 }
 
-async function collect(dir) {
+// Every file under dir, subfolders included, whose name `keep` accepts.
+async function collect(dir, keep = (name) => name.endsWith(".knobe.md")) {
   const out = [];
   async function walk(d) {
     for (const e of await readdir(d, { withFileTypes: true })) {
       const p = join(d, e.name);
       if (e.isDirectory()) await walk(p);
-      else if (e.name.endsWith(".knobe.md")) out.push(p);
+      else if (keep(e.name)) out.push(p);
     }
   }
   if (existsSync(dir)) await walk(dir);
@@ -231,11 +232,12 @@ for (const bad of [{ title: "x\u0378" }, { ["k\u0378"]: "v" }, { a: ["x\u0378"] 
 // falls back to a regular expression. Safari on iOS before 16.4 cannot parse a
 // regex lookbehind, and a script holding one it cannot parse does not load at
 // all, so neither knobe-core.js nor any page or script the site serves may
-// contain one. With isWellFormed removed, the fallback must reject exactly the
-// payloads that hold an unpaired surrogate, in a key, a value or a nested value.
+// contain one, in site/ or in any folder below it. With isWellFormed removed,
+// the fallback must reject exactly the payloads that hold an unpaired
+// surrogate, in a key, a value or a nested value.
 const SITE = join(HERE, "site");
-const browserFiles = [join(HERE, "knobe-core.js"), ...(await readdir(SITE))
-  .filter((n) => n.endsWith(".js") || n.endsWith(".html")).map((n) => join(SITE, n))];
+const browserFiles = [join(HERE, "knobe-core.js"),
+  ...await collect(SITE, (name) => name.endsWith(".js") || name.endsWith(".html"))];
 for (const file of browserFiles) {
   if (/\(\?<[=!]/.test(await readFile(file, "utf-8"))) {
     disagreements.push({ f: file, note: "contains a regex lookbehind, which Safari on iOS before 16.4 cannot parse" });

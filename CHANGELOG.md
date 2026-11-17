@@ -12,6 +12,14 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### 2026-11-15
+
+- `knobe-core.selftest.mjs`: the lookbehind check added on 2026-11-10
+  now reads the folders below `site/` as well. It had read only the
+  files directly in `site/`, so a lookbehind in a page such as
+  `site/studio/index.html` would have passed. No file under `site/`
+  has one. Nothing else changes: no engine, verdict or page.
+
 ### 2026-11-10
 
 - `knobe-core.js` (all three copies) and the browser Lens no longer use
