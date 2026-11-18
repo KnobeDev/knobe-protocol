@@ -12,6 +12,22 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### 2026-11-17
+
+- Site status corrections, wording only. No engine, verdict or vector
+  changes.
+  - Homepage and build page: nine core vectors plus twenty-four more
+    that probe hostile input or pin errata rulings (33 in all), not
+    sixteen more. The homepage's stewardship row no longer says
+    "Independent": it says there is a single steward for now, links
+    the published triggers for shared governance, and says KNOBE is not
+    an institutional project.
+  - knobe.org/implementations: knobe-rs shows its maintainer's report
+    of all 33 vectors at `4f66885`; knobe-go says it has not yet
+    reported results for the 33; KNOBE Studio for Obsidian uses
+    Joshua's wording from #16 for its built-in teaching guide and
+    installs from Obsidian's community directory.
+
 ### 2026-11-15
 
 - `knobe-core.selftest.mjs`: the lookbehind check added on 2026-11-10
