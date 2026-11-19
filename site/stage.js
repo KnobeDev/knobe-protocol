@@ -25,7 +25,7 @@ var KNOBE_SCENES=[
     files:['.pdf','.xlsx','CMS text','RAG chunks'],
     chips:['Engineer: M. Lin','Batch 7 only','Tested at 20°C','Not for outdoor use'],
     keeps:[[1,1,1,1],[0,1,1,1],[0,0,0,0],[0,0,0,0]],
-    caption:'An engineer tests a device and writes a memo: batch 7 only, tested at 20°C, not for outdoor use. The spec sheet keeps every limit and drops only the engineer. The retailer page keeps none of it. The support chatbot, answering from the retailer page, tells a customer it is fine outdoors. The chatbot was not wrong about the page it read; the page had already lost the knowing.',
+    caption:'An engineer tests a device and writes a memo: batch 7 only, tested at 20°C, not for outdoor use. The spec sheet keeps every limit and drops only the engineer. The retailer page keeps none of it. The support chatbot, answering from the retailer page, tells a customer it is fine outdoors. The chatbot was not wrong about the page it read; the page had already lost the limits.',
     verdicts:{ without:'“Yes, fine for outdoor use.”', withk:'“Not rated for outdoor use.”' },
     impact:{ without:'A customer mounts it outdoors on the chatbot’s word. The recall, when it comes, traces back through three systems to a memo that said so all along.', withk:'The chatbot reads the sealed limits before answering and says so. Even the retailer page can be tighter, because the file it compresses from still carries what may be claimed.' } },
   { key:'research', label:'A study', stations:['Pilot dataset','Working paper','AI literature summary','Policy brief'],
