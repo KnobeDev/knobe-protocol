@@ -106,11 +106,11 @@
     </div>
   </div>
   <div class="wrap">
-    <p>A verified seal proves the record is intact. <strong>It does not prove the record is true.</strong> That distinction is the whole design.</p>
+    <p>A verified seal shows the record matches the seal it carries. Anyone who edits a file can seal it again, so the check means most when you already know the hash. <strong>It does not prove the record is true.</strong> That distinction is the whole design.</p>
     <details class="example" id="example">
       <summary class="btn btn-ghost">Show a real sealed file</summary>
       <div class="inner">
-        <p class="quiet">This is a real sealed file. Press Verify and your browser checks the seal. Press Tamper, change a word, and watch the check fail. The block at the bottom is the machine-readable record; you are not expected to read it.</p>
+        <p class="quiet">This is a real sealed file: the protocol's plain-language summary. Press Verify and your browser checks the seal. Press Tamper, change a word, and watch the check fail. The block at the bottom is the machine-readable record; you are not expected to read it.</p>
         <div class="demo" id="demo" hidden>
           <pre class="demo-file fm" id="demoFm" aria-label="YAML frontmatter"></pre>
           <pre class="demo-file dbody" id="demoBody" aria-label="Markdown body"></pre>
@@ -121,9 +121,9 @@
             <button class="demo-btn ghost" id="demoReset" type="button" hidden>Reset</button>
           </div>
           <div id="demoVerdict" class="demo-verdict" role="status" hidden></div>
-          <p class="demo-note">The check runs in your browser with <a href="/knobe-core.js">knobe-core.js</a>; nothing is uploaded. A verified seal proves integrity, not truth.</p>
+          <p class="demo-note">The check runs in your browser with <a href="/knobe-core.js">knobe-core.js</a>; nothing is uploaded. A verified seal shows integrity, not truth.</p>
         </div>
-        <p class="quiet" id="demoFallback" hidden>The example could not be loaded in this browser. <a href="/knobe-education-reading.knobe.md">Open the file directly</a>.</p>
+        <p class="quiet" id="demoFallback" hidden>The example could not be loaded in this browser. <a href="/knobe-v1-plain-language-summary.knobe.md">Open the file directly</a>.</p>
       </div>
     </details>
   </div>
@@ -138,13 +138,13 @@
     <table>
       <thead><tr><th>Component</th><th>State</th></tr></thead>
       <tbody>
-        <tr><td>Specification</td><td><a href="/spec">v1.0</a>, frozen, published 2026. Changes are recorded in the open in the <a href="/ERRATA.md">errata</a>.</td></tr>
+        <tr><td>Specification</td><td><a href="/spec">v1.0</a>, frozen, published 2026. Clarifications are recorded in the open in the <a href="/ERRATA.md">errata</a>.</td></tr>
         <tr><td>Conformance</td><td><a href="/test-vectors/">Nine core test vectors</a> set the canonical-compatibility bar for v1; twenty-four more probe hostile input or pin errata rulings. Not every erratum is pinned by a vector yet.</td></tr>
         <tr><td>Implementations</td><td>JavaScript and Python, plus a steward-commissioned Go verifier, built from the specification text with lens.py consulted on edge cases. The JavaScript and Python verifiers are <a href="/implementations">checked against each other</a> across the published corpus.</td></tr>
         <tr><td>Agent access</td><td><a href="/mcp">knobe-mcp</a> v0.1.2 on npm: five tools, runs locally, no telemetry.</td></tr>
-        <tr><td>Browser tools</td><td><a href="/studio/">Studio</a>, <a href="/grove/">Grove</a> and <a href="/lens">Lens</a>. No account; nothing is uploaded.</td></tr>
-        <tr><td>Institutional pilots</td><td>UC Davis pilots are planned. None are active yet.</td></tr>
-        <tr><td>Known limits</td><td>Documented in the <a href="/threat-model">threat model</a> and restated as the six refusals on the <a href="/policy">policy page</a>.</td></tr>
+        <tr><td>Browser tools</td><td><a href="/studio/">Studio</a> and <a href="/lens">Lens</a>. No account; nothing is uploaded.</td></tr>
+        <tr><td>Institutional adoption</td><td>None active.</td></tr>
+        <tr><td>Known limits</td><td>Open issues are listed in the known-limits sections of the <a href="/threat-model#known-limits">threat model</a> and the <a href="/mcp#known-limits">MCP server page</a>. The six refusals are restated on the <a href="/policy">policy page</a>.</td></tr>
         <tr><td>Stewardship</td><td>A single steward for now, with <a href="/related-work#one-steward">published triggers for shared governance</a>. Not an institutional project. Protocol CC BY 4.0, code Apache-2.0.</td></tr>
       </tbody>
     </table>
@@ -211,7 +211,7 @@
 'displayed=displayed.replace(m[0],"-----BEGIN KNOBE B64-----\\n"+b64+"\\n-----END KNOBE B64-----");'+
 'render();await runVerify();$("#demoTamper").hidden=true;$("#demoReset").hidden=false;});'+
 '$("#demoReset").addEventListener("click",()=>{displayed=original;render();$("#demoVerdict").hidden=true;$("#demoTamper").hidden=true;$("#demoReset").hidden=true;});'+
-'try{const res=await fetch("/knobe-education-reading.knobe.md");if(res.ok){original=displayed=await res.text();render();$("#demo").hidden=false;}else{$("#demoFallback").hidden=false;}}catch{$("#demoFallback").hidden=false;}';
+'try{const res=await fetch("/knobe-v1-plain-language-summary.knobe.md");if(res.ok){original=displayed=await res.text();render();$("#demo").hidden=false;}else{$("#demoFallback").hidden=false;}}catch{$("#demoFallback").hidden=false;}';
     document.body.appendChild(s);
   });
 })();

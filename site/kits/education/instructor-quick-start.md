@@ -4,7 +4,7 @@ One page: define an assignment sequence, seal it, and post it to Canvas. No inst
 
 ## What you are making
 
-One plain-text file, called a journey. Its readable half is a syllabus-ready description of your assignment sequence. Its sealed half carries the same steps in machine-readable form, so a student who loads the file gets a submission form already set up with your policies. The file verifies: anyone can check that it is byte-identical to what you sealed.
+One plain-text file, called a journey. Its readable half is a syllabus-ready description of your assignment sequence. Its sealed half carries the same steps in machine-readable form, so a student who loads the file gets a submission form already set up with your policies. The file verifies: anyone can check that it matches the seal it carries. To confirm it is the file you sealed, compare its payload hash with the one you kept.
 
 ## Build the journey
 

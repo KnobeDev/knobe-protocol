@@ -430,13 +430,13 @@ footer a:hover{color:var(--moss)}
         <div class="tplgrid">
           <label class="tpl"><input type="radio" name="tpl" value="instructor">
             <span class="tname">Instructor: seal a reading</span>
-            <span class="tdesc">Course-scoped terms for an assigned reading. The seal proves the file is intact, not that reuse is authorized.</span></label>
+            <span class="tdesc">Course-scoped terms for an assigned reading. The seal shows the file matches the seal it carries, not that reuse is authorized.</span></label>
           <label class="tpl"><input type="radio" name="tpl" value="student">
             <span class="tname">Student: seal a reflection</span>
             <span class="tdesc">Your own words at submission time. The seal records your declaration; it does not prove authorship.</span></label>
           <label class="tpl"><input type="radio" name="tpl" value="researcher">
             <span class="tname">Researcher: seal a transcript</span>
-            <span class="tdesc">A verbatim transcript with participant attribution and fidelity limits. The seal proves the record is unaltered, not that the transcription is accurate.</span></label>
+            <span class="tdesc">A verbatim transcript with participant attribution and fidelity limits. The seal shows the record matches the seal it carries, not that the transcription is accurate.</span></label>
           <label class="tpl"><input type="radio" name="tpl" value="enterprise">
             <span class="tname">Enterprise: seal a policy summary</span>
             <span class="tdesc">A condensed summary sealed in quarantine: an orientation aid, not the policy, until review clears it.</span></label>
@@ -635,7 +635,7 @@ footer a:hover{color:var(--moss)}
 
     <!-- ================= TRANSFORM ================= -->
     <section class="panel" id="panel-transform" role="tabpanel" aria-labelledby="tab-transform" hidden>
-      <p style="font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;color:var(--ink-soft)">A derivative declares its parent: the new object's <code>parents</code> entry records the original's title and payload hash. The original must verify first; a broken seal cannot anchor a chain.</p>
+      <p style="font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;color:var(--ink-soft)">A derivative declares its parent: the new object's <code>parents</code> entry records the original's title and payload hash. The original's payload must verify; a broken seal cannot anchor a chain. If the original's text changed after sealing, Studio still accepts it and flags it, and the derivative names the sealed version, not the changed text.</p>
       <div id="tDrop" class="drop">
         <div class="dicon" aria-hidden="true">&#9671;</div>
         <div class="dmain">Drag a sealed <code>.knobe.md</code> here to derive from it</div>

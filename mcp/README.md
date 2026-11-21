@@ -13,11 +13,11 @@ SHA-256 integrity hash, all sealed inside the file and verifiable locally. The
 [specification](https://knobe.org/spec) is frozen at v1.0.
 
 The boundary is deliberate: `knobe-core.js` is the protocol engine; `knobe-mcp`
-is one surface over it. ([Studio](https://knobe.org/studio/) is another. Every
-future integration is a thin adapter over the same core.)
+is one surface over it. ([Studio](https://knobe.org/studio/) is another. The
+project's own integrations are thin adapters over the same core.)
 
-Everything runs in the local server process. No network requests, no telemetry,
-no accounts, no state between calls.
+Everything runs in the local server process. After install, no network requests,
+no telemetry, no accounts.
 
 ## Tools
 
@@ -26,15 +26,17 @@ no accounts, no state between calls.
 | `knobe_verify` | Integrity and conformance verdict for a file or pasted text: the protocol's four states (`verified`, `verified-body-modified`, `failed`, `unreadable`), a separate conformance axis with each issue listed, both hashes, and `lens.py`'s exit code. |
 | `knobe_read` | An obligations-first read: the first content block is the sealed-context preamble (integrity verdict, provenance, license, trust posture, and the obligations that travel with the object), so an agent reads the conditions before the content. The second block carries the payload metadata and markdown body. |
 | `knobe_create` | Assemble and seal a new object from fields and a body. Required fields default per the engine; the sealed file self-verifies before it is returned, and can be written to a path (with an explicit `overwrite` flag guarding existing files). |
-| `knobe_transform` | Seal a derivative of a verified original. The derivative's `parents` field records the original's title and payload hash automatically; a broken seal cannot anchor a chain. |
+| `knobe_transform` | Seal a derivative of a verified original. The derivative's `parents` field records the original's title and payload hash automatically. The original's payload must verify; a broken seal cannot anchor a chain. If the original's text changed after sealing, the tool still accepts it, and the derivative names the sealed version, not the changed text. |
 | `knobe_permits` | Evaluate a proposed action (`summarize`, `excerpt`, `translate`, `train`, `redistribute`, `publish`, `transform`, ...) against the object's own sealed terms. |
 
 ## Resources and prompt
 
 The 31-fixture corpus ships with the package and is browsable as MCP resources:
 
-- `knobe://examples/…` — sealed real-world KNOBEs (verify as verified/valid)
-- `knobe://vectors/…` — conformance and adversarial vectors with known verdicts
+- `knobe://examples/…` — sealed illustrative KNOBEs (verify as verified/valid)
+- `knobe://vectors/…` — the nine core vectors and ten of the seventeen
+  adversarial vectors, with known verdicts; the other seven adversarial and all
+  seven interpretation vectors are not included
 - `knobe://guide` — orientation for agents
 
 A `knobe-guarded-summarize` prompt encodes the basic KNOBE agent procedure:
@@ -68,6 +70,26 @@ rather than a guess. Two boundaries hold throughout: a file whose seal fails
 verification permits nothing, and the verdict reports what the object declares.
 Enforcement belongs to the caller; a verified seal confirms integrity, not
 truth.
+
+## Known limits
+
+`knobe_permits` is advisory. It reports what the sealed terms declare and
+enforces nothing, and it has open cases where it allows more than the license
+does. Until they are fixed, treat `"conditional"` as "ask a human", not as
+permission.
+
+- **Unlisted verbs skip the license check**
+  ([issue #42](https://github.com/KnobeOne/knobe-protocol/issues/42)). The
+  license is applied only to a fixed list of actions. Under "All rights
+  reserved", `excerpt` is refused, but `quote`, `paraphrase` and `fine-tune`
+  come back `"conditional"`.
+- **Some license spellings are read too permissively**
+  ([issue #44](https://github.com/KnobeOne/knobe-protocol/issues/44)). A
+  license that spells out NoDerivatives is not read as no-derivatives, so
+  derivative actions come back `"conditional"` instead of `false`. Spelled-out
+  NonCommercial and ShareAlike lose those obligations. Negated wording such as
+  "Not in the public domain", and a missing license, are also read too
+  generously.
 
 ## Install
 
@@ -106,8 +128,8 @@ Requires Node 20 or later.
 ## Data flow
 
 Files are read from the paths you pass (or from pasted text), processed in the
-server process, and optionally written to a path you name. Nothing is
-transmitted anywhere. The server has no network code.
+server process, and optionally written to a path you name. After install,
+nothing is transmitted anywhere; the server has no network code.
 
 ## Verification
 
@@ -118,7 +140,9 @@ The vendored engine copy is byte-compared against the repository copy in this
 package's test suite (`npm test`), which also drives every tool through a full
 MCP client/server round-trip.
 
-Where any implementation disagrees with `lens.py`, `lens.py` is right.
+The published vectors decide conformance; `lens.py` is canonical for §5
+serialization questions; other rulings are in
+[ERRATA.md](https://github.com/KnobeOne/knobe-protocol/blob/main/ERRATA.md).
 
 ## License
 

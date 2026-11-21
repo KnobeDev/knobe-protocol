@@ -52,15 +52,14 @@ KNOBE makes it harder for fragments to pass as whole objects. It carries interpr
 
 ## What this protocol does not do
 
-It is not DRM, not a truth machine, not an identity verification system, and not a replacement for institutional systems. It declares interpretive obligations; it does not enforce them. See the [specification](https://knobe.org/spec) §11 (Honest limits) and the [threat model](https://knobe.org/threat-model) for the precise account.
+It is not DRM, not a truth machine, not an identity verification system, and not a replacement for institutional systems. It declares interpretive obligations; it does not enforce them. See the [specification](https://knobe.org/spec) §11 (Limits) and the [threat model](https://knobe.org/threat-model) for the precise account.
 
 ## Tools
 
-All four run locally, in the browser or on your machine, and require no account.
+All three run locally, in the browser or on your machine, and require no account.
 
 - **[Studio](https://knobe.org/studio/)**: a browser app to create, verify, and transform KNOBEs. Everything runs client-side; nothing is uploaded. The fastest way to seal a first object without touching the command line.
 - **[MCP server](https://knobe.org/mcp)** (`knobe-mcp` on npm): exposes verify, read, create, transform, and a `permits` tool to any MCP client (Claude Desktop, Claude Code, Cursor, and others), so an AI agent can check a document's sealed terms before acting on it. Install with `npx -y knobe-mcp`; source in [`mcp/`](mcp/).
-- **[Grove](https://knobe.org/grove/)**: a guided, no-AI walkthrough that teaches the format by sealing one real KNOBE with you.
 - **[Lens](https://knobe.org/lens)**: a drag-and-drop browser verifier for a single file.
 
 ## Verifying a KNOBE
@@ -106,7 +105,7 @@ The reference verifier `lens.py` is a standard-library Python file with no exter
 2. Reproduce the canonical hash algorithm: sort keys recursively, NFC-normalize all keys and string values, no whitespace between tokens, literal UTF-8, SHA-256
 3. Run your implementation against all nine test vectors in `test-vectors/` and confirm expected outputs match the README in that directory
 
-An implementation that reproduces all nine expected results is canonically compatible with KNOBE Protocol v1. Beyond that bar, ten [adversarial vectors](test-vectors/adversarial/) exercise hostile input, six [interpretation vectors](test-vectors/interpretation/) pin the documented rulings in [ERRATA.md](ERRATA.md) for questions the specification text left open, and a reported ambiguity that survives scrutiny earns a ruling and a pinning vector, with credit.
+An implementation that reproduces all nine expected results is canonically compatible with KNOBE Protocol v1. Beyond that bar, seventeen [adversarial vectors](test-vectors/adversarial/) exercise hostile input, seven [interpretation vectors](test-vectors/interpretation/) pin the documented rulings in [ERRATA.md](ERRATA.md) for questions the specification text left open, and a reported ambiguity that survives scrutiny earns a ruling and a pinning vector, with credit.
 
 Two JavaScript verifiers already exist. The browser Lens ([`site/lens.html`](site/lens.html), live at [knobe.org/lens](https://knobe.org/lens)) is a pure-JavaScript verifier built to the same specification, sharing no code with `lens.py`; it reproduces `lens.py`'s verdicts across the conformance and adversarial vectors, declining to issue a hash verdict on bare-numeric payloads (a §5 violation) in the browser and deferring to `lens.py` there. [`knobe-core.js`](knobe-core.js) is a single standalone JavaScript file (a sibling verifier, written by studying `lens.py`, sharing no code but sharing lineage) that reproduces `lens.py`'s verdicts including the bare-numeric case, and also seals, creates, and derives KNOBEs. Run `node knobe-core.selftest.mjs` to check `knobe-core.js` against `lens.py` over every vector and example. Multiple implementations agreeing on the vectors is the practical test that the spec is buildable from text. See [knobe.org/implementations](https://knobe.org/implementations).
 
@@ -124,7 +123,7 @@ The steward asserts no patents covering KNOBE Protocol v1 and will not assert an
 
 ## Contributing
 
-Errata, hostile test vectors, and independent verifier implementations are the most valuable contributions. See [CONTRIBUTING.md](CONTRIBUTING.md) for process and [SECURITY.md](SECURITY.md) for reporting verification-bypass issues. The v1 freeze contract and stewardship commitments are in [GOVERNANCE.md](GOVERNANCE.md).
+Errata, hostile test vectors, and verifiers in other languages are the most valuable contributions. See [CONTRIBUTING.md](CONTRIBUTING.md) for process and [SECURITY.md](SECURITY.md) for reporting verification-bypass issues. The v1 freeze contract and stewardship commitments are in [GOVERNANCE.md](GOVERNANCE.md).
 
 ## Steward
 

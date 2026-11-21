@@ -11,7 +11,7 @@ everything rides on ordinary payload fields, which the specification requires
 verifiers to preserve (spec §4.3). The specification reserves
 `identity_status: "signed"` as a forward placeholder (spec §8); the signet is
 an application-layer step toward it, and files carrying signet fields keep
-`identity_status: "declared"` until a normative signing tier exists.
+`identity_status: "declared"`, because v1 defines no signing method.
 
 ## The problem this addresses
 
@@ -106,8 +106,8 @@ threat model, and the cohort receipt as its zero-infrastructure interim).
 
 ## Relationship to the published posture
 
-The threat model names three composition pathways: application-tier identity,
+The threat model names three composition pathways: application-layer identity,
 ledger anchoring, and credentialed authoring environments. The signet is the
-smallest possible application-tier identity step: no institution required, no
+smallest possible application-layer identity step: no institution required, no
 server, one keypair per person, one anchoring event per binding. It is
 designed to compose with the other two rather than substitute for them.

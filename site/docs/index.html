@@ -40,16 +40,6 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:
 .nav-menu a.here{color:var(--moss);border-bottom:none}
 @media(max-width:760px){nav .wrap{flex-wrap:wrap;row-gap:6px}.navlinks{width:100%;flex-wrap:wrap;justify-content:flex-start;gap:8px 14px;font-size:.78rem}}
 
-/* Grove callout: featured experiential-demo card after hero */
-.grove-callout{display:flex;align-items:center;gap:18px 24px;flex-wrap:wrap;background:#eef2ec;border:1px solid var(--line);border-left:3px solid var(--moss);border-radius:6px;padding:22px 26px;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
-.grove-callout:hover,.grove-callout:focus-visible{border-color:var(--moss);box-shadow:0 2px 18px rgba(47,107,79,.13)}
-.grove-callout .gc-main{flex:1;min-width:240px}
-.grove-callout .gc-kicker{font-family:-apple-system,system-ui,sans-serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:7px}
-.grove-callout .gc-title{font-size:1.25rem;font-weight:normal;color:var(--moss-deep);margin-bottom:6px;letter-spacing:-.01em}
-.grove-callout .gc-desc{font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;color:var(--ink-soft);margin:0}
-.grove-callout .gc-cta{font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;font-weight:600;color:var(--moss);white-space:nowrap}
-.grove-callout:hover .gc-cta,.grove-callout:focus-visible .gc-cta{color:var(--moss-deep)}
-
 /* KNOBE in use: tools list with status + description */
 .inuse{margin:22px 0 0;border-top:1px solid var(--line)}
 .inuse-item{display:grid;grid-template-columns:32px 1fr;gap:0 16px;padding:18px 0;border-bottom:1px solid var(--line)}
@@ -421,7 +411,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
         <button class="demo-btn ghost" id="demoReset" type="button" hidden>Reset</button>
       </div>
       <div id="demoVerdict" class="demo-verdict" role="status" hidden></div>
-      <p class="demo-note">The check runs in your browser with <a class="inline" href="/knobe-core.js">knobe-core.js</a>; nothing is uploaded. A verified seal proves integrity, not truth.</p>
+      <p class="demo-note">The check runs in your browser with <a class="inline" href="/knobe-core.js">knobe-core.js</a>; nothing is uploaded. A verified seal shows the record matches the seal it carries: integrity, not truth. Anyone who edits a file can seal it again, so the check means most when you already know the hash.</p>
     </div>
   </div>
 </section>
@@ -430,27 +420,14 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
 
 
-<section id="grove">
-  <div class="wrap">
-    <a class="grove-callout" href="/grove/" aria-labelledby="gcTitle">
-      <div class="gc-main">
-        <div class="gc-kicker">Optional · learn by doing</div>
-        <div class="gc-title" id="gcTitle">New to KNOBE? Walk the Grove</div>
-        <p class="gc-desc">A short, guided path that teaches the format by building one real sealed <code>.knobe.md</code> with you: no login, nothing to install. It's a friendly way to dig in and learn the idea, not the standard or fastest way to make a KNOBE. <strong>Note:</strong> Grove may take up to a minute to load on first visit.</p>
-      </div>
-      <span class="gc-cta">Enter Grove →</span>
-    </a>
-  </div>
-</section>
-
 <section id="sitemap">
   <div class="wrap wide">
     <div class="shead">Next steps</div>
     <div class="intent">
       <div class="intent-card">
         <p class="intent-q">Understand the design</p>
-        <p class="intent-d">The full conceptual case, or a hands-on walk.</p>
-        <a href="/white-paper">White paper →</a><a href="/grove/">Grove →</a><a href="/studio/">Studio →</a>
+        <p class="intent-d">The full conceptual case, or try it hands-on.</p>
+        <a href="/white-paper">White paper →</a><a href="/studio/">Studio →</a>
       </div>
       <div class="intent-card">
         <p class="intent-q">Evaluate a use case</p>
@@ -479,7 +456,6 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
         <a href="/studio/" class="smap-link">Studio</a>
         <a href="/lens" class="smap-link">Lens</a>
         <a href="/mcp" class="smap-link">MCP server</a>
-        <a href="/grove/" class="smap-link">Grove</a>
         <a href="/test-vectors/" class="smap-link">Test vectors</a>
       </div>
       <div>
@@ -706,7 +682,7 @@ $('#demoTamper').addEventListener('click',async()=>{
   displayed=displayed.replace(m[0],'-----BEGIN KNOBE B64-----\n'+b64+'\n-----END KNOBE B64-----');
   render();await runVerify();$('#demoTamper').hidden=true;$('#demoReset').hidden=false;});
 $('#demoReset').addEventListener('click',()=>{displayed=original;render();$('#demoVerdict').hidden=true;$('#demoTamper').hidden=true;$('#demoReset').hidden=true;});
-try{const res=await fetch('/knobe-education-reading.knobe.md');if(res.ok){original=displayed=await res.text();render();$('#demo').hidden=false;}}catch{}
+try{const res=await fetch('/knobe-v1-plain-language-summary.knobe.md');if(res.ok){original=displayed=await res.text();render();$('#demo').hidden=false;}}catch{}
 </script>
 </body>
 </html>

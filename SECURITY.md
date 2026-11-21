@@ -13,6 +13,8 @@
 - A sealed file containing false, misattributed, or harmful content. The seal proves integrity, not truth, authorship, or safety.
 - Identity forgery. v1 attribution is declared; the verifier cannot and does not authenticate identity.
 - Deletion or non-use of KNOBE structure by systems that do not verify.
+- Re-sealing after an edit. Anyone who edits a file can compute a new, valid seal for it; that is not a verification bypass. Only a receiver who already holds the original hash can detect it.
+- Digest differences caused by verifiers using different Unicode data (issue #33); this is a recorded known limit.
 
 See the full [threat model](https://knobe.org/threat-model) for the boundary between the two lists.
 

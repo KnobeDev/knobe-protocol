@@ -449,11 +449,11 @@ footer a:hover{color:var(--moss)}
           <p class="dk">Government</p>
           <ol>
             <li>A <b>record</b> is sealed at creation.</li>
-            <li>A <b>FOIA release</b> derives from it, redactions recorded as transformations.</li>
-            <li>The release <b>names its parent</b>; the derivation is checkable by anyone.</li>
+            <li>A <b>FOIA release</b> derives from it, with its redactions recorded in the release.</li>
+            <li>The release <b>names its parent by hash</b>; the derivation is declared.</li>
           </ol>
-          <div class="fields"><code>parents</code><code>transformations</code></div>
-          <p class="dwhy">A release that can prove which record it came from.</p>
+          <div class="fields"><code>parents</code><code>redaction</code></div>
+          <p class="dwhy">A release that names, by hash, the exact record it says it came from.</p>
         </div>
 
         <div class="dcard">
@@ -461,10 +461,10 @@ footer a:hover{color:var(--moss)}
           <ol>
             <li><b>Sources</b> are sealed with their use conditions.</li>
             <li>An <b>agent asks permits()</b> before acting: am I allowed to do this with this file?</li>
-            <li><b>Syntheses</b> declare their sources and inherit their obligations.</li>
+            <li><b>Syntheses</b> declare their sources; the sealer must copy obligations in.</li>
           </ol>
           <div class="fields"><code>permits</code><code>quarantine_status</code></div>
-          <p class="dwhy">Agents that check the terms before they act, and get a deterministic answer.</p>
+          <p class="dwhy">Agents that check the terms before they act, and get an answer that cites the sealed fields.</p>
         </div>
       </div>
     </section>

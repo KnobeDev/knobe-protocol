@@ -482,20 +482,20 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
 
     <h2 id="example"><span class="sec">§9</span>Worked example: source and agent synthesis</h2>
 
-    <div class="nonnorm"><strong>Note.</strong> Each example is a separate <code>.knobe.md</code> file. The hashes shown are payload hashes; they prove the structured record is intact, not proof of identity, accuracy, or approval. Integrity is not truth.</div>
+    <div class="nonnorm"><strong>Note.</strong> Each example is a separate <code>.knobe.md</code> file. The hashes shown are payload hashes. A verified seal shows the record matches the seal it carries; it is not proof of identity, accuracy, or approval. Integrity is not truth.</div>
 
-    <p>The two examples below form a verifiable pipeline lineage. A human-maintained knowledge-base document is the trusted source; an agent-generated summary is a synthesis that references the source by hash and carries <code>quarantine_status: quarantine</code>. Download both and verify with <code>lens.py</code>. The pair shows quarantine-first in practice: a trusted input produces an untrusted output that cannot be mistaken for a reviewed source, and whose single retrieved source is provable rather than asserted.</p>
+    <p>The two examples below form a verifiable pipeline lineage. A human-maintained knowledge-base document is the trusted source; an agent-generated summary is a synthesis that references the source by hash and carries <code>quarantine_status: quarantine</code>. Download both and verify with <code>lens.py</code>. The pair shows quarantine-first in practice: a trusted input produces an untrusted output, marked as not yet reviewed. The output names its source by hash; the derivation is declared by the pipeline.</p>
 
     <div class="dl-card">
       <div class="dt">Example 1: Knowledge-base source</div>
-      <div class="dd">A canonical internal reference document under change control. Carries <code>content_type: original</code>, <code>quarantine_status: trusted</code>, and the hash that the agent synthesis references as a parent. Its fidelity limits flag that enterprise-contract terms override the standard policy: a caveat the downstream summary is obligated to preserve.</div>
+      <div class="dd">Illustrative, fictional. A canonical internal reference document under change control. Carries <code>content_type: original</code>, <code>quarantine_status: trusted</code>, and the hash that the agent synthesis references as a parent. Its fidelity limits flag that enterprise-contract terms override the standard policy: a caveat the downstream summary is obligated to preserve.</div>
       <div class="dh">payload_hash: c1bb873ad47286363815aa96482cda96342f791b14c792283511c5c552db2507</div>
       <a href="knobe-enterprise-source.knobe.md" class="btn">Download</a>
     </div>
 
     <div class="dl-card">
       <div class="dt">Example 2: Agent-generated synthesis (quarantined)</div>
-      <div class="dd">A retrieval agent's summary of the source. Carries <code>content_type: synthesis</code>, <code>quarantine_status: quarantine</code> (no human review at sealing), an <code>ai_assistant</code> attribution entry describing what the agent did, and a <code>parents</code> entry referencing the source by hash. Fidelity limits state it must be checked against the source before use.</div>
+      <div class="dd">Illustrative, fictional. A retrieval agent's summary of the source. Carries <code>content_type: synthesis</code>, <code>quarantine_status: quarantine</code> (no human review at sealing), an <code>ai_assistant</code> attribution entry describing what the agent did, and a <code>parents</code> entry referencing the source by hash. Fidelity limits state it must be checked against the source before use.</div>
       <div class="dh">payload_hash: 0f26771048c7d4fcbaa646499b3117170e139ec4914f7a07eaef27f3cbc8e80e</div>
       <a href="knobe-enterprise-agent-synthesis.knobe.md" class="btn">Download</a>
     </div>
