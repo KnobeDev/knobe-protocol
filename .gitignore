@@ -15,8 +15,7 @@ __pycache__/
 *.pem
 *.p12
 *.pdf
-# Exceptions: curated presentation PDFs for the public site
-!site/KNOBE-Technical-Intro-Deck.pdf
+# Exception: the curated white paper PDF for the public site
 !site/knobe-v1-white-paper.pdf
 *.docx
 *.xlsx

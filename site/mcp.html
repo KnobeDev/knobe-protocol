@@ -156,7 +156,7 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
     <p class="sub">knobe-mcp gives any MCP client (Claude Desktop, Claude Code, Cursor, Windsurf, or a custom agent) five operations on <code>.knobe.md</code> knowledge objects: verify, read, create, transform, and <code>permits</code>, which evaluates a proposed action against the object's own sealed conditions and cites the fields that produced the verdict.</p>
     <div class="assurance">
       <span class="lock" aria-hidden="true">&#9679;</span>
-      <span>Everything runs in the local server process. No network requests, no telemetry, no accounts.</span>
+      <span>Everything runs in the local server process. After install, no network requests, no telemetry, no accounts.</span>
     </div>
   </div>
 </header>
@@ -170,12 +170,12 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
       <tr><th scope="row">knobe_verify</th><td>Integrity and conformance verdict for a file or pasted text: the protocol's four states, a separate conformance axis with each issue listed, both hashes, and <code>lens.py</code>'s exit code.</td></tr>
       <tr><th scope="row">knobe_read</th><td>An obligations-first read: the first content block is the sealed-context preamble (integrity verdict, provenance, license, trust posture, obligations), so an agent reads the conditions before the content. The second block carries the payload metadata and markdown body.</td></tr>
       <tr><th scope="row">knobe_create</th><td>Assemble and seal a new object from fields and a body. The sealed file self-verifies before it is returned, and can be written to a path.</td></tr>
-      <tr><th scope="row">knobe_transform</th><td>Seal a derivative of a verified original. The derivative's <code>parents</code> field records the original's title and payload hash automatically; a broken seal cannot anchor a chain.</td></tr>
+      <tr><th scope="row">knobe_transform</th><td>Seal a derivative of a verified original. The derivative's <code>parents</code> field records the original's title and payload hash automatically. The original's payload must verify; a broken seal cannot anchor a chain. If the original's text changed after sealing, the tool still accepts it, and the derivative names the sealed version, not the changed text.</td></tr>
       <tr><th scope="row">knobe_permits</th><td>Evaluate a proposed action (summarize, excerpt, translate, train, redistribute, publish, ...) against the object's own sealed terms.</td></tr>
     </table>
 
     <h2>Resources and a prompt</h2>
-    <p>The package ships 31 fixture files, browsable as MCP resources under <code>knobe://examples/&#8230;</code> (twelve sealed real-world KNOBEs) and <code>knobe://vectors/&#8230;</code> (the nine core conformance vectors and ten adversarial vectors, with known verdicts; the six interpretation vectors are not included). A further resource, <code>knobe://guide</code>, orients agents. A <code>knobe-guarded-summarize</code> prompt encodes the basic procedure: verify, consult the sealed terms, then act, qualify, or decline with a cited clause.</p>
+    <p>The package ships 31 fixture files, browsable as MCP resources under <code>knobe://examples/&#8230;</code> (twelve sealed illustrative KNOBEs) and <code>knobe://vectors/&#8230;</code> (the nine core vectors and ten of the seventeen adversarial vectors, with known verdicts; the other seven adversarial and all seven interpretation vectors are not included). A further resource, <code>knobe://guide</code>, orients agents. A <code>knobe-guarded-summarize</code> prompt encodes the basic procedure: verify, consult the sealed terms, then act, qualify, or decline with a cited clause.</p>
 
     <h2>What knobe_permits returns</h2>
     <p>The evaluation reads the sealed record itself: quarantine status, privacy level, license posture, and any namespaced extension terms the author declared. The verdict is <code>true</code>, <code>false</code>, or <code>"conditional"</code>, with the obligations that apply and a <code>basis</code> list citing each sealed field that produced it:</p>
@@ -190,6 +190,13 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
   "integrity": { "state": "verified", "conformance": "valid" }
 }</pre>
     <p>An agent that consults this before acting can decline with a quoted source rather than a guess. The pattern extends a norm the web already runs on: as a responsible crawler checks <code>robots.txt</code> before fetching, a responsible agent checks a document's sealed terms before acting on it. Two boundaries hold throughout: a file whose seal fails verification permits nothing, and the verdict reports what the object declares. Enforcement belongs to the caller; a verified seal confirms integrity, not truth.</p>
+
+    <h2 id="known-limits">Known limits</h2>
+    <p><code>knobe_permits</code> is advisory. It reports what the sealed terms declare and enforces nothing, and it has open cases where it allows more than the license does. Until they are fixed, treat <code>"conditional"</code> as "ask a human", not as permission.</p>
+    <ul>
+      <li><strong>Unlisted verbs skip the license check</strong> (<a class="inline" href="https://github.com/KnobeOne/knobe-protocol/issues/42">issue #42</a>). The license is applied only to a fixed list of actions. Under "All rights reserved", <code>excerpt</code> is refused, but <code>quote</code>, <code>paraphrase</code> and <code>fine-tune</code> come back <code>"conditional"</code>.</li>
+      <li><strong>Some license spellings are read too permissively</strong> (<a class="inline" href="https://github.com/KnobeOne/knobe-protocol/issues/44">issue #44</a>). A license that spells out NoDerivatives is not read as no-derivatives, so derivative actions come back <code>"conditional"</code> instead of <code>false</code>. Spelled-out NonCommercial and ShareAlike lose those obligations. Negated wording such as "Not in the public domain", and a missing license, are also read too generously.</li>
+    </ul>
 
     <h2>Install</h2>
     <p>From a checkout of the <a class="inline" href="https://github.com/KnobeOne/knobe-protocol">repository</a> (the server lives in <code>mcp/</code>; run <code>npm install</code> there once):</p>
@@ -209,8 +216,8 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
     <p>Requires Node 20 or later. The package is published to npm as <code>knobe-mcp</code>, so no checkout is needed; to run from a local checkout instead, point the command at <code>mcp/server.mjs</code>.</p>
 
     <h2>Data flow and verification</h2>
-    <p>Files are read from the paths you pass (or from pasted text), processed in the server process, and optionally written to a path you name. Nothing is transmitted anywhere; the server has no network code.</p>
-    <p>The engine is <a class="inline" href="/knobe-core.js">knobe-core.js</a>, the dependency-free ES module whose verdicts are checked against <code>lens.py</code> across the published test corpus; the parity claim and its command are on the <a class="inline" href="/implementations">implementations page</a>. The package's own test suite drives every tool through a full MCP client/server round-trip and byte-compares the vendored engine against the repository copy. Where any implementation disagrees with <code>lens.py</code>, <code>lens.py</code> is right.</p>
+    <p>Files are read from the paths you pass (or from pasted text), processed in the server process, and optionally written to a path you name. After install, nothing is transmitted anywhere; the server has no network code.</p>
+    <p>The engine is <a class="inline" href="/knobe-core.js">knobe-core.js</a>, the dependency-free ES module whose verdicts are checked against <code>lens.py</code> across the published test corpus; the parity claim and its command are on the <a class="inline" href="/implementations">implementations page</a>. The package's own test suite drives every tool through a full MCP client/server round-trip and byte-compares the vendored engine against the repository copy. The published vectors decide conformance; <code>lens.py</code> is canonical for &sect;5 serialization questions; other rulings are in <a class="inline" href="https://github.com/KnobeOne/knobe-protocol/blob/main/ERRATA.md">ERRATA.md</a>.</p>
 
   </div>
 

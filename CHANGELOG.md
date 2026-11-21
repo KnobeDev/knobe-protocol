@@ -12,6 +12,81 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### 2026-11-20
+
+- Site and documentation corrections, wording only. No engine, verdict
+  or vector changes.
+  - Integrity wording on the home and docs pages and in the notes on
+    the profile pages: a verified seal shows the record matches the
+    seal it carries; it does not prove the record is true.
+  - Re-sealing: the threat model now says that anyone who edits a file
+    can seal it again, and that only a receiver who already holds the
+    original hash can detect it. `SECURITY.md` lists re-sealing after
+    an edit as out of scope, and also digest differences caused by
+    verifiers using different Unicode data (issue #33), a recorded
+    known limit.
+  - Known limits: /threat-model has a new "Known limits" section for
+    issue #33 (verifiers on different Unicode data can disagree). /mcp
+    and `mcp/README.md` have one for issues #42 and #44: `knobe_permits`
+    is advisory and has open cases where it allows more than the
+    license does. The homepage links both sections.
+  - The Grove is resting, so links to it are removed from the home,
+    docs, Lens and Make pages, the README and the sitemap.
+  - The Technical Intro Deck PDF is removed from the site and from the
+    Downloads page. knobe.org/KNOBE-Technical-Intro-Deck.pdf now returns
+    404.
+  - The demos on the home and docs pages now load the protocol's
+    plain-language summary (`knobe-v1-plain-language-summary.knobe.md`)
+    instead of the education reading example.
+  - `ERRATA.md` (both copies) now links `GOVERNANCE.md` and the
+    interpretation vectors by absolute URL, so the links work when the
+    file is read on knobe.org.
+  - The TA guide in the instructor kit (the page, its Markdown copy and
+    the copy in `knobe-instructor-kit.zip`) no longer says an AI agent
+    leaves privacy unchanged: student text the agent reads goes to its
+    model's provider. It also says `verified` means the file matches
+    the seal it carries; to confirm it is the file that was submitted,
+    compare its payload hash with the one recorded when it was
+    submitted. The instructor quick start, the accessibility guide and
+    the one-page loop (pages, Markdown copies and zip copies) get the
+    same integrity corrections.
+  - Pilot wording: the homepage status row now reads "Institutional
+    adoption: None active", and the accessibility and education pages
+    say no instructional pilots are active.
+  - README: the adversarial and interpretation vector counts are
+    corrected to seventeen and seven.
+  - `mcp/README.md`, for the next `knobe-mcp` release: "after install"
+    is added to the no-network statement, the `knobe_transform` row
+    matches /mcp, the example resources are called illustrative, and
+    the vector resources are counted exactly.
+  - knobe.org/implementations: the knobe-go entry now cites its
+    maintainer's README, which reports all 33 vectors at `fd75d2d` as of
+    v0.1.3; this is not yet confirmed in the listing request (#14).
+  - Other wording: the profile pages label their examples
+    "Illustrative, fictional"; the government profile no longer calls a
+    record certified; the threat model, the research profile and
+    `docs/signet-design.md` say "layer" where they said "tier", and the
+    research profile cites the DOI; Studio's transform help and the
+    accessibility guide say that a source whose text changed after
+    sealing is accepted and flagged, and that the derivative names the
+    sealed version; /mcp says "after install" in its no-network
+    statements.
+
+### 2026-11-19
+
+- Homepage hero, wording only: the headline says what a KNOBE is for
+  and invites visitors to make one, and the lede says what a KNOBE
+  records (who made it, how it may be used, what it cannot tell you)
+  and that the record travels with it and with its adaptations. Title,
+  meta, URLs and the scenes are unchanged.
+- knobe.org/grove is resting. Several of the Grove's photographs were
+  never properly sourced or credited, and its seed export still writes
+  a pre-v1 file. Until both are fixed, /grove/ shows a short page that
+  keeps the URL working, points visitors to Studio and Lens, and states
+  the Grove's authorship and the CC BY 4.0 license of its text. The
+  photographs are no longer deployed; the full Grove stays in the
+  repository history.
+
 ### 2026-11-17
 
 - Site status corrections, wording only. No engine, verdict or vector
@@ -49,6 +124,80 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
   or page under `site/` contains a lookbehind, and runs the fallback
   with `isWellFormed` removed on payloads with and without unpaired
   surrogates.
+- PR #40, "Related work: add EPUB and W3C Web Annotation; answer the
+  one-steward objection": the related-work page gains entries for W3C
+  Web Annotation and EPUB, and a section, "A new protocol, with one
+  steward", that separates what need not be taken on trust (the frozen
+  format, irrevocable open licenses, the right to fork) from what is a
+  public commitment (the `GOVERNANCE.md` transition triggers, quoted
+  exactly) and says none of the triggers has been met as of November
+  2026. The About page's stewardship line
+  now matches `GOVERNANCE.md` and links to that section. Wording only:
+  no engine, verdict or vector changes.
+
+### 2026-11-09
+
+- PR #36, the Obsidian plugin listings: the implementations page lists
+  two Obsidian plugins (listing requests #16 and #17; their names are
+  under discussion there). Each entry is self-reported, names the
+  commit its vector run used, and keeps its authors' own words on
+  provenance.
+- PR #37, "Licensing: name CC0 in CITATION.cff and mcp/ in
+  CONTRIBUTING": `CITATION.cff` now names CC0-1.0, which covers the
+  test vectors, and the licensing table in `CONTRIBUTING.md` now lists
+  the `knobe-mcp` package (Apache-2.0, `mcp/LICENSE`). Both now match
+  `LICENSING.md`; no license terms changed.
+- PR #38, keep application-layer work off the protocol pages: the
+  threat model presents ledger anchoring only as a generic composition
+  option outside the protocol. The teaching and accessibility pages and
+  `docs/signet-design.md` keep hardware-credential work at the
+  application layer without naming anyone. The implementations page
+  says "this page lists" where it said "this registry lists". The
+  frozen spec page is unchanged.
+
+### 2026-11-08
+
+- PR #27, "mcp: update locked dependencies to clear security
+  advisories": `npm audit fix` within the existing semver ranges, in
+  `mcp/package-lock.json` only. `npm audit` goes from 9 vulnerable
+  packages to 0. The ranges in `mcp/package.json` are unchanged, so a
+  fresh install of the published `knobe-mcp` 0.1.2 already resolves
+  these versions. The server uses the stdio transport only.
+- PR #28, "Disclose that the July 2026 Go verifier was
+  steward-commissioned": `ERRATA.md`, both test-vector READMEs, this
+  changelog and three site pages now say that the Go verifier behind
+  the July 2026 questions was built with an AI coding agent at the
+  steward's direction, with `lens.py` consulted for edge cases. No
+  ruling changes. Root and `site/` copies stay identical.
+- PR #29, "Agent page: separate Cursor and VS Code setup tabs": the
+  single "Cursor or VS Code" tab showed an `mcpServers` block, which
+  VS Code ignores without an error. Cursor now has its own tab
+  (`.cursor/mcp.json`, `mcpServers`) and VS Code its own
+  (`.vscode/mcp.json`, a top-level `servers` key with
+  `"type": "stdio"`).
+- **Expected-results change.** PR #30, "test-vectors: publish expected
+  body_verified for the core nine": the core tables in
+  `test-vectors/README.md` (and its `site/` copy) gain an
+  `expected body_verified` column; they had published only status and
+  conformance. The values are the ones both reference engines already
+  reported, so no verdict changes, but a verifier checked against the
+  core nine must now match `body_verified` as well.
+  `knobe-core.selftest.mjs` enforces the column, as it already did for
+  the adversarial and interpretation sets.
+- **Behavior change.** PR #34, "Sealer refuses code points unassigned
+  in its Unicode tables (#33)": `knobe-core.js` (all three copies) now
+  refuses to seal a payload with a string, key or value that contains
+  a code point unassigned in the engine's own Unicode data, and says
+  why in a plain message. NFC of such a code point can change in a
+  later Unicode version, so the same payload could hash differently in
+  another verifier (issue #33). Studio loads `/knobe-core.js`, so
+  Studio refuses too. Verification is unchanged. `knobe-mcp` 0.1.2 on
+  npm was published before this change and does not include it; the
+  `mcp/` copy in this repository does.
+- PR #35, "Implementations page: list knobe-rs, knobe-go and KNOBE
+  Verify for VS Code": listing requests #13, #14 and #15. Each entry is
+  self-reported, names the commit its vector run used, and keeps its
+  authors' own words on provenance.
 
 ### 2026-11-07 (post-freeze, unreleased)
 
@@ -183,6 +332,12 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 - Implementations page added at `/implementations`, documenting the reference
   verifier, the browser Lens (and its documented bare-numeric deferral), and
   the JavaScript sibling. `sitemap.xml` updated.
+
+### 2026-07-03
+
+- Root `spec.html` deleted (`2bbf088`): it had gone stale, and
+  `site/spec.html`, served at knobe.org/spec, is the canonical spec
+  page. The README's references now point there.
 
 ### 2026-07-01
 

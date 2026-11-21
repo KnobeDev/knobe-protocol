@@ -14,7 +14,7 @@ One page: check a whole batch of sealed submissions at once. Time: a few minutes
 
 One row per file. Problem rows sort to the top.
 
-- **Integrity**: `verified` means the file is byte-identical to what the student sealed. `failed` means it was altered after sealing. `unreadable` means it is not a sealed file at all (often a plain essay uploaded without sealing).
+- **Integrity**: `verified` means the file matches the seal it carries. Anyone who edits a file can seal it again, so to confirm it is the file that was submitted, compare its payload hash (shown in KNOBE Lens or in Studio's Verify view) with the one you recorded when it was submitted. `failed` means it was altered after sealing. `unreadable` means it is not a sealed file at all (often a plain essay uploaded without sealing).
 - **Chain**: `linked` means the file references the assigned spec or journey by exact hash. `no link` means it chains to something else, or to nothing.
 - **AI disclosure**: the student's own declaration of what an AI did, quoted from the file. `none declared` is not an anomaly by itself; under a disclosure policy it means the student declared no AI use.
 - **Review**: the submission status the student sealed, usually `submitted`.
@@ -37,4 +37,4 @@ Drop a single student's files from across the term and press **Chain view**. Eac
 
 ## If you run an AI agent
 
-The same checks run agentically: install `knobe-mcp` (see knobe.org/mcp) in Claude Desktop or any MCP client, point it at the unzipped folder, and ask it to verify the batch and tabulate declarations. It runs locally, so the privacy posture is unchanged.
+The same checks run agentically: install `knobe-mcp` (see knobe.org/mcp) in Claude Desktop or any MCP client, point it at the unzipped folder, and ask it to verify the batch and tabulate declarations. The server runs locally, but anything the agent reads through it, including full student text from `knobe_read`, goes to that agent's model and its provider. Use it only where your institution's agreement with that provider covers student records.

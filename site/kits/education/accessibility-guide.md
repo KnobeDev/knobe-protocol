@@ -9,7 +9,7 @@ An alternate format usually circulates as a bare file: no link to the original, 
 ## The steps
 
 1. Open **knobe.org/studio** and choose the **Adapt** tab.
-2. Drag in the sealed source file (or paste its text). The tool verifies it first; an altered source is refused, because a broken seal cannot anchor a chain.
+2. Drag in the sealed source file (or paste its text). The tool verifies it first; a source whose seal does not verify is refused, because a broken seal cannot anchor a chain. If the source's text changed after sealing, the tool still accepts it and flags it, and the adaptation names the sealed version, not the changed text.
 3. Pick the kind of adaptation: plain language, translation, transcript or captions, alt-text or description, or a multimodal version.
 4. Replace the body with your adaptation. The **Clean pasted text** button normalizes smart quotes, stray HTML, and odd whitespace from wherever you drafted.
 5. Fill in the two honesty fields: what this adaptation preserves, and what it omits or changes. Both are sealed into the record; they are what make the adaptation trustworthy.

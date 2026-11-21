@@ -171,7 +171,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     <p class="lead">KNOBE is a context-survival protocol, not a hard security primitive. This page is for engineers, security reviewers, and adopters: an account of where the protocol provides value and where it provides none.</p>
 
-    <p>The open layer of KNOBE v1 verifies <em class="kw">integrity, not truth</em>. A passing verification proves that a sealed object has not been altered since its hash was computed. It does not prove that the author is who they claim to be, that the content is accurate, that consent was actually obtained, or that the object is appropriate for any particular use.</p>
+    <p>The open layer of KNOBE v1 verifies <em class="kw">integrity, not truth</em>. A passing verification shows the payload matches the seal it carries. It does not prove that the author is who they claim to be, that the content is accurate, that consent was actually obtained, or that the object is appropriate for any particular use.</p>
 
     <h2>Where KNOBE provides value</h2>
 
@@ -194,7 +194,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       <div class="label">Deliberate forgery: zero or negative value</div>
       <h3>Active forgery in a zero-verification culture</h3>
       <p>KNOBE v1.0 provides zero protection against active identity forgery. If a malicious actor creates a fraudulent policy document, attributes it to "The Office of the Provost," and seals it locally, the math is completely sound. A verifier will report <code>status: verified</code>. The seal is intact. The lie is preserved exactly as the attacker wrote it.</p>
-      <p>If downstream human receivers conflate cryptographic <code>verified</code> (the file has not changed since sealing) with organizational <em>authentic</em> (the Provost actually wrote this), the protocol can actively harm the receiver by providing security theater. KNOBE fails as an identity-trust mechanism when deployed without a PKI overlay, an institutional signing tier, or a ledger anchor.</p>
+      <p>If downstream human receivers conflate cryptographic <code>verified</code> (the file has not changed since sealing) with organizational <em>authentic</em> (the Provost actually wrote this), the protocol can actively harm the receiver by providing security theater. KNOBE fails as an identity-trust mechanism when deployed without a PKI overlay, an institutional signing layer, or a ledger anchor.</p>
     </div>
 
     <h2>The boundary</h2>
@@ -213,10 +213,10 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     <h2>How identity verification can be added</h2>
 
-    <p>v1's <code>identity_status: "declared"</code> field is a deliberate placeholder. <code>identity_status: "signed"</code> is reserved for future tiers where cryptographic identity binding becomes available. This is one of three composition pathways:</p>
+    <p>v1's <code>identity_status: "declared"</code> field is a deliberate placeholder. <code>identity_status: "signed"</code> is reserved; v1 defines no signing method. Cryptographic identity binding can be added by composition, along one of three pathways:</p>
 
     <ul>
-      <li><strong>Application-tier identity.</strong> An institution that issues credentials to its members can require KNOBE files produced by those members to be wrapped in a signed envelope at submission. The open KNOBE remains plain text; the institutional layer adds the identity guarantee.</li>
+      <li><strong>Application-layer identity.</strong> An institution that issues credentials to its members can require KNOBE files produced by those members to be wrapped in a signed envelope at submission. The open KNOBE remains plain text; the institutional layer adds the identity guarantee.</li>
       <li><strong>Ledger anchoring.</strong> A KNOBE's payload hash can be anchored to a distributed register at sealing time, providing existence-at-a-time proof. The open protocol provides integrity; the ledger provides timestamps the open protocol cannot.</li>
       <li><strong>Credentialed authoring environments.</strong> Authoring tools that hold institutional credentials can layer signing infrastructure over the open protocol. Files produced inside such an environment inherit institutional identity; files produced outside it do not, and the distinction is visible.</li>
     </ul>
@@ -229,8 +229,8 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     <h3>Resists</h3>
     <ul>
-      <li><strong>The lossy pipeline.</strong> RAG scrapers, summarization tools, AI ingestion engines that drop metadata. The sealed payload travels with the body or, once stripped, no longer verifies.</li>
-      <li><strong>The post-hoc revisionist.</strong> If the object was sealed with a <code>body_hash</code>, an actor who edits the document after the fact produces a mismatch that the verifier detects (<code>verified-body-modified</code>). The original narrative cannot be silently rewritten without triggering this state or stripping the seal entirely. If the originator omitted <code>body_hash</code>, this protection is not available: the verifier will report <code>verified · body_verified: omitted</code>, which is itself the receiver's signal that body integrity was never sealed.</li>
+      <li><strong>The lossy pipeline.</strong> RAG scrapers, summarization tools, AI ingestion engines that drop metadata. The sealed payload travels with the body; a copy that drops it no longer verifies, which is detectable by a receiver who expects a seal.</li>
+      <li><strong>The post-hoc revisionist.</strong> If the object was sealed with a <code>body_hash</code>, an actor who edits the document after the fact produces a mismatch that the verifier detects (<code>verified-body-modified</code>), unless the editor re-seals. Anyone who edits a file can seal it again, and the new seal verifies cleanly; only a receiver who already holds the original hash (a cohort receipt, an anchored hash) detects that. If the originator omitted <code>body_hash</code>, this protection is not available: the verifier will report <code>verified · body_verified: omitted</code>, which is itself the receiver's signal that body integrity was never sealed.</li>
       <li><strong>The shadow-payload appender.</strong> An adversary who appends a second payload block to a legitimate file cannot do so silently: verifiers MUST surface multiple-block presence per spec §3.3.</li>
       <li><strong>The lineage forger detected at traversal.</strong> An author who fabricates a parent hash seals a lie; any graph-traversal application that tries to resolve the parent chain will find the broken link.</li>
     </ul>
@@ -239,9 +239,18 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
     <ul>
       <li><strong>The identity forger.</strong> Anyone can declare any attribution and seal it. Identity verification requires a layer above the open protocol.</li>
       <li><strong>The original liar.</strong> A document sealed with a lie is sealed with a lie. The protocol preserves the lie exactly; it does not detect untruth.</li>
-      <li><strong>The metadata stripper or careless intermediary.</strong> A receiver who deletes the payload block (or a human who copy-pastes only the human-readable markdown body and leaves the Base64 block behind) produces ordinary text that no longer verifies. This is a property of any portable plain-text format. The seal itself is unaffected: it remains present and checkable by any tool, human, or future AI agent that looks for it. Automated pipelines that move whole files preserve the payload; manual GUI interactions that select only visible text do not.</li>
+      <li><strong>The metadata stripper or careless intermediary.</strong> A receiver who deletes the payload block (or a human who copy-pastes only the human-readable markdown body and leaves the Base64 block behind) produces ordinary text that no longer verifies. This is a property of any portable plain-text format. Automated pipelines that move whole files preserve the payload; manual GUI interactions that select only visible text do not.</li>
       <li><strong>The fail-open consumer.</strong> Most current consumers of <code>.knobe.md</code> files (text editors, LLMs, web tools) do not run the verifier. The seal does not enforce itself. Verification is the receiver's choice and responsibility.</li>
       <li><strong>The unverified parent claim.</strong> An adversary can list arbitrary strings as parent hashes. The lie is sealed and detectable on traversal, but the open protocol layer does not perform the traversal itself.</li>
+    </ul>
+
+    <h2 id="known-limits">Known limits</h2>
+
+    <p>Open issues that affect what a verification result means are listed here until they are resolved.</p>
+
+    <ul>
+      <li><strong>Verifiers on different Unicode data can disagree</strong> (<a class="inline" href="https://github.com/KnobeOne/knobe-protocol/issues/33">issue #33</a>). Spec §5 requires payload text to be normalized to Unicode NFC before hashing, and each verifier does that with its own Unicode data. For text that contains characters added in recent Unicode versions, the same file can verify in one verifier and fail in another. In testing between Unicode 13 and 17, text that used only characters from Unicode 13.0 or earlier was not affected. Closing the gap fully means changing the hash rule, which v1 cannot do; the issue proposes an erratum that records the limit.</li>
+      <li><strong>The MCP server's permission check is advisory.</strong> <code>knobe_permits</code> has open cases where it allows more than a license does; they are listed on the <a class="inline" href="/mcp#known-limits">MCP server page</a>.</li>
     </ul>
 
     <h2>The disposition</h2>
@@ -250,7 +259,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       Integrity is the substrate. Interpretive context is the point. Identity is a separable layer that adopters can build on top, where their trust model demands it.
     </div>
 
-    <p>KNOBE makes it harder for fragments to pass as whole objects, in a world where context is lost not through malice but through automation. It provides what its name says: a knowledge object boundary that survives transit.</p>
+    <p>KNOBE makes it harder for fragments to pass as whole objects, in a world where context is lost not through malice but through automation. It provides what its name says: a knowledge object boundary that survives transit when the whole file moves.</p>
 
     <p>Identity verification requires a PKI. Timestamp proof requires anchoring. KNOBE v1 claims integrity of declared context, and no more. Receivers who need more can compose it with infrastructure that provides more; receivers who need only what it provides can use it alone.</p>
 

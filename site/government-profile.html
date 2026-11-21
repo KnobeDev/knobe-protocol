@@ -224,7 +224,7 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
 <main id="main">
   <div class="wrap">
 
-    <p class="lead">Public records that can prove what they are, and releases that can prove which record they came from: chain of custody, redaction lineage, and accessibility obligations, carried in the file itself where any citizen can check them.</p>
+    <p class="lead">Public records sealed at creation, and releases that name their source record by hash, checkable whenever that record is produced: chain of custody, redaction lineage, and accessibility obligations, carried in the file itself where any citizen can read them and check the seal.</p>
     <p style="font-family:-apple-system,system-ui,sans-serif;font-size:.88rem;color:var(--ink-faint)">This page is non-normative guidance for using KNOBE in public-sector records work. Nothing here changes the protocol. If this document conflicts with the <a class="inline" href="/spec">normative specification</a>, the specification governs.</p>
 
     <div class="nonnorm">
@@ -460,8 +460,8 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
     <table class="label-table"><caption>UI label translations</caption>
       <thead><tr><th scope="col">Protocol field</th><th scope="col">Records-facing label</th><th scope="col">Notes</th></tr></thead>
       <tbody>
-        <tr><th scope="row">quarantine_status: quarantine</th><td>Pending records review</td><td>Neutral workflow language for material not yet certified.</td></tr>
-        <tr><th scope="row">quarantine_status: trusted</th><td>Certified record</td><td>Set by a records officer or governed system after review.</td></tr>
+        <tr><th scope="row">quarantine_status: quarantine</th><td>Pending records review</td><td>Neutral workflow language for material not yet reviewed.</td></tr>
+        <tr><th scope="row">quarantine_status: trusted</th><td>Marked trusted by its originator</td><td>Set by a records officer or governed system after review.</td></tr>
         <tr><th scope="row">fidelity_limits</th><td>What this record is and is not</td><td>Or: "Read-before-relying notes."</td></tr>
         <tr><th scope="row">use_conditions</th><td>Handling and release terms</td><td>Or: "Release and reuse terms."</td></tr>
         <tr><th scope="row">transformation_history</th><td>Custody and change log</td><td>Or: "Chain of custody."</td></tr>
@@ -475,27 +475,27 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
 
     <h2 id="example"><span class="sec">§8</span>Worked example: a record and its release</h2>
 
-    <div class="nonnorm"><strong>Note.</strong> Each example is a separate <code>.knobe.md</code> file. The hashes shown are payload hashes; they prove the structured record is intact, not proof of identity, authority, or approval. Integrity is not truth.</div>
+    <div class="nonnorm"><strong>Note.</strong> Each example is a separate <code>.knobe.md</code> file. The hashes shown are payload hashes. A verified seal shows the record matches the seal it carries; it is not proof of identity, authority, or approval. Integrity is not truth.</div>
 
     <p>The two examples below form a verifiable release lineage. An internal inspection memo is the record of origin; a FOIA release is a redacted public version that references the source memo by hash. Download both and verify with <code>lens.py</code>. The release declares its source by payload hash. A recipient cannot see the restricted memo, but the reference is precise and tamper-evident: if the source record is ever produced (in litigation, audit, or a later release), anyone can confirm it is the exact record the release named at sealing. The derivation itself is declared by the issuing office, not proven by the hash.</p>
 
     <div class="dl-card">
       <div class="dt">Example 1: Internal record of origin</div>
-      <div class="dd">An internal facility-inspection memo. Carries <code>privacy_level: restricted</code>, <code>quarantine_status: trusted</code> (certified by the originating office), and the hash that the redacted release references as a parent. Contains a personnel section that is withheld downstream.</div>
+      <div class="dd">Illustrative, fictional. An internal facility-inspection memo. Carries <code>privacy_level: restricted</code>, <code>quarantine_status: trusted</code>, and the hash that the redacted release references as a parent. Contains a personnel section that is withheld downstream.</div>
       <div class="dh">payload_hash: 472b7c28584bbc178c30fe7c942a6891e8babb5d3f8d32872e1940f3341037bc</div>
       <a href="knobe-government-record.knobe.md" class="btn">Download</a>
     </div>
 
     <div class="dl-card">
       <div class="dt">Example 2: Redacted FOIA release</div>
-      <div class="dd">A redacted public release of the memo, prepared in response to a FOIA request. Personnel details are withheld under Exemption 6. Carries a <code>redaction</code> record naming the authority and scope, a <code>parents</code> entry referencing the source by hash, and fidelity limits stating that withheld passages are withheld, not deleted.</div>
+      <div class="dd">Illustrative, fictional. A redacted public release of the memo, prepared in response to a FOIA request. Personnel details are withheld under Exemption 6. Carries a <code>redaction</code> record naming the authority and scope, a <code>parents</code> entry referencing the source by hash, and fidelity limits stating that withheld passages are withheld, not deleted.</div>
       <div class="dh">payload_hash: 1c503fa97dbdaacca370aba6b967d993a061bf3a0f92e01aa007a41947402d64</div>
       <a href="knobe-government-foia-release.knobe.md" class="btn">Download</a>
     </div>
 
     <h3>What the lineage demonstrates</h3>
 
-    <p>Opening the release's <code>parents</code> array reveals one entry with a payload hash. Verify that hash against the source record above and it matches: the release names that exact record as its source, and no other. The hash proves the identity of the referenced record precisely; the derivation and the faithfulness of reproduced text remain declarations by the issuing office: sealed, attributable, and tamper-evident, but not independently proven. The <code>redaction</code> field records the governing exemption and the scope of what was withheld, so the basis for withholding travels with the release rather than living only in a separate log. The chain (originating office certifies the record, FOIA office redacts and releases) is sealed and checkable without any case-management system, portal, or database. The artifacts carry their own custody.</p>
+    <p>Opening the release's <code>parents</code> array reveals one entry with a payload hash. Verify that hash against the source record above and it matches: the release names that exact record as its source, and no other. The hash identifies the referenced record precisely; the derivation and the faithfulness of reproduced text remain declarations by the issuing office: sealed, attributable, and tamper-evident, but not independently proven. The <code>redaction</code> field records the governing exemption and the scope of what was withheld, so the basis for withholding travels with the release rather than living only in a separate log. The chain (originating office marks the record trusted, FOIA office redacts and releases) is sealed and checkable without any case-management system, portal, or database. The artifacts carry their own custody.</p>
 
   </div>
 

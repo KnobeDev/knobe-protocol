@@ -63,7 +63,7 @@
     </div>
     <div id="tab-cc" role="tabpanel" aria-labelledby="tabbtn-cc">
       <div class="copybox"><pre class="code">claude mcp add knobe -- npx -y knobe-mcp</pre><button type="button" data-copy>Copy</button></div>
-      <p class="quiet">Requires Node 20 or later. The package is <a href="https://www.npmjs.com/package/knobe-mcp">knobe-mcp on npm</a>; it runs locally, makes no network requests and keeps no state between calls.</p>
+      <p class="quiet">Requires Node 20 or later. The package is <a href="https://www.npmjs.com/package/knobe-mcp">knobe-mcp on npm</a>; it runs locally, and after install, the server makes no network requests and keeps no state between calls.</p>
     </div>
     <div id="tab-cu" role="tabpanel" aria-labelledby="tabbtn-cu" hidden>
       <div class="copybox"><pre class="code">{
@@ -116,8 +116,9 @@ Use the server&#x27;s knobe_create tool to produce the file. Do not compute any 
       <li>Read the verification result. It says whether the sealed record matches the file.</li>
       <li>Open the file in any editor. The top is readable; the bottom is the record and the seal.</li>
     </ol>
-    <blockquote class="pullquote">A language model is not a verification environment. The seal is computed, never written.<cite>KNOBE white paper, section 5</cite></blockquote>
+    <blockquote class="pullquote">Language models are not verification environments.<cite>KNOBE white paper, section 5</cite></blockquote>
     <p>That line is on this page because it is the most common early mistake. The model drafts the fields; the engine computes the hash. If an assistant ever offers to write the seal itself, decline.</p>
+    <p class="quiet">Known limits: the server's <code>knobe_permits</code> check is advisory and has open cases where it allows too much, so treat a <code>"conditional"</code> answer as "ask a human". See <a href="/mcp#known-limits">the MCP server's known limits</a>.</p>
   </div>
 </section>
 <section>

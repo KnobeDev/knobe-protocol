@@ -236,7 +236,7 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
         <li class="chip">Librarians</li>
         <li class="chip">Course designers</li>
       </ul>
-      For documenting student work, course materials, AI use disclosure, and accessibility adaptations. The first KNOBE instructional pilots are being planned with collaborators at UC Davis for large courses with a range of AI use policies; none are yet active. KNOBE is an independent open protocol, not an official UC Davis standard or product.
+      For documenting student work, course materials, AI use disclosure, and accessibility adaptations. No instructional pilots are active. KNOBE is an independent open protocol, not an official UC Davis standard or product.
     </div>
 
     <p class="vh">The course loop this profile documents: the instructor seals the reading and the assignment spec; student work chains to them by hash; a TA batch-checks the cohort; the sealed record survives the term.</p>
@@ -476,27 +476,27 @@ caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hi
 
     <h2 id="example"><span class="sec">§8</span>Worked examples</h2>
 
-    <div class="nonnorm"><strong>Note.</strong> Each example is a separate <code>.knobe.md</code> file. The hashes shown are payload hashes; they prove the structured record is intact, not proof of identity, timestamp, or institutional approval. Integrity is not truth.</div>
+    <div class="nonnorm"><strong>Note.</strong> Each example is a separate <code>.knobe.md</code> file. The hashes shown are payload hashes. A verified seal shows the record matches the seal it carries; it is not proof of identity, timestamp, or institutional approval. Integrity is not truth.</div>
 
     <p>The three examples below form a verifiable lineage: the instructor creates an assignment KNOBE, assigns a reading KNOBE, and the student submits a reflection KNOBE that carries both as parents by hash. Download any of them and verify with <code>lens.py</code>. The chain from reading to assignment to student response is sealed across the three artifacts.</p>
 
     <div class="dl-card">
       <div class="dt">Example 1: Assigned Reading</div>
-      <div class="dd">An instructor-sealed version of the course reading. Carries <code>quarantine_status: trusted</code> (the instructor has reviewed it), use conditions limiting redistribution, and the hash that student submissions reference as a parent.</div>
+      <div class="dd">Illustrative, fictional. An instructor-sealed version of the course reading. Carries <code>quarantine_status: trusted</code> (the instructor has reviewed it), use conditions limiting redistribution, and the hash that student submissions reference as a parent.</div>
       <div class="dh">payload_hash: 6014b58eb6ff572fe844d3893971743979a5bbd1b6058b51cc59c892a7dfb54e</div>
       <a href="knobe-education-reading.knobe.md" class="btn">Download</a>
     </div>
 
     <div class="dl-card">
       <div class="dt">Example 2: Instructor Assignment</div>
-      <div class="dd">The assignment specification as a sealed KNOBE. Carries the AI use policy, submission format, and evaluation criteria inside the payload, so students who reference the assignment in their submission are linking to a verifiable, unaltered specification.</div>
+      <div class="dd">Illustrative, fictional. The assignment specification as a sealed KNOBE. Carries the AI use policy, submission format, and evaluation criteria inside the payload, so students who reference the assignment in their submission are linking to a specification named by its hash. The file mentions the Grove, which is offline; use <a href="/studio/" class="inline">KNOBE Studio</a> to seal a file.</div>
       <div class="dh">payload_hash: 7c2cb52737909933cd45b52d0e70146c2530d10c421e49627606e6688d9b18e9</div>
       <a href="knobe-education-assignment.knobe.md" class="btn">Download</a>
     </div>
 
     <div class="dl-card">
       <div class="dt">Example 3: Student AI-Assisted Reflection</div>
-      <div class="dd">A student reflection on the assigned reading. AI consulted once for terminology; all prose written by the student. Parents reference both the reading and the assignment by hash. Carries <code>assignment_context</code>, <code>education_review</code>, full attribution, fidelity limits, and course-private use conditions.</div>
+      <div class="dd">Illustrative, fictional. A student reflection on the assigned reading. AI consulted once for terminology; all prose written by the student. Parents reference both the reading and the assignment by hash. Carries <code>assignment_context</code>, <code>education_review</code>, full attribution, fidelity limits, and course-private use conditions.</div>
       <div class="dh">payload_hash: 8a0d690ce4d129c862df075d97a38ab4d0f66492578e15c6f927ac5cd45601fc</div>
       <a href="knobe-education-example.knobe.md" class="btn">Download</a>
     </div>
