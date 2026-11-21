@@ -9,7 +9,7 @@
 :root{
   --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#5d7568;
   --paper:#f7f5ef;--paper-warm:#efece2;--line:#d8d3c4;
-  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;
+  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;--amber-text:#6b3f0d;
   --alert:#9e2b1e;--code-bg:#10231a;--code-ink:#cfe6d6;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -106,7 +106,7 @@ h2{font-size:1.3rem;font-weight:normal;color:var(--moss-deep);margin:40px 0 12px
 .verdict .vlabel{font-size:1.18rem;font-weight:normal;letter-spacing:-.01em}
 .verdict .vstate{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--ink-soft);margin-top:2px;word-break:break-all}
 .v-ok{color:var(--moss-deep)}
-.v-warn{color:var(--amber)}
+.v-warn{color:var(--amber-text)}
 .v-bad{color:var(--alert)}
 .v-neutral{color:var(--ink-soft)}
 .verdict.v-ok{background:#eef2ec}
@@ -127,7 +127,7 @@ h2{font-size:1.3rem;font-weight:normal;color:var(--moss-deep);margin:40px 0 12px
   font-weight:500;padding:2px 9px;border-radius:3px;border:1px solid currentColor}
 .tag .tsym{font-weight:700}
 .tag.ok{color:var(--moss-deep);background:#eef2ec}
-.tag.warn{color:var(--amber);background:#f6efe4}
+.tag.warn{color:var(--amber-text);background:#f6efe4}
 .tag.bad{color:var(--alert);background:#f6ebe8}
 .tag.neutral{color:var(--ink-soft);background:var(--paper-warm)}
 .hashmatch{font-family:-apple-system,system-ui,sans-serif;font-size:.74rem;margin-top:3px}
@@ -138,7 +138,7 @@ h2{font-size:1.3rem;font-weight:normal;color:var(--moss-deep);margin:40px 0 12px
 .issues li{font-family:-apple-system,system-ui,sans-serif;font-size:.82rem;color:var(--ink-soft);
   padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--line)}
 .issues li:last-child{border-bottom:none}
-.issues li::before{content:'!';position:absolute;left:0;top:7px;color:var(--amber);font-weight:700;
+.issues li::before{content:'!';position:absolute;left:0;top:7px;color:var(--amber-text);font-weight:700;
   font-family:-apple-system,system-ui,sans-serif}
 .issues li.err::before{content:'\2715';color:var(--alert)}
 .notes{padding:14px 24px 20px;background:var(--paper-warm);border-top:1px solid var(--line)}
@@ -243,7 +243,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
   <div class="wrap">
     <div class="eyebrow">KNOBE Lens</div>
     <h1>Drop in a KNOBE. <em>Verify it</em> here.</h1>
-    <p class="sub">The Lens checks a <code>.knobe.md</code> file's sealed payload and tells you whether it is intact. It runs the same canonical algorithm as <code>lens.py</code>, the reference verifier, only in your browser, with nothing to install.</p>
+    <p class="sub">The Lens checks a <code>.knobe.md</code> file's sealed payload and tells you whether it matches its seal. It runs the same canonical algorithm as <code>lens.py</code>, the reference verifier, only in your browser, with nothing to install.</p>
     <div class="assurance">
       <span class="lock" aria-hidden="true">&#9679;</span>
       <span>Verification happens locally in your browser. No upload. No server. No AI.</span>
@@ -277,10 +277,10 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 
     <section class="explain">
       <h2>What the verdict means</h2>
-      <p><strong>Integrity is not truth.</strong> A green check proves the sealed record has not changed since sealing, not that its contents are correct, safe, or appropriate. The check is where inspection begins, not where it ends. The protocol's recommended posture is <em class="kw">quarantine-first</em>: treat any external object as untrusted until you have reviewed it, regardless of whether it verifies.</p>
+      <p><strong>Integrity is not truth.</strong> A green check shows the sealed record matches the seal it carries, not that its contents are correct, safe, or appropriate. Anyone who edits a file can seal it again, so the check means most when you already hold the hash. The check is where inspection begins, not where it ends. The protocol's recommended posture is <em class="kw">quarantine-first</em>: treat any external object as untrusted until you have reviewed it, regardless of whether it verifies.</p>
       <div class="states">
-        <div class="state-row"><div class="state-name">verified</div><div class="state-desc">The payload's contents hash exactly to the stored <code>payload_hash</code>. The sealed record is intact.</div></div>
-        <div class="state-row"><div class="state-name">verified · body modified</div><div class="state-desc">The sealed payload is intact, but the human-readable markdown body no longer matches the sealed <code>body_hash</code>. Inspect before relying on this version.</div></div>
+        <div class="state-row"><div class="state-name">verified</div><div class="state-desc">The payload's contents hash exactly to the stored <code>payload_hash</code>. The record matches the seal it carries.</div></div>
+        <div class="state-row"><div class="state-name">verified · body modified</div><div class="state-desc">The record matches its seal, but the readable text changed after sealing: the human-readable markdown body no longer matches the sealed <code>body_hash</code>. Inspect before relying on this version.</div></div>
         <div class="state-row"><div class="state-name">failed</div><div class="state-desc">The recomputed hash does not match the stored one. The payload has been altered, or the stored hash is wrong.</div></div>
         <div class="state-row"><div class="state-name">unreadable</div><div class="state-desc">No valid payload could be found or parsed: malformed file, missing block, duplicate keys, an unsupported spec version, or invalid encoding.</div></div>
       </div>
@@ -792,7 +792,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
   function verdictView(r){
     switch(r.state){
       case "verified":               return {sym:"✓", word:"Verified",                cls:"v-ok"};
-      case "verified-body-modified": return {sym:"!",       word:"Verified · body modified", cls:"v-warn"};
+      case "verified-body-modified": return {sym:"!",       word:"Verified, text changed", cls:"v-warn"};
       case "failed":                 return {sym:"✕", word:"Failed",                  cls:"v-bad"};
       case "declined":               return {sym:"—", word:"No hash verdict issued",  cls:"v-neutral"};
       default:                       return {sym:"⊘", word:"Unreadable",              cls:"v-neutral"};
@@ -905,7 +905,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       notes.appendChild(n1);
     }
     if (r.state === "verified-body-modified"){
-      notes.appendChild(el('p','', 'The markdown body differs from the sealed body_hash. Someone edited the human-readable text after it was sealed; inspect before relying on this version.'));
+      notes.appendChild(el('p','', 'The record matches its seal, but the readable text changed after sealing: the markdown body differs from the sealed body_hash. Inspect before relying on this version.'));
     }
     if (r.state === "failed"){
       notes.appendChild(el('p','', 'The sealed payload does not hash to its stored value. Treat this object as altered or corrupt.'));

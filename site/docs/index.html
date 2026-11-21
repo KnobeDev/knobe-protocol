@@ -243,6 +243,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 .demo-btn.ghost{background:transparent;color:var(--moss)}
 .demo-verdict{font-family:-apple-system,system-ui,sans-serif;font-size:.95rem;font-weight:600;margin-top:10px;padding:10px 14px;border-radius:6px;border:1px solid var(--line)}
 .demo-verdict.pass{border-color:#2f6b4f;background:#eef5f0;color:#1d4733}
+.demo-verdict.warn{border-color:#b06a1c;background:#f8f0e3;color:#6b3f0d}
 .demo-verdict.fail{border-color:#a33;background:#f7ecec;color:#7a2222}
 .demo-note{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;color:var(--ink-faint);margin-top:8px}
 /* ---- intent router ---- */
@@ -411,7 +412,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
         <button class="demo-btn ghost" id="demoReset" type="button" hidden>Reset</button>
       </div>
       <div id="demoVerdict" class="demo-verdict" role="status" hidden></div>
-      <p class="demo-note">The check runs in your browser with <a class="inline" href="/knobe-core.js">knobe-core.js</a>; nothing is uploaded. A verified seal shows the record matches the seal it carries: integrity, not truth. Anyone who edits a file can seal it again, so the check means most when you already know the hash.</p>
+      <p class="demo-note">The check runs in your browser with <a class="inline" href="/knobe-core.js">knobe-core.js</a>; nothing is uploaded. A verified seal shows the record matches the seal it carries: integrity, not truth. Anyone who edits a file can seal it again, so the check means most when you already hold the hash.</p>
     </div>
   </div>
 </section>
@@ -668,8 +669,8 @@ function split(t){const m=t.match(/^(---\n[\s\S]*?\n---\n)([\s\S]*?)(-----BEGIN 
 function render(){const L=split(displayed);$('#demoFm').textContent=L.fm.trim();$('#demoBody').textContent=L.body.trim();const p=L.payload.trim();$('#demoPayload').textContent=p.length>640?p.slice(0,640)+'\n… (truncated for display; the full block is what gets verified)':p;}
 function verdict(cls,text){const v=$('#demoVerdict');v.hidden=false;v.className='demo-verdict '+cls;v.textContent=text;}
 async function runVerify(){const r=await verify(displayed);
-  if(r.state==='verified'){verdict('pass','✓ Integrity verified: the payload matches its seal.');$('#demoTamper').hidden=false;}
-  else if(r.state==='verified-body-modified'){verdict('pass','✓ Payload seal intact: the readable body was changed after sealing.');}
+  if(r.state==='verified'){verdict('pass','✓ Integrity verified: the record matches its seal.');$('#demoTamper').hidden=false;}
+  else if(r.state==='verified-body-modified'){verdict('warn','! Verified, text changed: the record matches its seal, but the readable text changed after sealing.');}
   else if(r.state==='failed'){verdict('fail','✕ Modified since sealing: the check detected the changed character.');$('#demoReset').hidden=false;}
   else{verdict('fail','✕ Unreadable: this file cannot be evaluated as a KNOBE.');$('#demoReset').hidden=false;}}
 $('#demoVerify').addEventListener('click',runVerify);
@@ -682,7 +683,7 @@ $('#demoTamper').addEventListener('click',async()=>{
   displayed=displayed.replace(m[0],'-----BEGIN KNOBE B64-----\n'+b64+'\n-----END KNOBE B64-----');
   render();await runVerify();$('#demoTamper').hidden=true;$('#demoReset').hidden=false;});
 $('#demoReset').addEventListener('click',()=>{displayed=original;render();$('#demoVerdict').hidden=true;$('#demoTamper').hidden=true;$('#demoReset').hidden=true;});
-try{const res=await fetch('/knobe-v1-plain-language-summary.knobe.md');if(res.ok){original=displayed=await res.text();render();$('#demo').hidden=false;}}catch{}
+try{const res=await fetch('/knobe-demo.knobe.md');if(res.ok){original=displayed=await res.text();render();$('#demo').hidden=false;}}catch{}
 </script>
 </body>
 </html>

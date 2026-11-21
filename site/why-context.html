@@ -385,19 +385,20 @@ footer a:hover{color:var(--moss)}
 
           <div class="proves">
             <div class="yes">
-              <h4>The seal proves</h4>
+              <h4>A verified seal shows</h4>
               <ul>
-                <li>the payload's canonical form is unchanged since sealing</li>
+                <li>the payload's canonical form matches its seal</li>
                 <li>the body matches its recorded hash, when a body hash was sealed</li>
-                <li>the context record is intact and machine-readable</li>
+                <li>the context record is machine-readable</li>
               </ul>
             </div>
             <div class="no">
-              <h4>It does not prove</h4>
+              <h4>It does not show</h4>
               <ul>
                 <li>that the content is true</li>
                 <li>that the attribution is honest</li>
                 <li>that consent was actually obtained</li>
+                <li>that this is the first seal: anyone who edits a file can seal it again</li>
               </ul>
             </div>
           </div>

@@ -181,7 +181,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       <div class="label">Non-adversarial loss: high value</div>
       <h3>Entropy and the lossy middleman</h3>
       <p>KNOBE v1.0 makes changes to sealed context detectable. The primary "adversary" is an automated pipeline: a RAG scraper that drops metadata, an LLM ingestion engine that summarizes without provenance, a corporate wiki that flattens attribution, a copy-paste action that detaches a document from its source. By sealing context (fidelity limits, attribution, quarantine status, accessibility lineage) with a mathematical hash, and binding the text to it when a body hash is sealed, KNOBE lets a verifier detect any later change to that sealed record. Altered content that is resealed carries a new seal, not a detected change.</p>
-      <p>It proves what context was declared <em>at the moment of sealing</em> and, when a body hash was sealed, which text it was declared for. A copy that keeps the block keeps that context; a copy that drops it no longer verifies. A stripped file does not announce the loss to a recipient who never saw the original, so stripping is evident only to a receiver who expects a seal.</p>
+      <p>It shows what context was declared <em>at the most recent sealing</em> and, when a body hash was sealed, which text it was declared for. A copy that keeps the block keeps that context; a copy that drops it no longer verifies. A stripped file does not announce the loss to a recipient who never saw the original, so stripping is evident only to a receiver who expects a seal.</p>
     </div>
 
     <p>This is the protocol's main job. Knowledge objects that traditionally lost their interpretive obligations in transit now carry them in plain text, verifiable without infrastructure, and visible to any tool or human downstream that chooses to look.</p>
@@ -193,20 +193,20 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
     <div class="scenario low">
       <div class="label">Deliberate forgery: zero or negative value</div>
       <h3>Active forgery in a zero-verification culture</h3>
-      <p>KNOBE v1.0 provides zero protection against active identity forgery. If a malicious actor creates a fraudulent policy document, attributes it to "The Office of the Provost," and seals it locally, the math is completely sound. A verifier will report <code>status: verified</code>. The seal is intact. The lie is preserved exactly as the attacker wrote it.</p>
+      <p>KNOBE v1.0 provides zero protection against active identity forgery. If a malicious actor creates a fraudulent policy document, attributes it to "The Office of the Provost," and seals it locally, the math is completely sound. A verifier will report <code>status: verified</code>. The file matches its seal. The lie is preserved exactly as the attacker wrote it.</p>
       <p>If downstream human receivers conflate cryptographic <code>verified</code> (the file has not changed since sealing) with organizational <em>authentic</em> (the Provost actually wrote this), the protocol can actively harm the receiver by providing security theater. KNOBE fails as an identity-trust mechanism when deployed without a PKI overlay, an institutional signing layer, or a ledger anchor.</p>
     </div>
 
     <h2>The boundary</h2>
 
     <div class="boundary">
-      <h3>What <code>status: verified</code> proves</h3>
-      <p>The canonical form of this file's payload is unchanged since someone sealed it at some point. The author's declared attribution, fidelity limits, use conditions, and interpretive context are intact as the author wrote them.</p>
+      <h3>What <code>status: verified</code> shows</h3>
+      <p>The canonical form of this file's payload is unchanged since someone sealed it at some point. The attribution, fidelity limits, use conditions, and interpretive context are as the sealer declared them.</p>
     </div>
 
     <div class="boundary">
-      <h3>What <code>status: verified</code> does not prove</h3>
-      <p>Who that author actually was. Whether their attribution is honest. Whether the content is accurate. Whether the sealing happened recently or years ago. Whether the institution they claim is real. Whether the consent they assert was actually obtained.</p>
+      <h3>What <code>status: verified</code> does not show</h3>
+      <p>Who the named author actually was. Whether their attribution is honest. Whether the content is accurate. Whether the sealing happened recently or years ago. Whether the institution they claim is real. Whether the consent they assert was actually obtained.</p>
     </div>
 
     <p>The receiver bears the responsibility for interpreting what verification means in their specific context. A KNOBE received from a known colleague in a trusted workflow carries different weight than one received anonymously from the internet, even if both verify identically. The protocol does not collapse this distinction; it surfaces it.</p>
