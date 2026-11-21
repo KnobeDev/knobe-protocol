@@ -31,6 +31,7 @@
 .demo-btn.ghost{background:transparent;color:var(--moss)}
 .demo-verdict{font-family:var(--sans);font-size:.95rem;font-weight:600;margin-top:10px;padding:10px 14px;border-radius:6px;border:1px solid var(--line)}
 .demo-verdict.pass{border-color:#2f6b4f;background:#eef5f0;color:#1d4733}
+.demo-verdict.warn{border-color:#b06a1c;background:#f8f0e3;color:#6b3f0d}
 .demo-verdict.fail{border-color:#a33;background:#f7ecec;color:#7a2222}
 .demo-note{font-family:var(--sans);font-size:.8rem;color:var(--ink-faint);margin:8px 0 0}
 </style>
@@ -106,11 +107,11 @@
     </div>
   </div>
   <div class="wrap">
-    <p>A verified seal shows the record matches the seal it carries. Anyone who edits a file can seal it again, so the check means most when you already know the hash. <strong>It does not prove the record is true.</strong> That distinction is the whole design.</p>
+    <p>A verified seal shows the record matches the seal it carries. Anyone who edits a file can seal it again, so the check means most when you already hold the hash. <strong>It does not prove the record is true.</strong> That distinction is the whole design.</p>
     <details class="example" id="example">
       <summary class="btn btn-ghost">Show a real sealed file</summary>
       <div class="inner">
-        <p class="quiet">This is a real sealed file: the protocol's plain-language summary. Press Verify and your browser checks the seal. Press Tamper, change a word, and watch the check fail. The block at the bottom is the machine-readable record; you are not expected to read it.</p>
+        <p class="quiet">This is a real sealed file, made for this demo: <a href="/knobe-demo.knobe.md">A KNOBE you can test</a>. Press Verify and your browser checks the seal. Press Tamper to change one letter in the sealed record, and watch the check fail. The block at the bottom is the machine-readable record; you are not expected to read it.</p>
         <div class="demo" id="demo" hidden>
           <pre class="demo-file fm" id="demoFm" aria-label="YAML frontmatter"></pre>
           <pre class="demo-file dbody" id="demoBody" aria-label="Markdown body"></pre>
@@ -123,7 +124,7 @@
           <div id="demoVerdict" class="demo-verdict" role="status" hidden></div>
           <p class="demo-note">The check runs in your browser with <a href="/knobe-core.js">knobe-core.js</a>; nothing is uploaded. A verified seal shows integrity, not truth.</p>
         </div>
-        <p class="quiet" id="demoFallback" hidden>The example could not be loaded in this browser. <a href="/knobe-v1-plain-language-summary.knobe.md">Open the file directly</a>.</p>
+        <p class="quiet" id="demoFallback" hidden>The example could not be loaded in this browser. <a href="/knobe-demo.knobe.md">Open the file directly</a>.</p>
       </div>
     </details>
   </div>
@@ -200,7 +201,7 @@
 'function verdict(cls,text){const v=$("#demoVerdict");v.hidden=false;v.className="demo-verdict "+cls;v.textContent=text;}'+
 'async function runVerify(){const r=await verify(displayed);'+
 'if(r.state==="verified"){verdict("pass","✓ Integrity verified: the record matches its seal.");$("#demoTamper").hidden=false;}'+
-'else if(r.state==="verified-body-modified"){verdict("pass","✓ Seal intact: the readable body was changed after sealing.");}'+
+'else if(r.state==="verified-body-modified"){verdict("warn","! Verified, text changed: the record matches its seal, but the readable text changed after sealing.");}'+
 'else if(r.state==="failed"){verdict("fail","✕ Modified since sealing: the check detected the changed character.");$("#demoReset").hidden=false;}'+
 'else{verdict("fail","✕ Unreadable: this file cannot be evaluated as a KNOBE.");$("#demoReset").hidden=false;}}'+
 '$("#demoVerify").addEventListener("click",runVerify);'+
@@ -211,7 +212,7 @@
 'displayed=displayed.replace(m[0],"-----BEGIN KNOBE B64-----\\n"+b64+"\\n-----END KNOBE B64-----");'+
 'render();await runVerify();$("#demoTamper").hidden=true;$("#demoReset").hidden=false;});'+
 '$("#demoReset").addEventListener("click",()=>{displayed=original;render();$("#demoVerdict").hidden=true;$("#demoTamper").hidden=true;$("#demoReset").hidden=true;});'+
-'try{const res=await fetch("/knobe-v1-plain-language-summary.knobe.md");if(res.ok){original=displayed=await res.text();render();$("#demo").hidden=false;}else{$("#demoFallback").hidden=false;}}catch{$("#demoFallback").hidden=false;}';
+'try{const res=await fetch("/knobe-demo.knobe.md");if(res.ok){original=displayed=await res.text();render();$("#demo").hidden=false;}else{$("#demoFallback").hidden=false;}}catch{$("#demoFallback").hidden=false;}';
     document.body.appendChild(s);
   });
 })();

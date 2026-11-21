@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KNOBE Studio — create, verify, and transform knowledge objects in your browser</title>
-<meta name="description" content="KNOBE Studio creates sealed .knobe.md knowledge objects from your content, checks whether a sealed record is intact, and derives new objects that declare their parent. It runs locally in the browser on knobe-core.js; nothing is uploaded.">
+<meta name="description" content="KNOBE Studio creates sealed .knobe.md knowledge objects from your content, checks whether a file matches its seal, and derives new objects that declare their parent. It runs locally in the browser on knobe-core.js; nothing is uploaded.">
 <style>
 :root{
   --ink:#1a2820;--ink-soft:#3d5447;--ink-faint:#6b8276;
   --paper:#f7f5ef;--paper-warm:#efece2;--line:#d8d3c4;
-  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;
+  --moss:#2f6b4f;--moss-deep:#1d4733;--amber:#b06a1c;--amber-text:#6b3f0d;
   --alert:#9e2b1e;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -145,7 +145,7 @@ pre.filepre{max-height:340px;overflow:auto;font-family:'SF Mono',ui-monospace,Me
 .chainline .cbad{color:var(--alert);font-weight:600}
 .chainline code{word-break:break-all}
 
-.warnnote{font-family:-apple-system,system-ui,sans-serif;font-size:.82rem;color:var(--amber);
+.warnnote{font-family:-apple-system,system-ui,sans-serif;font-size:.82rem;color:var(--amber-text);
   background:#f6efe4;border:1px solid #e8d5b5;border-radius:6px;padding:10px 14px;margin:0 0 16px}
 .errmsg{font-family:-apple-system,system-ui,sans-serif;font-size:.86rem;color:var(--alert);
   background:#f6ebe8;border:1px solid #e3c4bd;border-radius:6px;padding:12px 16px;margin:18px 0 0}
@@ -181,7 +181,7 @@ pre.filepre{max-height:340px;overflow:auto;font-family:'SF Mono',ui-monospace,Me
 .chtable tbody th{font-weight:normal;text-align:left}
 .chtable td.mono,.chtable tbody th.mono{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.72rem;word-break:break-all}
 .chtable .cok{color:var(--moss-deep);font-weight:600}
-.chtable .cwarn{color:var(--amber);font-weight:600}
+.chtable .cwarn{color:var(--amber-text);font-weight:600}
 .chtable .cbad{color:var(--alert);font-weight:600}
 .chtable .cneutral{color:var(--ink-faint)}
 #chChain{border:1px solid var(--line);border-radius:8px;background:#fff;padding:14px 18px;margin-top:12px;
@@ -228,7 +228,7 @@ pre.filepre{max-height:340px;overflow:auto;font-family:'SF Mono',ui-monospace,Me
 .verdict .vlabel{font-size:1.12rem;letter-spacing:-.01em}
 .verdict .vfile{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--ink-faint);margin-top:2px;word-break:break-all}
 .v-ok{color:var(--moss-deep)}
-.v-warn{color:var(--amber)}
+.v-warn{color:var(--amber-text)}
 .v-bad{color:var(--alert)}
 .v-neutral{color:var(--ink-faint)}
 .verdict.v-ok{background:#eef2ec}
@@ -239,7 +239,7 @@ pre.filepre{max-height:340px;overflow:auto;font-family:'SF Mono',ui-monospace,Me
 .tag{display:inline-flex;align-items:center;gap:6px;font-family:-apple-system,system-ui,sans-serif;font-size:.78rem;
   font-weight:500;padding:2px 9px;border-radius:3px;border:1px solid currentColor}
 .tag.ok{color:var(--moss-deep);background:#eef2ec}
-.tag.warn{color:var(--amber);background:#f6efe4}
+.tag.warn{color:var(--amber-text);background:#f6efe4}
 .tag.bad{color:var(--alert);background:#f6ebe8}
 .tag.neutral{color:var(--ink-faint);background:var(--paper-warm)}
 .rgrid{padding:6px 22px 12px}
@@ -254,7 +254,7 @@ pre.filepre{max-height:340px;overflow:auto;font-family:'SF Mono',ui-monospace,Me
 .issues li{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;color:var(--ink-soft);
   padding:7px 0 7px 20px;position:relative;border-bottom:1px solid var(--line)}
 .issues li:last-child{border-bottom:none}
-.issues li::before{content:'!';position:absolute;left:0;top:7px;color:var(--amber);font-weight:700;
+.issues li::before{content:'!';position:absolute;left:0;top:7px;color:var(--amber-text);font-weight:700;
   font-family:-apple-system,system-ui,sans-serif}
 .notes{padding:12px 22px 16px;background:var(--paper-warm);border-top:1px solid var(--line)}
 .notes p{font-family:-apple-system,system-ui,sans-serif;font-size:.8rem;color:var(--ink-soft);margin-bottom:8px}
@@ -302,11 +302,11 @@ footer a:hover{color:var(--moss)}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KNOBE Protocol">
 <meta property="og:title" content="KNOBE Studio — create, verify, and transform knowledge objects in your browser">
-<meta property="og:description" content="KNOBE Studio creates sealed .knobe.md knowledge objects, checks whether a sealed record is intact, and derives new objects that declare their parent. Runs locally in the browser; nothing is uploaded.">
+<meta property="og:description" content="KNOBE Studio creates sealed .knobe.md knowledge objects, checks whether a file matches its seal, and derives new objects that declare their parent. Runs locally in the browser; nothing is uploaded.">
 <meta property="og:url" content="https://knobe.org/studio/">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="KNOBE Studio — create, verify, and transform knowledge objects in your browser">
-<meta name="twitter:description" content="KNOBE Studio creates sealed .knobe.md knowledge objects, checks whether a sealed record is intact, and derives new objects that declare their parent. Runs locally in the browser; nothing is uploaded.">
+<meta name="twitter:description" content="KNOBE Studio creates sealed .knobe.md knowledge objects, checks whether a file matches its seal, and derives new objects that declare their parent. Runs locally in the browser; nothing is uploaded.">
 <style>.returnbar{font-family:-apple-system,system-ui,sans-serif;font-size:.78rem;background:#efece2;border-bottom:1px solid #d8d3c4}.returnbar .rb-in{max-width:920px;margin:0 auto;padding:6px 28px;display:flex;gap:16px}.returnbar a{color:#3d5447;text-decoration:none}.returnbar a:hover{color:#2f6b4f}</style>
 </head>
 <body>
@@ -359,7 +359,7 @@ footer a:hover{color:var(--moss)}
   <div class="wrap">
     <div class="eyebrow">KNOBE Studio</div>
     <h1>Create, verify, and transform <em>knowledge objects</em>.</h1>
-    <p class="sub">Studio is a browser workbench for <code>.knobe.md</code> files. It seals your content into a knowledge object, checks whether a sealed record is intact, and derives new objects that declare their parent. It runs on <a class="inline" href="/knobe-core.js">knobe-core.js</a>, the JavaScript engine whose verdicts are checked against <code>lens.py</code> across the published test corpus.</p>
+    <p class="sub">Studio is a browser workbench for <code>.knobe.md</code> files. It seals your content into a knowledge object, checks whether a file matches its seal, and derives new objects that declare their parent. It runs on <a class="inline" href="/knobe-core.js">knobe-core.js</a>, the JavaScript engine whose verdicts are checked against <code>lens.py</code> across the published test corpus.</p>
     <div class="assurance">
       <span class="lock" aria-hidden="true">&#9679;</span>
       <span>Everything runs locally in your browser. No upload. No server. No account.</span>
@@ -1349,11 +1349,18 @@ $('cCopy').addEventListener('click', (e) => { if (createResult) copyText(createR
 
 // ---- verify rendering ----
 const STATE_META = {
-  'verified': { cls: 'v-ok', sym: '✓', label: 'Verified. The sealed record is intact.' },
-  'verified-body-modified': { cls: 'v-warn', sym: '!', label: 'Verified, body modified. The sealed payload is intact; the readable body changed.' },
+  'verified': { cls: 'v-ok', sym: '✓', label: 'Verified. The record matches its seal.' },
+  'verified-body-modified': { cls: 'v-warn', sym: '!', label: 'Verified, text changed. The record matches its seal, but the readable text changed after sealing.' },
   'failed': { cls: 'v-bad', sym: '✕', label: 'Failed. The recomputed hash does not match the stored one.' },
   'unreadable': { cls: 'v-neutral', sym: '?', label: 'Unreadable. No valid payload could be parsed.' },
 };
+// body_verified 'omitted' covers three cases; name the one that applies.
+function bodyVerifiedText(report) {
+  if (report.body_verified !== 'omitted') return report.body_verified;
+  if (report.state !== 'verified') return 'not checked';
+  if (report.multiple_blocks) return 'not checked (more than one payload block)';
+  return 'text not sealed';
+}
 function tag(text, cls) {
   const s = document.createElement('span');
   s.className = 'tag ' + cls;
@@ -1387,7 +1394,7 @@ function renderReport(container, report, sourceName) {
   tags.appendChild(tag('conformance: ' + report.conformance, confCls));
   if (report.body_verified) {
     const bvCls = report.body_verified === 'yes' ? 'ok' : report.body_verified === 'modified' ? 'warn' : 'neutral';
-    tags.appendChild(tag('body: ' + report.body_verified, bvCls));
+    tags.appendChild(tag('body: ' + bodyVerifiedText(report), bvCls));
   }
   container.appendChild(tags);
 
@@ -1410,7 +1417,7 @@ function renderReport(container, report, sourceName) {
 
   const notes = document.createElement('div'); notes.className = 'notes';
   const p1 = document.createElement('p');
-  p1.textContent = 'A verified result confirms integrity, not truth: the sealed record is unchanged, whether or not its contents are accurate.';
+  p1.textContent = 'A verified seal shows the record matches the seal it carries. Anyone who edits a file can seal it again, so the check means most when you already hold the hash. Integrity, not truth.';
   notes.appendChild(p1);
   if ((report.conformance_issues || []).some(s => s.includes('bare numeric'))) {
     const p2 = document.createElement('p');
@@ -2177,17 +2184,34 @@ function chChainVerdict(row) {
 function chStateCls(state) {
   return state === 'verified' ? 'cok' : state === 'verified-body-modified' ? 'cwarn' : 'cbad';
 }
+// Lower scores sort first. Integrity outranks chain: failed or unreadable rows,
+// then rows whose text changed after sealing, then verified rows.
+function chIntegrityRank(state) {
+  return state === 'verified' ? 2 : state === 'verified-body-modified' ? 1 : 0;
+}
 function chAnomalyScore(row) {
-  const integ = (row.state === 'verified' || row.state === 'verified-body-modified') ? 1 : 0;
   const chain = !chExpectation ? 1 : (row.chainHashes.some(h => chExpectation.hashes.has(h)) ? 1 : 0);
-  return integ + chain;
+  return chIntegrityRank(row.state) * 2 + chain;
+}
+// One tally function for the on-page summary and the sealed receipt (the receipt counts deduplicated rows).
+function chTally(states) {
+  const t = { verified: 0, bodyModified: 0, bad: 0 };
+  states.forEach(s => {
+    if (s === 'verified') t.verified += 1;
+    else if (s === 'verified-body-modified') t.bodyModified += 1;
+    else t.bad += 1;
+  });
+  return t;
+}
+function chTallyParts(t) {
+  return [t.verified + ' verified', t.bodyModified + ' verified but text changed after sealing', t.bad + ' failed or unreadable'];
 }
 
 function renderCohort() {
   chRows.sort((a, b) => chAnomalyScore(a) - chAnomalyScore(b) || a.file.localeCompare(b.file));
   const body = $('chBody');
   body.textContent = '';
-  let okCount = 0, badCount = 0, aiCount = 0;
+  let aiCount = 0;
   chRows.forEach(row => {
     const tr = document.createElement('tr');
     const td = (text, cls) => { const d = document.createElement('td'); d.textContent = text; if (cls) d.className = cls; tr.appendChild(d); };
@@ -2201,11 +2225,11 @@ function renderCohort() {
     td(cv.text, cv.cls);
     td(row.review || '—', row.review ? undefined : 'cneutral');
     body.appendChild(tr);
-    if (row.state === 'verified' || row.state === 'verified-body-modified') okCount += 1; else badCount += 1;
     if (row.ai && row.ai !== 'none declared') aiCount += 1;
   });
+  const tally = chTally(chRows.map(r => r.state));
   $('chSummary').textContent = chRows.length + ' file' + (chRows.length === 1 ? '' : 's') + ' · '
-    + okCount + ' verified · ' + badCount + ' failed or unreadable · ' + aiCount + ' with an AI disclosure'
+    + chTallyParts(tally).join(' · ') + ' · ' + aiCount + ' with an AI disclosure'
     + (chExpectation ? ' · chain checked against "' + chExpectation.title + '"' : ' · no chain expectation loaded');
   $('chResults').hidden = false;
   $('chChain').hidden = true;
@@ -2300,8 +2324,8 @@ function chReceiptRows() {
 function buildCohortReceipt(sealerName) {
   const rows = chReceiptRows();
   const today = localToday();
-  const ok = rows.filter(r => r.integrity === 'verified' || r.integrity === 'verified-body-modified').length;
-  const bad = rows.length - ok;
+  const tally = chTally(rows.map(r => r.integrity));
+  const counts = chTallyParts(tally).join(', ');
   const scope = chExpectation ? chExpectation.title : 'an unnamed batch';
   const title = 'Cohort check receipt: ' + scope + ', ' + today;
 
@@ -2309,8 +2333,9 @@ function buildCohortReceipt(sealerName) {
     checked_date: today,
     engine: 'knobe-core.js via KNOBE Studio cohort check',
     submission_count: String(rows.length),
-    verified_count: String(ok),
-    failed_or_unreadable_count: String(bad),
+    verified_count: String(tally.verified),
+    body_modified_count: String(tally.bodyModified),
+    failed_or_unreadable_count: String(tally.bad),
     submissions: rows.map(r => {
       const s = { file: r.file, integrity: r.integrity, conformance: r.conformance, chain: r.chain };
       if (r.stored) s.payload_hash = r.stored;
@@ -2324,7 +2349,7 @@ function buildCohortReceipt(sealerName) {
 
   const fields = {
     title,
-    summary: 'Sealed record of a cohort integrity check: ' + rows.length + ' file' + (rows.length === 1 ? '' : 's') + ', ' + ok + ' verified, ' + bad + ' failed or unreadable.',
+    summary: 'Sealed record of a cohort integrity check: ' + rows.length + ' file' + (rows.length === 1 ? '' : 's') + ', ' + counts + '.',
     content_type: 'collection',
     created_date: today,
     license: 'All rights reserved',
@@ -2357,7 +2382,7 @@ function buildCohortReceipt(sealerName) {
   }
 
   const L = ['# ' + title, ''];
-  L.push('Checked ' + today + ' by ' + sealerName + '. ' + rows.length + ' file' + (rows.length === 1 ? '' : 's') + ': ' + ok + ' verified, ' + bad + ' failed or unreadable.' + (chExpectation ? ' Chain checked against "' + chExpectation.title + '".' : ' No chain expectation was loaded.'));
+  L.push('Checked ' + today + ' by ' + sealerName + '. ' + rows.length + ' file' + (rows.length === 1 ? '' : 's') + ': ' + counts + '.' + (chExpectation ? ' Chain checked against "' + chExpectation.title + '".' : ' No chain expectation was loaded.'));
   L.push('');
   L.push('This receipt attests that the sealer ran the check and saw these verdicts at seal time. It is not an independent wall-clock timestamp until its payload hash is anchored somewhere the sealer does not control.');
   L.push('');

@@ -87,6 +87,13 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 .social-icon{display:inline-flex;align-items:center;vertical-align:middle;margin-left:8px;color:var(--ink-faint);transition:color .15s;line-height:1}
 .social-icon:hover{color:var(--moss)}
 .social-icon svg{display:block}
+/* ---- editor's note (outside the sealed text) ---- */
+.ed-note{font-family:-apple-system,system-ui,sans-serif;font-size:.9rem;line-height:1.6;color:var(--ink);background:var(--paper-warm);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:4px;padding:16px 20px;margin:24px 0 8px}
+.ed-note h2{font-size:.98rem;font-weight:600;margin:0 0 8px;padding:0;border:0;letter-spacing:0}
+.ed-note p{margin-bottom:10px}
+.ed-note ul{margin:0 0 0 1.2rem}
+.ed-note li{margin-bottom:8px}
+.ed-note li:last-child{margin-bottom:0}
 /* ---- skip link (accessibility) ---- */
 /* ---- forward transitions (where to go next) ---- */
 .fwd{border-top:1px solid var(--line);margin-top:56px;padding:26px 0 10px}
@@ -114,6 +121,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
   h3{break-after:avoid}
   p,li{orphans:3;widows:3}
   pre,.wp-aphorism,li,figure{break-inside:avoid}
+  .ed-note{break-inside:avoid;background:none}
   code,pre{background:#f2f2f2}
   pre{border-left:2px solid #999}
   a{color:#111}
@@ -184,6 +192,16 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 <p><strong>David Kyle</strong> · University of California, Davis · knobe.org</p>
 <p><em>Public release, June 28, 2026</em></p>
 <p>DOI: <a href="https://doi.org/10.5281/zenodo.21298913">10.5281/zenodo.21298913</a></p>
+<aside class="ed-note" aria-labelledby="ed-note-h">
+<h2 id="ed-note-h">Editor's note (David Kyle), November 2026</h2>
+<p>This page shows the text of the sealed white paper (the <code>.knobe.md</code> linked above). Editing that text would mean it no longer matches its published <code>payload_hash</code>, so these notes sit outside it and are not part of the sealed file.</p>
+<ul>
+<li><strong>What a seal shows.</strong> Where the paper says the hash &ldquo;proves only that the sealed payload has not changed since sealing&rdquo; (<a href="#s1">Abstract</a>), or calls it &ldquo;a tamper-evidence mechanism, and a strong one&rdquo; (<a href="#s6">section 5</a>), read it this way: a verified seal shows the record matches the seal it carries. Anyone who edits a file can seal it again, so the check means most when you already hold the hash. Integrity, not truth.</li>
+<li><strong>What travels.</strong> Where it says a receiver is &ldquo;never able to say the object failed to carry them&rdquo; (<a href="#s5">section 4</a>), the fields travel with every copy that keeps the payload. A paste or summary that drops the payload does not carry them.</li>
+<li><strong>The field test.</strong> The &ldquo;documented field test&rdquo; in <a href="#s6">section 5</a> is an incident observed in June 2026. The paper and the <a href="/knobe-seed-v1.0.knobe.md">seed file</a> describe it; no transcript or log has been published.</li>
+<li><strong>Time to implement.</strong> <a href="#s11">Section 10</a> calls the specification &ldquo;small enough to implement in an afternoon&rdquo;. An implementation now also has to pass the 33 published <a href="/test-vectors/">test vectors</a> and follow the rulings in <a href="/ERRATA.md">ERRATA.md</a>, so expect it to take longer.</li>
+</ul>
+</aside>
 <h2 id="s1">Abstract</h2>
 <p>KNOBE Protocol v1 is an open protocol for responsible knowledge movement. It defines a plain-text <code>.knobe.md</code> file that lets a knowledge object carry its readable content together with a machine-legible, hash-sealed record of attribution, source relations, transformation history, fidelity limits, use conditions, accessibility adaptations, quarantine status, and integrity checks.</p>
 <p>The problem KNOBE addresses is simple. When knowledge moves between people, platforms, course systems, archives, AI tools, summaries, and reports, the words often survive while the conditions that made them responsible to use do not.</p>

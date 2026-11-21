@@ -12,14 +12,14 @@ One page: check a whole batch of sealed submissions at once. Time: a few minutes
 
 ## Reading the table
 
-One row per file. Problem rows sort to the top.
+One row per file. Rows to look at first sort to the top: failed and unreadable files, then files whose text changed after sealing, then verified files with no link; within each group, files with no link come first. Verified, linked rows come last.
 
-- **Integrity**: `verified` means the file matches the seal it carries. Anyone who edits a file can seal it again, so to confirm it is the file that was submitted, compare its payload hash (shown in KNOBE Lens or in Studio's Verify view) with the one you recorded when it was submitted. `failed` means it was altered after sealing. `unreadable` means it is not a sealed file at all (often a plain essay uploaded without sealing).
+- **Integrity**: `verified` means the file matches the seal it carries. Anyone who edits a file can seal it again, so to confirm it is the file that was submitted, compare its payload hash (shown in KNOBE Lens or in Studio's Verify view) with the one you recorded when it was submitted. `verified-body-modified` means the sealed payload still matches its seal, but the readable text (the essay you would read and grade) changed after sealing. The summary above the table counts these separately as *verified but text changed after sealing*, and they sort near the top, just below failed and unreadable files. `failed` means it was altered after sealing. `unreadable` means it is not a sealed file at all (often a plain essay uploaded without sealing).
 - **Chain**: `linked` means the file references the assigned spec or journey by exact hash. `no link` means it chains to something else, or to nothing.
 - **AI disclosure**: the student's own declaration of what an AI did, quoted from the file. `none declared` is not an anomaly by itself; under a disclosure policy it means the student declared no AI use.
 - **Review**: the submission status the student sealed, usually `submitted`.
 
-A `failed` or `no link` row is a conversation, not a verdict. The table tells you what the file says about itself; what that means is course policy.
+A `failed`, `verified-body-modified`, `unreadable` or `no link` row is a conversation, not a verdict. An `unreadable` file is often just an essay that was never sealed, which is not an anomaly by itself. The table tells you what the file says about itself; what that means is course policy.
 
 ## Exporting and grading
 

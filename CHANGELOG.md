@@ -12,6 +12,78 @@ The protocol itself is frozen at v1.0 (see [GOVERNANCE.md](GOVERNANCE.md)); entr
 
 ## Post-freeze updates (non-normative)
 
+### 2026-11-21
+
+- Site and documentation wording, and site tooling. No engine, verdict
+  or vector changes.
+  - Verdict labels: the home and docs demos, Studio's Verify view and
+    KNOBE Lens's notes on each state use one wording for the two
+    verified states. A verified file "matches its seal". A file whose readable text changed reads "Verified, text
+    changed: the record matches its seal, but the readable text changed
+    after sealing." The home and docs demos now show that state as a
+    warning ("!", amber), as Studio and Lens do, not with the green
+    check. Lens's introduction and the label tables on the education,
+    enterprise and government profiles also say a verified file matches
+    its seal, where they said the record was "intact".
+  - Seal wording on other pages. KNOBE Lens's "What the verdict means"
+    says a green check shows the sealed record matches the seal it
+    carries, and that anyone who edits a file can seal it again, so the
+    check means most when you already hold the hash. /why-context's box
+    reads "A verified seal shows" and "It does not show", and adds that
+    a seal does not show it is the first seal. /threat-model says a
+    forged file "matches its seal", its boundary headings say what
+    `status: verified` shows and does not show, and the sealed fields
+    are "as the sealer declared them", where it said "intact as the
+    author wrote them".
+  - The home and docs demos now load `knobe-demo.knobe.md`, a short
+    file made for the demo and sealed with `knobe-core.js`. It is
+    served from the site only and is not in `examples/`. Its text says
+    what Verify, Tamper and an edit to the readable text each show, and
+    that anyone who edits a file can seal it again. `lens.py` and
+    `knobe-core.js` both report it verified, body yes, conformance
+    valid. The plain-language summary is still on the Downloads page.
+  - CI: the parity workflow checks `site/knobe-demo.knobe.md` with
+    `lens.py` and fails unless it reports verified, body yes,
+    conformance valid, because the home and docs demos depend on it.
+  - /white-paper has an editor's note between the byline and the
+    Abstract, signed by David Kyle. It says how to read the paper's
+    "proves" wording about the seal, that the fields travel only with
+    copies that keep the payload, that the "documented field test" is
+    an incident observed in June 2026 that the paper and the seed file
+    describe, with no published transcript or log, and that an
+    implementation now also has to pass the 33 test vectors and follow
+    the rulings in `ERRATA.md`. The sealed white paper, its `.knobe.md`
+    and its PDF are unchanged.
+  - The Grove's theme music (`site/grove/assets/grove-theme.mp3`) is
+    removed while the Grove rests. No page linked it.
+  - Studio, page script only (`site/studio/index.html`; `knobe-core.js`
+    is unchanged): the Verify view uses the labels above; its note uses
+    the seal wording above; and its body tag says "text not sealed" or
+    "not checked" where it said "omitted". The page description says
+    Studio checks whether a file matches its seal.
+  - Studio's cohort check, page script only: its scoring (the
+    `chAnomalyScore` sort) now ranks rows by integrity first, so failed
+    and unreadable files come first, then files whose text changed
+    after sealing, then verified files, with unlinked files ahead of
+    linked ones at each level. The summary line and the sealed cohort
+    receipt count text-changed files on their own. The receipt adds
+    `body_modified_count`, and its `verified_count` no longer includes
+    files whose text changed after sealing (it still includes verified
+    files that sealed no text hash). Receipts sealed before this change
+    have no `body_modified_count`, and their `verified_count` includes
+    files whose text changed after sealing.
+  - The TA guide in the instructor kit (the page, its Markdown copy and
+    the copy in `knobe-instructor-kit.zip`) describes the new sort
+    order, explains `verified-body-modified`, and lists it among the
+    rows that start a conversation, not a verdict, alongside `failed`
+    and `unreadable` (often an essay that was never sealed).
+  - KNOBE Lens now names the text-changed result "Verified, text changed",
+    like Studio and the demos. Amber warning text in Studio and Lens is
+    darker (#6b3f0d) so it meets WCAG 2.1 AA contrast; amber borders are
+    unchanged. The threat model says a seal shows the context declared
+    at the most recent sealing, and the home and docs pages say "hold the
+    hash" like the other pages.
+
 ### 2026-11-20
 
 - Site and documentation corrections, wording only. No engine, verdict

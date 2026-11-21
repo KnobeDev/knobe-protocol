@@ -60,6 +60,21 @@ jobs:
             if [ -f "$src" ]; then same "$src" "$f"; fi
           done
           exit $status
+      - name: Demo file verifies
+        # The home and docs demos load site/knobe-demo.knobe.md. It is served
+        # from the site only (not in examples/), so the parity selftest does
+        # not read it. Fail unless lens.py reports verified, body yes, valid.
+        run: |
+          out=$(python3 lens.py --json site/knobe-demo.knobe.md) || true
+          echo "$out"
+          printf '%s' "$out" | python3 -c '
+          import json, sys
+          r = json.load(sys.stdin)
+          got = (r.get("state"), r.get("body_verified"), r.get("conformance"))
+          if got != ("verified", "yes", "valid"):
+              print("::error file=site/knobe-demo.knobe.md::expected verified / body yes / conformance valid, got %s / %s / %s" % got)
+              sys.exit(1)
+          '
 
   mcp-smoke:
     name: MCP server smoke test
