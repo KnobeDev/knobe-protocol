@@ -1,4 +1,4 @@
-// Builds the three interpretation vectors proposed in #22 for E13 and E14,
+// Builds the five interpretation vectors for E13 and E14 (issue #22),
 // in the shape of the existing interpretation set: a two-line frontmatter
 // (title, spec_version), a body that states the expected result, and one
 // payload block sealed by knobe-core.js's seal().
@@ -42,13 +42,14 @@ function basePayload(title, summary) {
 
 // frontmatter: lines between the delimiters. body: the body text.
 // sealBody: whether the payload seals a body_hash. preamble: text placed
-// above the opening delimiter after sealing.
-async function build({ title, summary, frontmatter, body, sealBody, preamble = "" }) {
+// above the opening delimiter after sealing. opening: the bytes of line 1
+// (default `---`), for a leading BOM or trailing CRs.
+async function build({ title, summary, frontmatter, body, sealBody, preamble = "", opening = "---" }) {
   const payload = basePayload(title, summary);
   if (sealBody) payload.body_hash = await sha256Hex(normalizeBody(body));
   const { payload: sealed } = await seal(payload);
   return preamble
-    + ["---", ...frontmatter, "---"].join("\n") + "\n\n"
+    + [opening, ...frontmatter, "---"].join("\n") + "\n\n"
     + body + "\n\n"
     + BEGIN + "\n" + b64Wrapped(canonicalize(sealed)) + "\n" + END + "\n";
 }
@@ -103,6 +104,32 @@ const VECTORS = [
       "Body Horizontal Rules",
       "The frontmatter begins on line 1 and closes at the next line that is exactly `---`. Every later `---` line is body content.",
       "Expected status: verified, body_verified: yes, conformance: valid.",
+    ),
+    sealBody: true,
+  },
+  {
+    file: "leading-bom-body-hash.knobe.md",
+    title: "Leading BOM With Body Hash",
+    summary: "Pins that one leading UTF-8 byte-order mark is skipped when locating the body, as it is when checking for frontmatter, so a sealed body_hash still verifies (E14).",
+    opening: "﻿---",
+    frontmatter: ['title: "Leading BOM With Body Hash"', 'spec_version: "1.0"'],
+    body: RULED_BODY(
+      "Leading BOM With Body Hash",
+      "This file begins with a UTF-8 byte-order mark (EF BB BF) before the opening `---`, as some editors save files. A verifier skips one leading byte-order mark both when it checks that frontmatter exists and when it locates the body.",
+      "The body after the closing delimiter is unchanged since sealing. Expected status: verified, body_verified: yes, conformance: valid.",
+    ),
+    sealBody: true,
+  },
+  {
+    file: "opening-delimiter-trailing-cr.knobe.md",
+    title: "Opening Delimiter Trailing CR",
+    summary: "Pins that trailing carriage returns on the opening delimiter line are ignored when locating the body, as they are when checking for frontmatter, so a sealed body_hash still verifies (E14).",
+    opening: "---\r\r",
+    frontmatter: ['title: "Opening Delimiter Trailing CR"', 'spec_version: "1.0"'],
+    body: RULED_BODY(
+      "Opening Delimiter Trailing CR",
+      "Line 1 of this file is `---` followed by two carriage returns and then a line feed. A delimiter line is `---` once its trailing carriage returns are removed, both when a verifier checks that frontmatter exists and when it locates the body.",
+      "The body after the closing delimiter is unchanged since sealing. Expected status: verified, body_verified: yes, conformance: valid.",
     ),
     sealBody: true,
   },

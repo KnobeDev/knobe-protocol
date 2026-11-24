@@ -221,10 +221,14 @@ def _find_body_start(pre):
     """Given the text before the last BEGIN marker, return the offset where the
     body begins: immediately after the closing '---' frontmatter line. Line-
     exact (a '---' must occupy its own line), so a '---' substring inside a
-    value is not mistaken for the delimiter. Returns None if no frontmatter."""
-    if not (pre.startswith('---\n') or pre.startswith('---\r\n')):
+    value is not mistaken for the delimiter. Returns None if no frontmatter.
+    One leading U+FEFF is skipped and trailing CRs on the opening line are
+    ignored, the same test parse_frontmatter applies (ERRATA E14)."""
+    off = 1 if pre.startswith('\ufeff') else 0
+    nl0 = pre.find('\n', off)
+    if nl0 == -1 or pre[off:nl0].rstrip('\r') != '---':
         return None
-    idx = pre.index('\n') + 1            # start of line 2
+    idx = nl0 + 1                        # start of line 2
     while True:
         nl = pre.find('\n', idx)
         line = pre[idx:nl] if nl != -1 else pre[idx:]

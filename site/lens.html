@@ -286,7 +286,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       </div>
       <p style="margin-top:14px;font-family:-apple-system,system-ui,sans-serif;font-size:.86rem;color:var(--ink-soft)"><strong>Bare-numeric payloads:</strong> When a payload contains bare JSON numeric values (which KNOBE v1 treats as a spec violation), Browser Lens does not issue a hash verdict. This is a browser Lens behavior, not a protocol state. Use <a href="lens.py" class="inline">lens.py</a> for canonical verification of these files.</p>
       <p style="margin-top:14px"><strong>Conformance</strong> is reported separately from integrity. A file can be <em>verified</em> yet still carry conformance <em>warnings</em> or be <em>invalid</em>: for example a missing field, a malformed date, or multiple payload blocks. Integrity asks "is the sealed record unchanged?"; conformance asks "is it well-formed against the spec?"</p>
-      <p>This Lens matches <a href="lens.py" class="inline">lens.py</a> for conforming all-string KNOBE v1 payloads and deliberately declines hash verdicts for bare-numeric payloads, deferring to <code>lens.py</code> as canonical. The engine has been checked against 12 sealed public KNOBEs, 9 core conformance vectors, 17 adversarial hardening vectors, and 10 interpretation vectors (48 files total). For automation, audits, and the definitive result, use <a href="lens.py" class="inline">lens.py</a>, a single standard-library Python file with no dependencies. Read the algorithm in the <a href="/spec" class="inline">specification</a>.</p>
+      <p>This Lens matches <a href="lens.py" class="inline">lens.py</a> for conforming all-string KNOBE v1 payloads and deliberately declines hash verdicts for bare-numeric payloads, deferring to <code>lens.py</code> as canonical. The engine has been checked against 12 sealed public KNOBEs, 9 core conformance vectors, 17 adversarial hardening vectors, and 12 interpretation vectors (50 files total). For automation, audits, and the definitive result, use <a href="lens.py" class="inline">lens.py</a>, a single standard-library Python file with no dependencies. Read the algorithm in the <a href="/spec" class="inline">specification</a>.</p>
     </section>
 
   </div>
@@ -312,7 +312,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 <!-- ============================================================= -->
 <!-- KNOBE verification engine, kept in step with lens.py and      -->
 <!-- knobe-core.js. Checked (Nov 2026, Node harness, not in CI)    -->
-<!-- against the 48 published test files; declines bare-numeric    -->
+<!-- against the 50 published test files; declines bare-numeric    -->
 <!-- payloads by design.                                           -->
 <!-- ============================================================= -->
 <script>
@@ -571,10 +571,10 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
   function parseFrontmatter(raw){
     if(raw.charCodeAt(0)===0xFEFF) raw=raw.slice(1);
     const lines=raw.split('\n');
-    if(lines.length===0||lines[0].replace(/\r$/,'')!=='---') return {ok:false,fmSpec:null,reason:"missing opening '---' frontmatter delimiter"};
+    if(lines.length===0||lines[0].replace(/\r+$/,'')!=='---') return {ok:false,fmSpec:null,reason:"missing opening '---' frontmatter delimiter"};
     let fmSpec=null;
     for(let j=1;j<lines.length;j++){
-      const line=lines[j].replace(/\r$/,'');
+      const line=lines[j].replace(/\r+$/,'');
       if(line==='---') return {ok:true,fmSpec:fmSpec,reason:null};
       const m=/^\s*spec_version\s*:\s*(.+?)\s*$/.exec(line);
       if(m&&fmSpec===null) fmSpec=m[1].trim().replace(/^["']+/,'').replace(/["']+$/,'');
@@ -582,11 +582,14 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
     return {ok:false,fmSpec:fmSpec,reason:"missing closing '---' frontmatter delimiter"};
   }
   function findBodyStart(pre){
-    if(!(pre.startsWith('---\n')||pre.startsWith('---\r\n'))) return null;
-    let idx=pre.indexOf('\n')+1;
+    // Skip one leading U+FEFF; ignore trailing CRs on the opening line (ERRATA E14).
+    const off=pre.startsWith('\ufeff')?1:0;
+    const nl0=pre.indexOf('\n',off);
+    if(nl0===-1||pre.slice(off,nl0).replace(/\r+$/,'')!=='---') return null;
+    let idx=nl0+1;
     for(;;){
       let nl=pre.indexOf('\n',idx);
-      const line=(nl!==-1?pre.slice(idx,nl):pre.slice(idx)).replace(/\r$/,'');
+      const line=(nl!==-1?pre.slice(idx,nl):pre.slice(idx)).replace(/\r+$/,'');
       if(line==='---') return nl!==-1?nl+1:pre.length;
       if(nl===-1) return null;
       idx=nl+1;

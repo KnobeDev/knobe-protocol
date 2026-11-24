@@ -36,7 +36,7 @@ The 31-fixture corpus ships with the package and is browsable as MCP resources:
 - `knobe://examples/…` — sealed illustrative KNOBEs (verify as verified/valid)
 - `knobe://vectors/…` — the nine core vectors and ten of the seventeen
   adversarial vectors, with known verdicts; the other seven adversarial and all
-  ten interpretation vectors are not included
+  twelve interpretation vectors are not included
 - `knobe://guide` — orientation for agents
 
 A `knobe-guarded-summarize` prompt encodes the basic KNOBE agent procedure:

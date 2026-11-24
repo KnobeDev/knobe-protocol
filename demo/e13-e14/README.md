@@ -11,14 +11,18 @@ compatibility bar, and no expected result is published for them.
 
 The pinning vectors for E13 and E14 are in
 [`test-vectors/interpretation/`](../../test-vectors/interpretation/README.md):
-`frontmatter-no-spec-version`, `body-after-preamble` and the positive control
-`body-horizontal-rules`. `make-vectors.mjs` rebuilds them, byte for byte,
+`frontmatter-no-spec-version`, `body-after-preamble`, the positive control
+`body-horizontal-rules`, and `leading-bom-body-hash` and
+`opening-delimiter-trailing-cr` for the tolerance ruled with E14.
+`make-vectors.mjs` rebuilds them, byte for byte,
 into both `test-vectors/` and its `site/` mirror.
 
-The table below records the engines before the E13 check was added to
-`lens.py` and `knobe-core.js`. With that check, the four E13 rows read
-verified · yes · invalid · 1 in both reference engines, as in knobe-rs.
-No other row changes.
+The table below records the engines before the rulings were implemented
+in `lens.py` and `knobe-core.js`. With them, the four E13 rows read
+verified · yes · invalid · 1 in both reference engines, as in knobe-rs,
+and `bom-with-body-hash` and `cr-cr-opening-delimiter` read
+verified · yes · valid · 0. No other row changes. knobe-go and knobe-rs
+still give the results shown until they adopt the rulings.
 
 ## How the files were made
 

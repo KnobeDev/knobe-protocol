@@ -154,7 +154,7 @@ behaved this way.
 **Pinned by:** `test-vectors/interpretation/frontmatter-no-spec-version.knobe.md`
 (expected: verified · omitted · invalid).
 
-## E14. The body starts after the frontmatter that begins on line 1
+## E14. Where the body starts
 
 **Question:** §6 defines the body as "the text immediately following the
 second line containing exactly --- (the closing delimiter of the YAML
@@ -164,6 +164,12 @@ first line was. So for a file with a line of text above its frontmatter,
 or with no frontmatter at all, knobe-rs took horizontal rules in the body
 for the frontmatter's delimiters and could report the body as modified
 when nobody had changed it.
+
+A related question was ruled with it. Both reference engines skipped one leading U+FEFF and trailing CRs when checking that
+frontmatter exists, but not when locating the body. So a byte-order mark
+before line 1, or an opening line of `---` followed by CRs, left a file
+verified and valid when it sealed no `body_hash` and unreadable when it
+did.
 
 **Ruling:** The opening delimiter is line 1. The closing delimiter is
 the next line that is exactly `---`. No verifier searches elsewhere. §6
@@ -177,14 +183,29 @@ from (§6). A file without a `body_hash` still verifies, as
 horizontal rule after the closing delimiter is body content and is never
 taken for a delimiter.
 
-**Effect:** `lens.py`, `knobe-core.js` and the browser Lens already
-locate the body this way, so their verdicts do not change. knobe-rs
-changes to match. No published vector or sealed example changes verdict.
+Frontmatter detection and body location apply the same test. One
+leading U+FEFF is skipped, and a delimiter line is `---` once its
+trailing CRs are removed. A file whose body is unchanged since sealing
+then verifies with `body_verified: yes`, whether or not it starts with a
+byte-order mark or carries trailing CRs on its delimiter lines.
+
+**Effect:** For line 1, `lens.py`, `knobe-core.js` and the browser Lens
+already located the body this way. knobe-rs changes to match. The BOM and
+trailing-CR tolerance changes one verdict, in the reference engines and
+the browser Lens: a file with a leading byte-order mark or a CR-terminated
+opening line that seals a `body_hash` is no longer `unreadable`. It is
+`verified` with `body_verified: yes` when its body is unchanged, and
+`verified-body-modified` when the body changed after sealing. No file
+that verifies today stops verifying, and no published vector or sealed
+example changes verdict.
 
 **Pinned by:** `test-vectors/interpretation/body-after-preamble.knobe.md`
 (expected: unreadable · — · invalid), and the positive control
 `test-vectors/interpretation/body-horizontal-rules.knobe.md` (expected:
-verified · yes · valid).
+verified · yes · valid). The tolerance is pinned by
+`test-vectors/interpretation/leading-bom-body-hash.knobe.md` and
+`test-vectors/interpretation/opening-delimiter-trailing-cr.knobe.md`
+(expected for both: verified · yes · valid).
 
 ---
 

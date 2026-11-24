@@ -490,8 +490,12 @@ export function parseFrontmatter(raw) {
  * Line-exact. Returns null if no frontmatter. Port of _find_body_start().
  */
 function findBodyStart(pre) {
-  if (!(pre.startsWith("---\n") || pre.startsWith("---\r\n"))) return null;
-  let idx = pre.indexOf("\n") + 1; // start of line 2
+  // One leading U+FEFF is skipped and trailing CRs on the opening line are
+  // ignored, the same test parseFrontmatter applies (ERRATA E14).
+  const off = pre.startsWith("\ufeff") ? 1 : 0;
+  const nl0 = pre.indexOf("\n", off);
+  if (nl0 === -1 || pre.slice(off, nl0).replace(/\r+$/, "") !== "---") return null;
+  let idx = nl0 + 1; // start of line 2
   for (;;) {
     const nl = pre.indexOf("\n", idx);
     const line = nl !== -1 ? pre.slice(idx, nl) : pre.slice(idx);
