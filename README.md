@@ -91,7 +91,7 @@ A `verified` result proves the payload is byte-identical to what was hashed at s
 ├── lens.py                Python reference verifier, no external dependencies
 ├── knobe-core.js          JavaScript sibling verifier and engine (Node ≥ 20.10 and browsers), no dependencies
 ├── knobe-core.selftest.mjs  Cross-checks knobe-core.js against lens.py over every vector and example
-├── test-vectors/          Nine conformance vectors, seventeen adversarial, seven interpretation
+├── test-vectors/          Nine conformance vectors, seventeen adversarial, ten interpretation
 ├── examples/              Sealed example KNOBEs (white paper, education chain, etc.)
 ├── site/studio/           Studio browser app (served at knobe.org/studio)
 └── mcp/                   knobe-mcp MCP server (published to npm as knobe-mcp)
@@ -105,7 +105,7 @@ The reference verifier `lens.py` is a standard-library Python file with no exter
 2. Reproduce the canonical hash algorithm: sort keys recursively, NFC-normalize all keys and string values, no whitespace between tokens, literal UTF-8, SHA-256
 3. Run your implementation against all nine test vectors in `test-vectors/` and confirm expected outputs match the README in that directory
 
-An implementation that reproduces all nine expected results is canonically compatible with KNOBE Protocol v1. Beyond that bar, seventeen [adversarial vectors](test-vectors/adversarial/) exercise hostile input, seven [interpretation vectors](test-vectors/interpretation/) pin the documented rulings in [ERRATA.md](ERRATA.md) for questions the specification text left open, and a reported ambiguity that survives scrutiny earns a ruling and a pinning vector, with credit.
+An implementation that reproduces all nine expected results is canonically compatible with KNOBE Protocol v1. Beyond that bar, seventeen [adversarial vectors](test-vectors/adversarial/) exercise hostile input, ten [interpretation vectors](test-vectors/interpretation/) pin the documented rulings in [ERRATA.md](ERRATA.md) for questions the specification text left open, and a reported ambiguity that survives scrutiny earns a ruling and a pinning vector, with credit.
 
 Two JavaScript verifiers already exist. The browser Lens ([`site/lens.html`](site/lens.html), live at [knobe.org/lens](https://knobe.org/lens)) is a pure-JavaScript verifier built to the same specification, sharing no code with `lens.py`; it reproduces `lens.py`'s verdicts across the conformance and adversarial vectors, declining to issue a hash verdict on bare-numeric payloads (a §5 violation) in the browser and deferring to `lens.py` there. [`knobe-core.js`](knobe-core.js) is a single standalone JavaScript file (a sibling verifier, written by studying `lens.py`, sharing no code but sharing lineage) that reproduces `lens.py`'s verdicts including the bare-numeric case, and also seals, creates, and derives KNOBEs. Run `node knobe-core.selftest.mjs` to check `knobe-core.js` against `lens.py` over every vector and example. Multiple implementations agreeing on the vectors is the practical test that the spec is buildable from text. See [knobe.org/implementations](https://knobe.org/implementations).
 

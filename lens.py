@@ -253,7 +253,12 @@ def check_conformance(payload, missing, fm_ok, fm_reason, fm_spec, block_count):
     #    frontmatter block; without it the file is not a conformant KNOBE.
     if not fm_ok:
         errors.append(f"YAML frontmatter missing or malformed: {fm_reason}")
-    elif (fm_spec is not None and isinstance(payload.get("spec_version"), str)
+    elif not fm_spec or not fm_spec.strip():
+        # E13: §3.1 requires the frontmatter to declare spec_version. A missing
+        # line, an empty or whitespace-only value (quoted or not), or a quoted
+        # key counts as not declared: one issue, and no E5 warning on top.
+        errors.append("YAML frontmatter does not declare spec_version (spec §3.1)")
+    elif (isinstance(payload.get("spec_version"), str)
           and fm_spec != payload.get("spec_version")):
         warnings.append(f"frontmatter spec_version {fm_spec!r} does not match "
                         f"sealed payload spec_version {payload.get('spec_version')!r}")

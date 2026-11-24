@@ -7,8 +7,18 @@ frontmatter must declare `spec_version` (E13), where the body starts (E14),
 and the related byte-order-mark and trailing-CR question.
 
 These are demo files, not test vectors. They are not part of any
-compatibility bar, and no expected result is published for them. Vectors
-follow the rulings, as #22 proposes.
+compatibility bar, and no expected result is published for them.
+
+The pinning vectors for E13 and E14 are in
+[`test-vectors/interpretation/`](../../test-vectors/interpretation/README.md):
+`frontmatter-no-spec-version`, `body-after-preamble` and the positive control
+`body-horizontal-rules`. `make-vectors.mjs` rebuilds them, byte for byte,
+into both `test-vectors/` and its `site/` mirror.
+
+The table below records the engines before the E13 check was added to
+`lens.py` and `knobe-core.js`. With that check, the four E13 rows read
+verified · yes · invalid · 1 in both reference engines, as in knobe-rs.
+No other row changes.
 
 ## How the files were made
 

@@ -35,7 +35,7 @@ The [`adversarial/`](adversarial/) subdirectory contains seventeen additional ho
 
 ## Interpretation set
 
-The [`interpretation/`](interpretation/) subdirectory contains seven files pinning the documented rulings in [ERRATA.md](../ERRATA.md): questions the specification text left open: six reported from the steward-commissioned Go verifier (built from the specification text, with lens.py consulted for ambiguous edge cases), and one (E12) proposed in PR #12, each resolved authoritatively and fixed by a vector both reference verifiers agree on. Expected results in [`interpretation/README.md`](interpretation/README.md).
+The [`interpretation/`](interpretation/) subdirectory contains ten files pinning the documented rulings in [ERRATA.md](../ERRATA.md): questions the specification text left open: six reported from the steward-commissioned Go verifier (built from the specification text, with lens.py consulted for ambiguous edge cases), one (E12) proposed in PR #12, and three (E13 and E14) proposed in issue #22, each resolved authoritatively and fixed by a vector both reference verifiers agree on. Expected results in [`interpretation/README.md`](interpretation/README.md).
 
 ## Notes
 

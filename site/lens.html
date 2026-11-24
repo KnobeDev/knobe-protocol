@@ -286,7 +286,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       </div>
       <p style="margin-top:14px;font-family:-apple-system,system-ui,sans-serif;font-size:.86rem;color:var(--ink-soft)"><strong>Bare-numeric payloads:</strong> When a payload contains bare JSON numeric values (which KNOBE v1 treats as a spec violation), Browser Lens does not issue a hash verdict. This is a browser Lens behavior, not a protocol state. Use <a href="lens.py" class="inline">lens.py</a> for canonical verification of these files.</p>
       <p style="margin-top:14px"><strong>Conformance</strong> is reported separately from integrity. A file can be <em>verified</em> yet still carry conformance <em>warnings</em> or be <em>invalid</em>: for example a missing field, a malformed date, or multiple payload blocks. Integrity asks "is the sealed record unchanged?"; conformance asks "is it well-formed against the spec?"</p>
-      <p>This Lens matches <a href="lens.py" class="inline">lens.py</a> for conforming all-string KNOBE v1 payloads and deliberately declines hash verdicts for bare-numeric payloads, deferring to <code>lens.py</code> as canonical. The engine has been checked against 12 sealed public KNOBEs, 9 core conformance vectors, 17 adversarial hardening vectors, and 7 interpretation vectors (45 files total). For automation, audits, and the definitive result, use <a href="lens.py" class="inline">lens.py</a>, a single standard-library Python file with no dependencies. Read the algorithm in the <a href="/spec" class="inline">specification</a>.</p>
+      <p>This Lens matches <a href="lens.py" class="inline">lens.py</a> for conforming all-string KNOBE v1 payloads and deliberately declines hash verdicts for bare-numeric payloads, deferring to <code>lens.py</code> as canonical. The engine has been checked against 12 sealed public KNOBEs, 9 core conformance vectors, 17 adversarial hardening vectors, and 10 interpretation vectors (48 files total). For automation, audits, and the definitive result, use <a href="lens.py" class="inline">lens.py</a>, a single standard-library Python file with no dependencies. Read the algorithm in the <a href="/spec" class="inline">specification</a>.</p>
     </section>
 
   </div>
@@ -312,7 +312,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
 <!-- ============================================================= -->
 <!-- KNOBE verification engine, kept in step with lens.py and      -->
 <!-- knobe-core.js. Checked (Nov 2026, Node harness, not in CI)    -->
-<!-- against the 45 published test files; declines bare-numeric    -->
+<!-- against the 48 published test files; declines bare-numeric    -->
 <!-- payloads by design.                                           -->
 <!-- ============================================================= -->
 <script>
@@ -577,7 +577,7 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
       const line=lines[j].replace(/\r$/,'');
       if(line==='---') return {ok:true,fmSpec:fmSpec,reason:null};
       const m=/^\s*spec_version\s*:\s*(.+?)\s*$/.exec(line);
-      if(m&&fmSpec===null) fmSpec=m[1].trim().replace(/^["']|["']$/g,'');
+      if(m&&fmSpec===null) fmSpec=m[1].trim().replace(/^["']+/,'').replace(/["']+$/,'');
     }
     return {ok:false,fmSpec:fmSpec,reason:"missing closing '---' frontmatter delimiter"};
   }
@@ -603,7 +603,9 @@ footer .fclaim{font-family:Georgia,serif;font-style:italic;color:var(--moss-deep
   function checkConformance(payload, missing, fm, blockCount){
     const errors=[], warnings=[];
     if(!fm.ok) errors.push(`YAML frontmatter missing or malformed: ${fm.reason}`);
-    else if(fm.fmSpec!==null && typeof payload.spec_version==='string' && fm.fmSpec!==payload.spec_version)
+    // E13: the frontmatter must declare a non-empty spec_version (spec §3.1).
+    else if(!fm.fmSpec||!fm.fmSpec.trim()) errors.push('YAML frontmatter does not declare spec_version (spec §3.1)');
+    else if(typeof payload.spec_version==='string' && fm.fmSpec!==payload.spec_version)
       warnings.push(`frontmatter spec_version '${fm.fmSpec}' does not match sealed payload spec_version '${payload.spec_version}'`);
     for(const m of missing) errors.push(`required field missing: ${m}`);
     for(const f of STRING_FIELDS) if(f in payload && typeof payload[f]!=='string')

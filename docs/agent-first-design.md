@@ -160,7 +160,7 @@ Mostly consolidation; the engine and server exist.
   missing parent explanation), and a permits() matrix run over the
   adaptation examples for summarize, translate, train, redistribute, embed.
 - All fixtures verify against both engines before publication, per the
-  existing parity discipline (currently 45 of 45 files agree).
+  existing parity discipline (currently 48 of 48 files agree).
 
 ## Sequencing
 
