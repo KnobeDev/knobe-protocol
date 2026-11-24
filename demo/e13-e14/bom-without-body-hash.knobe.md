@@ -1,0 +1,20 @@
+﻿---
+title: "BOM: byte-order mark, no body_hash"
+spec_version: "1.0"
+content_type: original
+license: CC0 1.0
+created_date: "2026-11-23"
+---
+
+-----BEGIN KNOBE B64-----
+eyJhdHRyaWJ1dGlvbiI6eyJzb3VyY2VzIjpbeyJhdXRob3IiOiJKb3NodWEgSG9yaSIsImNvbnRy
+aWJ1dGlvbiI6ImF1dGhvciJ9XX0sImNvbnRlbnRfdHlwZSI6Im9yaWdpbmFsIiwiY3JlYXRlZF9k
+YXRlIjoiMjAyNi0xMS0yMyIsImlkZW50aXR5X3N0YXR1cyI6ImRlY2xhcmVkIiwibGljZW5zZSI6
+IkNDMCAxLjAiLCJwYXlsb2FkX2hhc2giOiIwMDU3MGI4YmFlN2E0MGE1MjYxMjIzYzFhZDAxYjJl
+YWY5YTRlODgwOTBkOWY4YWExZTQxYzE2YTEyMTE3M2M0IiwicHJpdmFjeV9sZXZlbCI6InB1Ymxp
+YyIsInF1YXJhbnRpbmVfc3RhdHVzIjoicXVhcmFudGluZSIsInNwZWNfdmVyc2lvbiI6IjEuMCIs
+InN1bW1hcnkiOiJBIFVURi04IGJ5dGUtb3JkZXIgbWFyayB3YXMgYWRkZWQgYmVmb3JlIGxpbmUg
+MSBhZnRlciBzZWFsaW5nLiBUaGlzIGZpbGUgc2VhbHMgbm8gYm9keV9oYXNoLCB1bmxpa2UgYm9t
+LXdpdGgtYm9keS1oYXNoLmtub2JlLm1kLiIsInRpdGxlIjoiQk9NOiBieXRlLW9yZGVyIG1hcmss
+IG5vIGJvZHlfaGFzaCJ9
+-----END KNOBE B64-----
